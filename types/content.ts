@@ -13,10 +13,19 @@ export class Field {
 
 export enum Fieldtype {
   String,
-  Number,
+  Int,
+  Float,
   Boolean,
   Date,
-  Array,
+  DateTime,
+  Time,
+  Password,
+  Email,
+  URL,
+  Phone,
+  PostalCode,
+  IP,
+  Custom
 }
 
 export const contentTypes = new PersistentUnorderedMap<string, ContentType>("pfB4RNkXKt66x5Wd")

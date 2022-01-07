@@ -1,8 +1,9 @@
 import { NetworkConfiguration } from "../types/configuration";
 
-const CONTRACT_NAME = process.env.CONTRACT_NAME || 'near-cms.testnet';
+const CONTRACT_NAME = process.env.CONTRACT_NAME || 'wickham.testnet';
 
-function getConfig(env): NetworkConfiguration {
+function getConfig(env: string): NetworkConfiguration {
+  console.log('CONTRACT_NAME', CONTRACT_NAME);
   switch(env) {
     case 'production':
     case 'mainnet':

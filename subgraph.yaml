@@ -1,0 +1,23 @@
+specVersion: 0.0.2
+schema:
+  file: ./schema.graphql # link to the schema file
+dataSources:
+  - kind: near
+    name: dCMS
+    network: near-testnet
+    source:
+      account: wickham.testnet # This data source will monitor this account
+      startBlock: 10662188 # Required for NEAR
+    mapping:
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      entities:
+        - Field
+        - FieldType
+        - Content
+        - ContentType
+      blockHandlers:
+        - handler: handleNewBlock # the function name in the mapping file
+      receiptHandlers:
+        - handler: handleReceipt # the function name in the mapping file
+      file: ./assembly/mapping.ts

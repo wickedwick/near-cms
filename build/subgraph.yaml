@@ -1,0 +1,23 @@
+specVersion: 0.0.2
+schema:
+  file: schema.graphql
+dataSources:
+  - kind: near
+    name: dCMS
+    network: near-testnet
+    source:
+      account: wickham.testnet
+      startBlock: 10662188
+    mapping:
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      entities:
+        - Field
+        - FieldType
+        - Content
+        - ContentType
+      blockHandlers:
+        - handler: handleNewBlock
+      receiptHandlers:
+        - handler: handleReceipt
+      file: dCMS/dCMS.wasm

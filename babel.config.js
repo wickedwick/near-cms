@@ -1,3 +1,7 @@
-module.exports = {
-  presets: ['next/babel']
-}
+// eslint-disable-next-line no-undef
+module.exports = function(api) {
+  api.cache(true);
+  return {
+    presets: ['next/babel'],
+  };
+};

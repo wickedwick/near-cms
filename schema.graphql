@@ -1,0 +1,35 @@
+type Field @entity {
+  id: ID!
+  name:String
+  fieldType: FieldType
+}
+
+enum FieldType {
+  String
+  Int
+  Float
+  Boolean
+  Date
+  DateTime
+  Time
+  Password
+  Email
+  URL
+  Phone
+  PostalCode
+  IP
+  Custom
+}
+
+type ContentType @entity {
+  id: ID!
+  fields: [Field!]
+  name: String
+  isSingleton: Boolean
+}
+
+type Content @entity {
+  id: ID!
+  contentType: ContentType
+  values: [Field!]
+}
