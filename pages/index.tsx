@@ -32,7 +32,6 @@ const Home: NextPage = () => {
     wallet.signOut()
     Router.push('/')
     setCurrentUser(undefined)
-    //window.location.replace(window.location.origin + window.location.pathname)
   }
 
   return (

@@ -1,13 +1,10 @@
-import { ContentType, Fieldtype } from "../../types/content"
+import { ContentType, Fieldtype } from "../model"
 import { setContentType, getContentType, deleteContentType } from "../main"
 
 const contentType: ContentType = {
   name: 'content-type-1',
   fields: [
-    {
-      name: 'field-1',
-      fieldType: Fieldtype.String,
-    }
+    Fieldtype.String
   ]
 }
 
