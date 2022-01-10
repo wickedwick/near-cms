@@ -2,28 +2,24 @@ import type { NextPage } from 'next'
 import Head from 'next/head'
 import { useContext, useState } from 'react'
 import { NearContext } from '../../context/NearContext'
-//import styles from '../styles/Home.module.css'
 import Router from 'next/router'
-import { Fieldtype, fieldTypeOptions } from '../../assembly/model'
-import { ContentType } from '../../assembly/main'
+import { ContentType, Field } from '../../assembly/main'
+import Link from 'next/link'
+import FieldTypesEditor from '../../components/FieldTypesEditor'
 
 const NewContentType: NextPage = () => {
   const { contract, currentUser, nearConfig, wallet, setCurrentUser } = useContext(NearContext)
   const [contentTypeName, setContentTypeName] = useState('')
-  const [fieldName, setFieldName] = useState('')
-  const [fieldType, setFieldType] = useState(Fieldtype.String)
-  const [fields, setFields] = useState([])
+  const [fields, setFields] = useState<Field[]>([])
 
   const handleContentTypeNameChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
     setContentTypeName(event.target.value)
   }
 
-  const handleFieldNameChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
-    setFieldName(event.target.value)
-  }
-
-  const handleFieldTypeChange = (event: React.ChangeEvent<HTMLSelectElement>): void => {
-    setFieldType(event.target.value as Fieldtype)
+  const handleDeleteField = (index: number): void => {
+    const newFields = [...fields];
+    newFields.splice(index, 1);
+    setFields(newFields);
   }
 
   const handleSubmit = (): void => {
@@ -33,9 +29,7 @@ const NewContentType: NextPage = () => {
 
     const contentType: ContentType = {
       name: contentTypeName,
-      fields: [
-        'name',
-      ]
+      fields,
     }
 
     contract.setContentType({ contentType }).then(() => {
@@ -55,16 +49,23 @@ const NewContentType: NextPage = () => {
         <h1>Create a Content Type</h1>
 
         <input className="block px-3 py-2 mb-3 w-full" type="text" value={contentTypeName} onChange={(e) => handleContentTypeNameChange(e)} />
-        <input className="block px-3 py-2 mb-3 w-full" type="text" value={fieldName} onChange={(e) => handleFieldNameChange(e)} />
-        <select className="block px-3 py-2 mb-3 w-full" onChange={(e) => handleFieldTypeChange(e)}>
-          {fieldTypeOptions.map((key) => {
+        <h2>Fields</h2>
+        <div className="flex flex-wrap">
+          {fields.map((field, index) => {
             return (
-              <option value={key.value} key={key.value}>{key.label}</option>
+              <div key={`${field.name}-${index}`}>
+                <p>{index}. {field.name} {field.fieldType}
+                  <button onClick={() => {handleDeleteField(index)}}>x</button>
+                </p>
+              </div>
             )
           })}
-        </select>
-        {/* Need a field types [] */}
+        </div>
+        <FieldTypesEditor fields={fields} setFields={setFields} />
         <button className="px-3 py-2 m-3 x-4 border border-green shadow-sm text-gray-light bg-green hover:bg-green focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green" onClick={handleSubmit}>Submit</button>
+        <Link href="/contentTypes">
+          <a>Back</a>
+        </Link>
       </main>
     </div>
   )

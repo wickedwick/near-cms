@@ -1,23 +1,23 @@
 export enum Fieldtype {
-  String = 'String',
-  Int = 'Int',
-  Float = 'Float',
-  Boolean = 'Boolean',
-  Date = 'Date',
-  DateTime = 'DateTime',
-  Time = 'Time',
-  Password = 'Password',
-  Email = 'Email',
-  URL = 'URL',
-  Phone = 'Phone',
-  PostalCode = 'PostalCode',
-  IP = 'IP',
-  Custom = 'Custom',
+  String,
+  Int,
+  Float,
+  Boolean,
+  Date,
+  DateTime,
+  Time,
+  Password,
+  Email,
+  URL,
+  Phone,
+  PostalCode,
+  IP,
+  Custom,
 }
 
 export class FieldTypeOption {
-  label: string | undefined
-  value: Fieldtype | undefined
+  label: string
+  value: Fieldtype
 }
 
 export const fieldTypeOptions: FieldTypeOption[] = [
@@ -36,3 +36,10 @@ export const fieldTypeOptions: FieldTypeOption[] = [
   { label: 'IP', value: Fieldtype.IP },
   { label: 'Custom', value: Fieldtype.Custom }
 ]
+
+export enum Role {
+  Admin,
+  Editor,
+  Viewer,
+  Public,
+}

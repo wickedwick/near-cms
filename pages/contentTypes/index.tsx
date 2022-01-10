@@ -3,24 +3,45 @@ import Head from 'next/head'
 import { useContext, useEffect, useState } from 'react'
 import { NearContext } from '../../context/NearContext'
 //import styles from '../styles/Home.module.css'
-import Router from 'next/router'
-import { Fieldtype, fieldTypeOptions } from '../../assembly/model'
 import { ContentType } from '../../assembly/main'
+import Link from 'next/link'
 
 const ContentTypes: NextPage = () => {
   const { contract, currentUser, nearConfig, wallet, setCurrentUser } = useContext(NearContext)
-  const [contentType, setContentType] = useState<ContentType | null>()
+  const [contentTypes, setContentTypes] = useState<ContentType[]>([])
 
   useEffect(() => {
+    if (!contract) {
+      setTimeout(() => {
+        init
+      }
+      , 5000)
+
+      return
+    }
+
+    init()
+  }, [])
+  
+  const init = () => {
     if (!contract) {
       return
     }
 
-    contract.getContentType({ name: 'Date' }).then((ct) => {
-      console.log('ct', ct)
-      setContentType(ct)
+    contract.getContentTypes().then((ct: ContentType[]) => {
+      setContentTypes(ct)
     })
-  }, [])
+  }
+
+  const deleteContentType = (ct: ContentType): void => {
+    if (!contract) {
+      return
+    }
+
+    contract.deleteContentType({ name: ct.name }).then(() => {
+      init()
+    })
+  }
 
   return (
     <div>
@@ -31,10 +52,30 @@ const ContentTypes: NextPage = () => {
       </Head>
 
       <main>
-        <h1>Create a Content Type</h1>
-        {contentType && (
-          <p>{contentType.name}</p>
-        )}
+        <h1>Content Types</h1>
+        {!contract && <div>Loading...</div>}
+        {contract && !contentTypes.length && <button onClick={init}>Load</button>}
+        <table>
+              <thead>
+                <tr>
+                  <th>Actions</th>
+                  <th>Name</th>
+                </tr>
+              </thead>
+              <tbody>
+              {contract && contentTypes && contentTypes.map((ct) => {
+                return (
+                  <tr key={ct.name}>
+                    <td><button onClick={() => deleteContentType(ct)}>Delete</button></td>
+                    <td>{ct.name}</td>
+                  </tr>
+                )
+              })}
+              </tbody>
+            </table>
+        <Link href="/contentTypes/new">
+          <a>New</a>
+        </Link>
       </main>
     </div>
   )

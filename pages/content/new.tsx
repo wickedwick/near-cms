@@ -1,18 +1,51 @@
-import type { NextPage } from 'next'
+import type { GetStaticProps, NextPage } from 'next'
 import Head from 'next/head'
-import { useContext, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { NearContext } from '../../context/NearContext'
-//import styles from '../styles/Home.module.css'
+import { Content, ContentType, Field } from '../../assembly/main'
 import Router from 'next/router'
-import { Fieldtype, fieldTypeOptions } from '../../assembly/model'
+import Link from 'next/link'
+import FieldsEditor from '../../components/FieldsEditor'
 
 const NewField: NextPage = () => {
   const { contract, currentUser, nearConfig, wallet, setCurrentUser } = useContext(NearContext)
-  const [fieldName, setFieldName] = useState('')
-  const [fieldType, setFieldType] = useState(Fieldtype.String)
+  const [name, setName] = useState('')
+  const [fields, setFields] = useState<Field[]>([])
+  const [contentTypes, setContentTypes] = useState<ContentType[]>([])
+  const [selectedContentType, setSelectedContentType] = useState<ContentType>()
 
-  const handleFieldTypeChange = (event: React.ChangeEvent<HTMLSelectElement>): void => {
-    setFieldType(event.target.value as Fieldtype)
+  useEffect(() => {
+    if (!contract) {
+      setTimeout(() => {
+        init
+      }
+      , 5000)
+
+      return
+    }
+
+    init()
+  }, [])
+  
+  const init = () => {
+    if (!contract) {
+      return
+    }
+
+    contract.getContentTypes().then((ct: ContentType[]) => {
+      setContentTypes(ct)
+    })
+  }
+
+  const handleSelectContentType = (name: string): void => {
+    const contentType = contentTypes.find(ct => ct.name === name)
+
+    if (!contentType) {
+      return
+    }
+
+    setSelectedContentType(contentType)
+    setFields(contentType.fields)
   }
 
   const handleSubmit = (): void => {
@@ -20,6 +53,18 @@ const NewField: NextPage = () => {
       return
     }
 
+    const content: Content = {
+      name,
+      fields,
+      slug: '', // TODO: slugify name
+      type: selectedContentType as ContentType,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    }
+
+    contract.setContent({ content }).then(() => {
+      Router.push('/content')
+    })
   }
 
   return (
@@ -31,17 +76,30 @@ const NewField: NextPage = () => {
       </Head>
 
       <main>
-        <h1></h1>
-
-        <input className="block px-3 py-2 mb-3 w-full" type="text" value={fieldName} onChange={(e) => setFieldName(e.target.value)} />
-        <select className="block px-3 py-2 mb-3 w-full" onChange={(e) => handleFieldTypeChange(e)}>
-          {fieldTypeOptions.map((key) => {
+        <h1>Create some content</h1>
+        <label htmlFor="name">Name</label>
+        <input className="block px-3 py-2 mb-3 w-full" type="text" value={name} onChange={(e) => setName(e.target.value)} />
+        
+        <label htmlFor="type">Content Type</label>
+        <select className="block px-3 py-2 mb-3 w-full" value={selectedContentType?.name} onChange={(e) => handleSelectContentType(e.target.value)}>
+          {contentTypes.map((ct) => {
             return (
-              <option value={key.value} key={key.value}>{key.label}</option>
+              <option key={ct.name} value={ct.name}>{ct.name}</option>
             )
           })}
         </select>
-        <button className="px-3 py-2 m-3 x-4 border border-green shadow-sm text-gray-light bg-green hover:bg-green focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green" onClick={handleSubmit}>Create</button>
+        
+        {fields && (
+          <>
+            <label htmlFor="fields">Fields</label>
+            <FieldsEditor fields={fields} setFields={setFields} />
+          </>
+        )}
+        
+        <button className="block px-3 py-2 m-3 x-4 border border-green shadow-sm text-gray-light bg-green hover:bg-green focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green" onClick={handleSubmit}>Create</button>
+        <Link href="/content">
+          <a className="block">Back</a>
+        </Link>
       </main>
     </div>
   )

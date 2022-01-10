@@ -11,7 +11,6 @@ import { NearContext } from '../context/NearContext'
 
 async function initContract() {
   const nearConfig = getConfig('testnet')
-  //const nearConfig = getConfig(process.env.NODE_ENV || 'testnet')
   const keyStore = new nearAPI.keyStores.BrowserLocalStorageKeyStore()
   const near = await nearAPI.connect({ keyStore, ...nearConfig })
   const walletConnection = new nearAPI.WalletConnection(near, '')
@@ -28,8 +27,8 @@ async function initContract() {
     walletConnection.account(),
     nearConfig.contractName,
     {
-      viewMethods: ['getContentType', 'getContentTypes'],
-      changeMethods: ['setContentType', 'deleteContentType'],
+      viewMethods: ['getContentType', 'getContentTypes', 'getContents', 'getContent', 'getUserRole'],
+      changeMethods: ['setContentType', 'deleteContentType', 'setContent', 'deleteContent', 'setUserRole', 'deleteUserRole'],
       sender: walletConnection.getAccountId(),
     }
   )

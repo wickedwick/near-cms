@@ -1,43 +1,81 @@
-import { Fieldtype } from "./model"
-import { PersistentMap } from "near-sdk-as"
+import { PersistentUnorderedMap } from "near-sdk-as"
+import { Role } from "./model"
 
-export function setContentType(contentType: ContentType): void {
-  console.log('setContentType', contentType)
-  contentTypes.set(contentType.name || '', contentType)
+export function getContentTypes(): ContentType[] {
+  return contentTypes.values() as ContentType[]
 }
 
 export function getContentType(name: string): ContentType | null {
   return contentTypes.get(name) as ContentType
 }
 
+export function setContentType(contentType: ContentType): void {
+  contentTypes.set(contentType.name || '', contentType)
+}
+
 export function deleteContentType(name: string): void {
   contentTypes.delete(name)
 }
 
-// export function getContentTypes(): ContentType[] {
-//   return contentTypes.
-// }
+export function getUserRole(name: string): UserRole | null {
+  return userRegistry.get(name) as UserRole
+}
 
-export const contentTypes = new PersistentMap<string, ContentType>("pfB4RNkXKt66x5Wd")
-export const content = new PersistentMap<string, Content>("r6g9FALgD8KNf3QE")
+export function setUserRole(role: UserRole): void {
+  userRegistry.set(role.username, role)
+}
+
+export function deleteUserRole(name: string): void {
+  userRegistry.delete(name)
+}
+
+export function getContents(): Content[] {
+  return contents.values() as Content[]
+}
+
+export function getContent(slug: string): Content | null {
+  return contents.get(slug) as Content
+}
+
+export function setContent(content: Content): void {
+  contents.set(content.slug || '', content)
+}
+
+export function deleteContent(content: Content): void {
+  contents.delete(content.slug || '')
+}
+
+export const userRegistry = new PersistentUnorderedMap<string, UserRole>('ku2DjgA6tMcswJ3Y')
+export const contentTypes = new PersistentUnorderedMap<string, ContentType>("pfB4RNkXKt66x5Wd")
+export const contents = new PersistentUnorderedMap<string, Content>("r6g9FALgD8KNf3QE")
 
 @nearBindgen
-export class ContentType {
-  name: string | undefined
-  fields: string[] | undefined
+class ContentType {
+  name: string
+  fields: Field[]
 }
 
 @nearBindgen
-export class Field {
-  name: string | undefined
-  fieldType: string | undefined
-  value: any | undefined
+class Field {
+  name: string
+  fieldType: string
+  value: string
 }
 
 @nearBindgen
-export class Content {
-  type: ContentType | undefined
-  fields: Field[] | undefined
-  createdAt: Date | undefined
-  updatedAt: Date | undefined
+class Content {
+  slug: string
+  name: string
+  type: ContentType
+  fields: Field[]
+  createdAt: Date
+  updatedAt: Date
 }
+
+@nearBindgen
+class UserRole {
+  username: string
+  role: Role
+}
+
+export { ContentType, Field, Content }

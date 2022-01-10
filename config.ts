@@ -1,9 +1,9 @@
 import { NetworkConfiguration } from "../types/configuration";
 
-const CONTRACT_NAME = process.env.CONTRACT_NAME || 'wickham.testnet';
+const CONTRACT_NAME = process.env.CONTRACT_NAME || 'dev-1641709731586-99971157649148'//'wickham.testnet';
 
 function getConfig(env: string): NetworkConfiguration {
-  console.log('CONTRACT_NAME', CONTRACT_NAME);
+  console.log('CONTRACT_NAME', CONTRACT_NAME)
   switch(env) {
     case 'production':
     case 'mainnet':
@@ -14,8 +14,8 @@ function getConfig(env: string): NetworkConfiguration {
         walletUrl: 'https://wallet.near.org',
         helperUrl: 'https://helper.mainnet.near.org'
       };
-    case 'development':
     case 'testnet':
+    case 'development':
       return {
         networkId: 'testnet',
         nodeUrl: 'https://rpc.testnet.near.org',
@@ -23,20 +23,20 @@ function getConfig(env: string): NetworkConfiguration {
         walletUrl: 'https://wallet.testnet.near.org',
         helperUrl: 'https://helper.testnet.near.org'
       };
-    case 'betanet':
-      return {
-        networkId: 'betanet',
-        nodeUrl: 'https://rpc.betanet.near.org',
-        contractName: CONTRACT_NAME,
-        walletUrl: 'https://wallet.betanet.near.org',
-        helperUrl: 'https://helper.betanet.near.org'
-      };
+      case 'betanet':
+        return {
+          networkId: 'betanet',
+          nodeUrl: 'https://rpc.betanet.near.org',
+          contractName: CONTRACT_NAME,
+          walletUrl: 'https://wallet.betanet.near.org',
+          helperUrl: 'https://helper.betanet.near.org'
+        };
     case 'local':
       return {
-        networkId: 'local',
-        nodeUrl: 'http://localhost:3030',
-        keyPath: `${process.env.HOME}/.near/validator_key.json`,
-        walletUrl: 'http://localhost:4000/wallet',
+        networkId: 'localnet',
+        nodeUrl: 'http://127.0.0.1:52421',
+        keyPath: `${process.env.HOME}/.neartosis/2022-01-09T00.04.45/validator-key.json`,
+        walletUrl: 'http://127.0.0.1:52493',
         contractName: CONTRACT_NAME
       };
     case 'test':
@@ -59,4 +59,4 @@ function getConfig(env: string): NetworkConfiguration {
   }
 }
 
-module.exports = getConfig;
+module.exports = getConfig
