@@ -6,7 +6,7 @@ dataSources:
     name: dCMS
     network: near-testnet
     source:
-      account: wickham.testnet # This data source will monitor this account
+      account: dev-1641709731586-99971157649148 # This data source will monitor this account
       startBlock: 10662188 # Required for NEAR
     mapping:
       apiVersion: 0.0.5

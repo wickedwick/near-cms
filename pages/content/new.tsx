@@ -58,8 +58,8 @@ const NewField: NextPage = () => {
       fields,
       slug: '', // TODO: slugify name
       type: selectedContentType as ContentType,
-      createdAt: new Date(),
-      updatedAt: new Date(),
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
     }
 
     contract.setContent({ content }).then(() => {

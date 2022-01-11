@@ -13,7 +13,12 @@ const FieldsEditor = ({ fields, setFields }: FieldTypesEditorProps) => {
         return (
           <div key={index}>
             <label htmlFor={`${field.name}-value`}>{field.name}</label>
-            <input id={`${field.name}-value`} className="block px-3 py-2 mb-3 w-full" type="text" value={field.value} onChange={(e) => handleFieldChange(index, e)} />
+            <input
+              id={`${field.name}-value`}
+              className="block px-3 py-2 mb-3 w-full"
+              type="text" value={field.value}
+              onChange={(e) => handleFieldChange(index, e)}
+            />
           </div>
         )
       })}

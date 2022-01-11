@@ -68,8 +68,8 @@ class Content {
   name: string
   type: ContentType
   fields: Field[]
-  createdAt: Date
-  updatedAt: Date
+  createdAt: string
+  updatedAt: string
 }
 
 @nearBindgen

@@ -6,7 +6,7 @@ dataSources:
     name: dCMS
     network: near-testnet
     source:
-      account: wickham.testnet
+      account: dev-1641709731586-99971157649148
       startBlock: 10662188
     mapping:
       apiVersion: 0.0.5
