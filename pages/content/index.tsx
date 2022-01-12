@@ -4,9 +4,10 @@ import { NearContext } from "../../context/NearContext";
 import { Content } from '../../assembly/main'
 import Head from "next/head";
 import Link from "next/link";
+import Router from "next/router";
 
 const Contents: NextPage = () => {
-  const { contract, currentUser, nearConfig, wallet, setCurrentUser } = useContext(NearContext)
+  const { contract } = useContext(NearContext)
   const [content, setContent] = useState<Content[]>([])
   
   useEffect(() => {
@@ -42,6 +43,14 @@ const Contents: NextPage = () => {
     })
   }
 
+  const editContent = (ct: Content): void => {
+    if (!contract) {
+      return
+    }
+
+    Router.push('/content/[slug]', `/content/${ct.slug}`)
+  }
+
   return (
     <div>
       <Head>
@@ -65,7 +74,10 @@ const Contents: NextPage = () => {
           {contract && content && content.map((ct) => {
             return (
               <tr key={ct.name}>
-                <td><button onClick={() => deleteContent(ct)}>Delete</button></td>
+                <td>
+                  <button onClick={() => editContent(ct)}>Edit</button>
+                  <button onClick={() => deleteContent(ct)}>Delete</button>
+                </td>
                 <td>{ct.name}</td>
               </tr>
             )

@@ -1,4 +1,4 @@
-import type { GetStaticProps, NextPage } from 'next'
+import type { NextPage } from 'next'
 import Head from 'next/head'
 import { useContext, useEffect, useState } from 'react'
 import { NearContext } from '../../context/NearContext'
@@ -6,9 +6,11 @@ import { Content, ContentType, Field } from '../../assembly/main'
 import Router from 'next/router'
 import Link from 'next/link'
 import FieldsEditor from '../../components/FieldsEditor'
+import { put } from '../../services/db'
+import { nanoid } from 'nanoid'
 
 const NewField: NextPage = () => {
-  const { contract, currentUser, nearConfig, wallet, setCurrentUser } = useContext(NearContext)
+  const { contract } = useContext(NearContext)
   const [name, setName] = useState('')
   const [fields, setFields] = useState<Field[]>([])
   const [contentTypes, setContentTypes] = useState<ContentType[]>([])
@@ -52,15 +54,21 @@ const NewField: NextPage = () => {
     if (!contract) {
       return
     }
-
+    
+    const slug = nanoid()
     const content: Content = {
       name,
       fields,
-      slug: '', // TODO: slugify name
+      slug,
       type: selectedContentType as ContentType,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     }
+
+    // TODO: Save fields first, then save either soul or error on Content fields, value
+    content.fields.forEach(f => {
+      const soul = put(`fields/${content.slug}/${f.name}`, f)
+    })
 
     contract.setContent({ content }).then(() => {
       Router.push('/content')

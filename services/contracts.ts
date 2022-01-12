@@ -27,3 +27,30 @@ export const getServerSideContract = async () => {
 
   return contract
 }
+
+export const initContract = async () => {
+  const nearConfig = getConfig('testnet')
+  const keyStore = new nearAPI.keyStores.BrowserLocalStorageKeyStore()
+  const near = await nearAPI.connect({ keyStore, ...nearConfig })
+  const walletConnection = new nearAPI.WalletConnection(near, '')
+  let currentUser
+
+  if (walletConnection.getAccountId()) {
+    currentUser = {
+      accountId: walletConnection.getAccountId(),
+      balance: (await walletConnection.account().state()).amount,
+    } as User
+  }
+
+  const contract = await new nearAPI.Contract(
+    walletConnection.account(),
+    nearConfig.contractName,
+    {
+      viewMethods: ['getContentType', 'getContentTypes', 'getContents', 'getContent', 'getUserRole'],
+      changeMethods: ['setContentType', 'deleteContentType', 'setContent', 'deleteContent', 'setUserRole', 'deleteUserRole'],
+      sender: walletConnection.getAccountId(),
+    }
+  )
+
+  return { contract, currentUser, nearConfig, walletConnection }
+}
