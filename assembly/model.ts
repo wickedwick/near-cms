@@ -17,24 +17,24 @@ export enum Fieldtype {
 
 export class FieldTypeOption {
   label: string
-  value: Fieldtype
+  value: string
 }
 
 export const fieldTypeOptions: FieldTypeOption[] = [
-  { label: 'String', value: Fieldtype.String },
-  { label: 'Int', value: Fieldtype.Int },
-  { label: 'Float', value: Fieldtype.Float },
-  { label: 'Boolean', value: Fieldtype.Boolean },
-  { label: 'Date', value: Fieldtype.Date },
-  { label: 'DateTime', value: Fieldtype.DateTime },
-  { label: 'Time', value: Fieldtype.Time },
-  { label: 'Password', value: Fieldtype.Password },
-  { label: 'Email', value: Fieldtype.Email },
-  { label: 'URL', value: Fieldtype.URL },
-  { label: 'Phone', value: Fieldtype.Phone },
-  { label: 'Postal Code', value: Fieldtype.PostalCode },
-  { label: 'IP', value: Fieldtype.IP },
-  { label: 'Custom', value: Fieldtype.Custom }
+  { label: 'String', value: 'String' },
+  { label: 'Int', value: 'Int' },
+  { label: 'Float', value: 'Float' },
+  { label: 'Boolean', value: 'Boolean' },
+  { label: 'Date', value: 'Date' },
+  { label: 'DateTime', value: 'DateTime' },
+  { label: 'Time', value: 'Time' },
+  { label: 'Password', value: 'Password' },
+  { label: 'Email', value: 'Email' },
+  { label: 'URL', value: 'URL' },
+  { label: 'Phone', value: 'Phone' },
+  { label: 'Postal Code', value: 'PostalCode' },
+  { label: 'IP', value: 'IP' },
+  { label: 'Custom', value: 'Custom' }
 ]
 
 export enum Role {

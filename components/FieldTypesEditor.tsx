@@ -3,7 +3,7 @@ import { Fieldtype, fieldTypeOptions } from "../assembly/model"
 import { FieldTypesEditorProps } from "../types/components"
 
 const FieldTypesEditor = ({ fields, setFields }: FieldTypesEditorProps) => {
-  const [fieldType, setFieldType] = useState(Fieldtype.String)
+  const [fieldType, setFieldType] = useState('String')
   const [fieldName, setFieldName] = useState('')
   
   const handleFieldNameChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
@@ -11,7 +11,7 @@ const FieldTypesEditor = ({ fields, setFields }: FieldTypesEditorProps) => {
   }
 
   const handleFieldTypeChange = (event: React.ChangeEvent<HTMLSelectElement>): void => {
-    setFieldType(event.target.value as Fieldtype)
+    setFieldType(event.target.value)
   }
 
   const handleAddField = (): void => {
@@ -20,10 +20,10 @@ const FieldTypesEditor = ({ fields, setFields }: FieldTypesEditorProps) => {
       fieldType,
       value: ''
     }
-    
+
     setFields([...fields, newField])
     setFieldName('')
-    setFieldType(Fieldtype.String)
+    setFieldType('String')
   }
 
   return (

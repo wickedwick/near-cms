@@ -27,7 +27,6 @@ const Contents: NextPage = () => {
     if (!contract) {
       return
     }
-
     contract.getContents().then((ct: Content[]) => {
       setContent(ct)
     })
@@ -38,7 +37,7 @@ const Contents: NextPage = () => {
       return
     }
 
-    contract.deleteContent({ name: ct.name }).then(() => {
+    contract.deleteContent({ content: ct }).then(() => {
       init()
     })
   }

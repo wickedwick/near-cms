@@ -8,7 +8,7 @@ import Link from 'next/link'
 import FieldTypesEditor from '../../components/FieldTypesEditor'
 
 const NewContentType: NextPage = () => {
-  const { contract, currentUser, nearConfig, wallet, setCurrentUser } = useContext(NearContext)
+  const { contract } = useContext(NearContext)
   const [contentTypeName, setContentTypeName] = useState('')
   const [fields, setFields] = useState<Field[]>([])
 

@@ -6,7 +6,7 @@ import { Content, ContentType, Field } from '../../assembly/main'
 import Router from 'next/router'
 import Link from 'next/link'
 import FieldsEditor from '../../components/FieldsEditor'
-import { put } from '../../services/db'
+import { put, putSet } from '../../services/db'
 import { nanoid } from 'nanoid'
 
 const NewField: NextPage = () => {
@@ -65,9 +65,8 @@ const NewField: NextPage = () => {
       updatedAt: new Date().toISOString(),
     }
 
-    // TODO: Save fields first, then save either soul or error on Content fields, value
-    content.fields.forEach(f => {
-      const soul = put(`fields/${content.slug}/${f.name}`, f)
+    fields.forEach(f => {
+      put(`fields/${content.slug}/${f.name}`, f)
     })
 
     contract.setContent({ content }).then(() => {

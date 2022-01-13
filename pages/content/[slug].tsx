@@ -7,7 +7,7 @@ import { useContext, useState, useEffect } from "react"
 import { Field, Content } from "../../assembly/main"
 import FieldsEditor from "../../components/FieldsEditor"
 import { NearContext } from "../../context/NearContext"
-import { put } from "../../services/db"
+import { get, getSet, put } from "../../services/db"
 
 const EditContent: NextPage = () => {
   const { contract } = useContext(NearContext)
@@ -38,19 +38,26 @@ const EditContent: NextPage = () => {
 
     contract.getContent({ slug }).then((ct: Content) => {
       setName(ct.name)
-      setFields(ct.fields)
+      const savedFields = ct.fields.map(f => {
+        return get(`fields/${ct.slug}/${f.name}/fields/${ct.slug}/${f.name}`)
+      })
+
+      ct.fields = savedFields
+
+      setFields(savedFields)
       setCurrentContent(ct)
     })
   }
 
+  // TODO: Get update working right.
   const handleSubmit = (): void => {
     if (!contract) {
       return
     }
     
     const content: Content = { ...currentContent as Content, name, fields, updatedAt: new Date().toISOString() }
-    content.fields.forEach(f => {
-      const soul = put(`fields/${content.slug}/${f.name}`, f)
+    fields.forEach(f => {
+      put(`fields/${content.slug}/${f.name}`, f)
     })
 
     contract.setContent({ content }).then(() => {

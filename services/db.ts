@@ -2,15 +2,13 @@ import Gun from 'gun'
 import 'gun/sea'
 import 'gun/axe'
 
-export const db = Gun('contentStore')
+export const db = Gun('https://tranquil-thicket-13876.herokuapp.com/gun')
 
 export const user = db.user().recall({sessionStorage: true})
 
 export const get = (key: string) => {
-  console.log('get', key)
   let ret: any = {}
   db.get(key).on(data => {
-    console.log('get', data)
     ret = data
   })
 
@@ -22,11 +20,36 @@ export const post = (key: string, value: any) => {
 }
 
 export const put = (key: string, value: any) => {
-  return db.get(key).put({ [key]: value }, (soul) => {
-    soul = soul
+  let ret: any = {}
+  
+  db.get(key).put({ [key]: value }, (soul) => {
+    ret = soul
   })
+
+  return ret
 }
 
 export const del = (key: string) => {
   return db.get(key).put(null)
+}
+
+export const getSet = (setName: string) => {
+  let ret: any[] = []
+  db.get(setName).map().once(data => {
+    ret.push(data)
+  })
+
+  return ret
+}
+
+export const putSet = (setName: string, key: string, value: any) => {
+  let ret: any = {}
+  
+  const field = db.get(key).put({ [key]: value }, (soul) => {
+    ret = soul
+  })
+  
+  db.get(setName).set(field)
+
+  return ret
 }
