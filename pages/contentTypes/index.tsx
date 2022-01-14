@@ -1,13 +1,12 @@
+import { useContext, useEffect, useState } from 'react'
 import type { NextPage } from 'next'
 import Head from 'next/head'
-import { useContext, useEffect, useState } from 'react'
-import { NearContext } from '../../context/NearContext'
-//import styles from '../styles/Home.module.css'
-import { ContentType } from '../../assembly/main'
 import Link from 'next/link'
+import { ContentType } from '../../assembly/main'
+import { NearContext } from '../../context/NearContext'
 
 const ContentTypes: NextPage = () => {
-  const { contract, currentUser, nearConfig, wallet, setCurrentUser } = useContext(NearContext)
+  const { contract } = useContext(NearContext)
   const [contentTypes, setContentTypes] = useState<ContentType[]>([])
 
   useEffect(() => {
@@ -23,7 +22,7 @@ const ContentTypes: NextPage = () => {
     init()
   }, [])
   
-  const init = () => {
+  const init = (): void => {
     if (!contract) {
       return
     }

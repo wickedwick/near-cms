@@ -59,7 +59,7 @@ export const roleOptions: RoleOption[] = [
 ]
 
 export class ContentData {
-  name: string
   content: Content
+  name: string
   values: Field[]
 }

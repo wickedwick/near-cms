@@ -7,4 +7,3 @@ export const NearContext = React.createContext({
   nearConfig: null,
   wallet: null,
 } as AppParams)
-

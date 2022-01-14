@@ -1,12 +1,13 @@
 import * as nearAPI from 'near-api-js';
+import { UserRole } from '../assembly/main';
 import { NetworkConfiguration } from './configuration';
 
 export type AppParams = {
   contract: nearAPI.Contract | null
-  currentUser: User | undefined
+  currentUser: UserRole | undefined
   nearConfig: NetworkConfiguration | null
   wallet: nearAPI.WalletConnection | null,
-  setCurrentUser: (user: User | undefined) => void
+  setCurrentUser: (user: UserRole | undefined) => void
 }
 
 export type DbContextParams = {

@@ -10,7 +10,7 @@ type Data = {
 
 export default async (
   req: NextApiRequest,
-  res: NextApiResponse<Data>
+  res: NextApiResponse<Data | { error: string }>
 ) => {
   const { slug } = req.query
   const contract = await getServerSideContract()
@@ -27,8 +27,8 @@ export default async (
   })
 
   const contentData: ContentData = {
-    name: content.name,
     content,
+    name: content.name,
     values: savedFields
   }
   res.status(200).json(contentData)

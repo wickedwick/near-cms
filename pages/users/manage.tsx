@@ -1,16 +1,17 @@
+import { useContext, useEffect, useState } from 'react'
 import type { NextPage } from 'next'
 import Head from 'next/head'
-import { useContext, useEffect, useState } from 'react'
-import { NearContext } from '../../context/NearContext'
-import { Role, roleOptions } from '../../assembly/model'
-import { UserRole } from '../../assembly/main'
 import Router from 'next/router'
+import { UserRole } from '../../assembly/main'
+import { Role, roleOptions } from '../../assembly/model'
+import { NearContext } from '../../context/NearContext'
 
 const ManageUsers: NextPage = () => {
   const { contract } = useContext(NearContext)
   const [accountId, setAccountId] = useState('')
-  const [role, setRole] = useState(Role.Public)
+  const [role, setRole] = useState<number>(Role.Public)
   const [users, setUsers] = useState<UserRole[]>([])
+  const [validationSummary, setValidationSummary] = useState<string>([])
 
   useEffect(() => {
     if (!contract) {
@@ -24,7 +25,7 @@ const ManageUsers: NextPage = () => {
     init()
   }, [])
 
-  const init = () => {
+  const init = (): void => {
     if (!contract) {
       return
     }
@@ -34,17 +35,19 @@ const ManageUsers: NextPage = () => {
     })
   }
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (): Promise<void> => {
+    setValidationSummary('')
+
     if (!contract) {
+      setValidationSummary('Contract is not available')
       return
     }
 
-    // const user = await contract.getUser({ username: accountId })
-    // if (user) {
-    //   // need to set a message here to let the user know that the account already exists
-    //   return
-    // }
-    console.log('role', role)
+    const user = await contract.getUser({ username: accountId })
+    if (user) {
+      setValidationSummary('User already exists')
+      return
+    }
 
     await contract.setUser({ user: { accountId, balance: '0' }, role })
     Router.push('/users')
@@ -61,6 +64,7 @@ const ManageUsers: NextPage = () => {
       <main>
         <h1>Manage Users</h1>
         <a href="/">Back to dashboard</a>
+        {validationSummary && <p>{validationSummary}</p>}
         <table>
           <thead>
             <tr>
@@ -73,7 +77,7 @@ const ManageUsers: NextPage = () => {
             {users.map(user => (
               <tr key={user.username}>
                 <td>{user.username}</td>
-                <td>{roleOptions[user.role].value}</td>
+                <td>{roleOptions[user.role].label}</td>
                 <td>
                   <button>Edit</button>
                 </td>
@@ -83,7 +87,7 @@ const ManageUsers: NextPage = () => {
         </table>
         <label htmlFor="accountId">Account ID</label>
         <input className="block px-3 py-2 mb-3 w-full" type="text" value={accountId} onChange={(e) => setAccountId(e.target.value)} />
-        <select className="block px-3 py-2 mb-3 w-full" value={role} onChange={(e) => setRole(e.target.value)}>
+        <select className="block px-3 py-2 mb-3 w-full" value={role} onChange={(e) => setRole(parseInt(e.target.value, 10))}>
           {roleOptions.map((key) => {
             return (
               <option value={key.value} key={key.value}>{key.label}</option>

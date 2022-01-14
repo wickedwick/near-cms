@@ -1,12 +1,12 @@
+import { useContext } from 'react'
 import type { NextPage } from 'next'
 import Head from 'next/head'
 import Image from 'next/image'
-import { useContext } from 'react'
+import Link from 'next/link'
+import Router from 'next/router'
+import { roleOptions } from '../assembly/model'
 import { NearContext } from '../context/NearContext'
 import styles from '../styles/Home.module.css'
-import Router from 'next/router'
-import { Role, roleOptions } from '../assembly/model'
-import Link from 'next/link'
 
 const Home: NextPage = () => {
   const { contract, currentUser, nearConfig, wallet, setCurrentUser } = useContext(NearContext)

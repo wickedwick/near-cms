@@ -16,7 +16,7 @@ export const getServerSideContract = async () => {
 
   const near = await nearAPI.connect(config)
   const account = await near.account('wickham.testnet')
-  const contract = await new nearAPI.Contract(
+  const contract = new nearAPI.Contract(
     account,
     nearConfig.contractName,
     {
@@ -43,7 +43,7 @@ export const initContract = async () => {
     } as User
   }
 
-  const contract = await new nearAPI.Contract(
+  const contract = new nearAPI.Contract(
     walletConnection.account(),
     nearConfig.contractName,
     {

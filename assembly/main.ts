@@ -68,21 +68,21 @@ export const contents = new PersistentUnorderedMap<string, Content>("r6g9FALgD8K
 
 @nearBindgen
 class ContentType {
-  name: string
   fields: Field[]
+  name: string
 }
 
 @nearBindgen
 class Field {
-  name: string
   fieldType: string
+  name: string
   value: string
 }
 
 @nearBindgen
 class Content {
-  slug: string
   name: string
+  slug: string
   type: ContentType
   createdAt: string
   updatedAt: string
@@ -90,8 +90,8 @@ class Content {
 
 @nearBindgen
 class UserRole {
-  username: string
   role: Role
+  username: string
 }
 
 @nearBindgen

@@ -1,6 +1,6 @@
 import Gun from 'gun'
-import 'gun/sea'
 import 'gun/axe'
+import 'gun/sea'
 
 export const db = Gun('https://tranquil-thicket-13876.herokuapp.com/gun')
 

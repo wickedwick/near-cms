@@ -1,13 +1,12 @@
-import { nanoid } from "nanoid"
+import { useContext, useState, useEffect } from "react"
 import { NextPage } from "next"
 import Head from "next/head"
 import Link from "next/link"
 import Router, { useRouter } from "next/router"
-import { useContext, useState, useEffect } from "react"
 import { Field, Content, ContentType } from "../../assembly/main"
 import FieldsEditor from "../../components/FieldsEditor"
 import { NearContext } from "../../context/NearContext"
-import { get, getSet, put } from "../../services/db"
+import { get, put } from "../../services/db"
 
 const EditContent: NextPage = () => {
   const { contract } = useContext(NearContext)
@@ -31,7 +30,7 @@ const EditContent: NextPage = () => {
     init()
   }, [])
   
-  const init = async () => {
+  const init = async (): Promise<void> => {
     if (!contract) {
       return
     }

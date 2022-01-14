@@ -1,10 +1,10 @@
-import { NextPage } from "next";
 import { useContext, useEffect, useState } from "react";
-import { NearContext } from "../../context/NearContext";
-import { Content } from '../../assembly/main'
+import { NextPage } from "next";
 import Head from "next/head";
 import Link from "next/link";
 import Router from "next/router";
+import { Content } from '../../assembly/main'
+import { NearContext } from "../../context/NearContext";
 
 const Contents: NextPage = () => {
   const { contract } = useContext(NearContext)
@@ -23,10 +23,11 @@ const Contents: NextPage = () => {
     init()
   }, [])
   
-  const init = () => {
+  const init = (): void => {
     if (!contract) {
       return
     }
+
     contract.getContents().then((ct: Content[]) => {
       setContent(ct)
     })

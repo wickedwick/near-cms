@@ -1,11 +1,11 @@
+import { useContext, useState } from 'react'
 import type { NextPage } from 'next'
 import Head from 'next/head'
-import { useContext, useState } from 'react'
-import { NearContext } from '../../context/NearContext'
 import Router from 'next/router'
-import { ContentType, Field } from '../../assembly/main'
 import Link from 'next/link'
+import { ContentType, Field } from '../../assembly/main'
 import FieldTypesEditor from '../../components/FieldTypesEditor'
+import { NearContext } from '../../context/NearContext'
 
 const NewContentType: NextPage = () => {
   const { contract } = useContext(NearContext)
