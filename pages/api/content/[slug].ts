@@ -1,5 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next"
-import { Content, Field } from "../../../assembly/main"
+import { Content, ContentType, Field } from "../../../assembly/main"
+import { ContentData } from "../../../assembly/model"
 import { getServerSideContract } from "../../../services/contracts"
 import { get } from "../../../services/db"
 
@@ -14,12 +15,21 @@ export default async (
   const { slug } = req.query
   const contract = await getServerSideContract()
   const content: Content = await contract.getContent({ slug })
-  const savedFields: Field[] = content.fields.map(f => {
+  const contentType: ContentType = await contract.getContentType({ name: content.type.name })
+  
+  if (!contentType) {
+    res.status(404).json({ error: "Content type not found" })
+    return
+  }
+
+  const savedFields: Field[] = contentType.fields.map(f => {
     return get(`fields/${content.slug}/${f.name}/fields/${content.slug}/${f.name}`)
   })
 
-  console.log('savedFields', savedFields)
-
-  content.fields = savedFields
-  res.status(200).json(content)
+  const contentData: ContentData = {
+    name: content.name,
+    content,
+    values: savedFields
+  }
+  res.status(200).json(contentData)
 }

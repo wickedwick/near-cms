@@ -1,4 +1,5 @@
 import * as nearAPI from 'near-api-js'
+import { User } from '../assembly/main'
 import getConfig from '../config'
 
 export const getServerSideContract = async () => {
@@ -19,8 +20,8 @@ export const getServerSideContract = async () => {
     account,
     nearConfig.contractName,
     {
-      viewMethods: ['getContentType', 'getContentTypes', 'getContents', 'getContent', 'getUserRole'],
-      changeMethods: ['setContentType', 'deleteContentType', 'setContent', 'deleteContent', 'setUserRole', 'deleteUserRole'],
+      viewMethods: ['getContentType', 'getContentTypes', 'getContents', 'getContent', 'getUserRole', 'getUser', 'getUsers'],
+      changeMethods: ['setContentType', 'deleteContentType', 'setContent', 'deleteContent', 'setUserRole', 'deleteUserRole', 'setUser'],
       sender: account.accountId,
     }
   )
@@ -46,8 +47,8 @@ export const initContract = async () => {
     walletConnection.account(),
     nearConfig.contractName,
     {
-      viewMethods: ['getContentType', 'getContentTypes', 'getContents', 'getContent', 'getUserRole'],
-      changeMethods: ['setContentType', 'deleteContentType', 'setContent', 'deleteContent', 'setUserRole', 'deleteUserRole'],
+      viewMethods: ['getContentType', 'getContentTypes', 'getContents', 'getContent', 'getUserRole', 'getUser', 'getUsers'],
+      changeMethods: ['setContentType', 'deleteContentType', 'setContent', 'deleteContent', 'setUserRole', 'deleteUserRole', 'setUser'],
       sender: walletConnection.getAccountId(),
     }
   )

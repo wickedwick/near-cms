@@ -1,3 +1,5 @@
+import { Content, Field } from "./main"
+
 export enum Fieldtype {
   String,
   Int,
@@ -15,12 +17,12 @@ export enum Fieldtype {
   Custom,
 }
 
-export class FieldTypeOption {
+export class Option {
   label: string
   value: string
 }
 
-export const fieldTypeOptions: FieldTypeOption[] = [
+export const fieldTypeOptions: Option[] = [
   { label: 'String', value: 'String' },
   { label: 'Int', value: 'Int' },
   { label: 'Float', value: 'Float' },
@@ -42,4 +44,22 @@ export enum Role {
   Editor,
   Viewer,
   Public,
+}
+
+export class RoleOption {
+  label: string
+  value: Role
+}
+
+export const roleOptions: RoleOption[] = [
+  { label: 'Admin', value: Role.Admin },
+  { label: 'Editor', value: Role.Editor },
+  { label: 'Viewer', value: Role.Viewer },
+  { label: 'Public', value: Role.Public }
+]
+
+export class ContentData {
+  name: string
+  content: Content
+  values: Field[]
 }

@@ -6,7 +6,7 @@ import { Content, ContentType, Field } from '../../assembly/main'
 import Router from 'next/router'
 import Link from 'next/link'
 import FieldsEditor from '../../components/FieldsEditor'
-import { put, putSet } from '../../services/db'
+import { put } from '../../services/db'
 import { nanoid } from 'nanoid'
 
 const NewField: NextPage = () => {
@@ -54,11 +54,16 @@ const NewField: NextPage = () => {
     if (!contract) {
       return
     }
-    
+
+    if (selectedContentType) {
+      selectedContentType.fields = selectedContentType.fields.map(f => {
+        return { ...f, value: '' }
+      })
+    }
+
     const slug = nanoid()
     const content: Content = {
       name,
-      fields,
       slug,
       type: selectedContentType as ContentType,
       createdAt: new Date().toISOString(),

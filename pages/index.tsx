@@ -5,6 +5,8 @@ import { useContext } from 'react'
 import { NearContext } from '../context/NearContext'
 import styles from '../styles/Home.module.css'
 import Router from 'next/router'
+import { Role, roleOptions } from '../assembly/model'
+import Link from 'next/link'
 
 const Home: NextPage = () => {
   const { contract, currentUser, nearConfig, wallet, setCurrentUser } = useContext(NearContext)
@@ -51,10 +53,16 @@ const Home: NextPage = () => {
           ? <button onClick={signOut}>Log out</button>
           : <button onClick={signIn}>Log in</button>
         }
+
         {currentUser &&
-          <p>{currentUser.accountId}</p>
+          <p>{currentUser.username} {roleOptions[currentUser.role].value}</p>
         }
-        { !!currentUser && <p>Not logged in</p> }
+
+        <Link href="/users/manage">
+          <a>Manage Users</a>
+        </Link>
+
+        { !currentUser && <p>Not logged in</p> }
 
         <p className={styles.description}>
           Get started by editing{' '}

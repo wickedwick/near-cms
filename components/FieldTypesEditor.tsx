@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { Fieldtype, fieldTypeOptions } from "../assembly/model"
+import { fieldTypeOptions } from "../assembly/model"
 import { FieldTypesEditorProps } from "../types/components"
 
 const FieldTypesEditor = ({ fields, setFields }: FieldTypesEditorProps) => {

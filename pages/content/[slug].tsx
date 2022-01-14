@@ -4,7 +4,7 @@ import Head from "next/head"
 import Link from "next/link"
 import Router, { useRouter } from "next/router"
 import { useContext, useState, useEffect } from "react"
-import { Field, Content } from "../../assembly/main"
+import { Field, Content, ContentType } from "../../assembly/main"
 import FieldsEditor from "../../components/FieldsEditor"
 import { NearContext } from "../../context/NearContext"
 import { get, getSet, put } from "../../services/db"
@@ -31,22 +31,21 @@ const EditContent: NextPage = () => {
     init()
   }, [])
   
-  const init = () => {
+  const init = async () => {
     if (!contract) {
       return
     }
 
-    contract.getContent({ slug }).then((ct: Content) => {
-      setName(ct.name)
-      const savedFields = ct.fields.map(f => {
-        return get(`fields/${ct.slug}/${f.name}/fields/${ct.slug}/${f.name}`)
-      })
-
-      ct.fields = savedFields
-
-      setFields(savedFields)
-      setCurrentContent(ct)
+    const ct: Content = await contract.getContent({ slug })
+    setName(ct.name)
+    
+    const contentType: ContentType = await contract.getContentType({ name: ct.type.name })
+    const savedFields: Field[] = contentType.fields.map(f => {
+      return get(`fields/${ct.slug}/${f.name}/fields/${ct.slug}/${f.name}`)
     })
+
+    setFields(savedFields)
+    setCurrentContent(ct)
   }
 
   // TODO: Get update working right.
@@ -55,7 +54,7 @@ const EditContent: NextPage = () => {
       return
     }
     
-    const content: Content = { ...currentContent as Content, name, fields, updatedAt: new Date().toISOString() }
+    const content: Content = { ...currentContent as Content, name, updatedAt: new Date().toISOString() }
     fields.forEach(f => {
       put(`fields/${content.slug}/${f.name}`, f)
     })

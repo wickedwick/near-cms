@@ -9,11 +9,6 @@ export type AppParams = {
   setCurrentUser: (user: User | undefined) => void
 }
 
-export type User = {
-  accountId: string
-  balance: string
-}
-
 export type DbContextParams = {
   db: any | null
   user: any | null
