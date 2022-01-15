@@ -3,7 +3,6 @@ import { NetworkConfiguration } from "../types/configuration";
 const CONTRACT_NAME = process.env.CONTRACT_NAME || 'dev-1641709731586-99971157649148'//'wickham.testnet';
 
 function getConfig(env: string): NetworkConfiguration {
-  console.log('CONTRACT_NAME', CONTRACT_NAME)
   switch(env) {
     case 'production':
     case 'mainnet':

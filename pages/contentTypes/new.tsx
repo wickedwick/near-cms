@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import type { NextPage } from 'next'
 import Head from 'next/head'
 import Router from 'next/router'
@@ -6,11 +6,31 @@ import Link from 'next/link'
 import { ContentType, Field } from '../../assembly/main'
 import FieldTypesEditor from '../../components/FieldTypesEditor'
 import { NearContext } from '../../context/NearContext'
+import { Role } from '../../assembly/model'
 
 const NewContentType: NextPage = () => {
-  const { contract } = useContext(NearContext)
+  const { contract, currentUser } = useContext(NearContext)
   const [contentTypeName, setContentTypeName] = useState('')
   const [fields, setFields] = useState<Field[]>([])
+
+  useEffect(() => {
+    if (!contract) {
+      setTimeout(() => {
+        init
+      }
+      , 5000)
+
+      return
+    }
+
+    init()
+  }, [])
+  
+  const init = (): void => {
+    if (!currentUser || currentUser.role !== Role.Admin) {
+      Router.push('/')
+    }
+  }
 
   const handleContentTypeNameChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
     setContentTypeName(event.target.value)

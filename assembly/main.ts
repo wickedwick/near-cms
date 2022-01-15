@@ -50,7 +50,7 @@ export function setUser(user: User, role: Role): void {
     username: user.accountId,
     role
   }
-
+  
   userRegistry.set(userRole.username || '', userRole)
 }
 

@@ -4,9 +4,11 @@ import Head from 'next/head'
 import Link from 'next/link'
 import { ContentType } from '../../assembly/main'
 import { NearContext } from '../../context/NearContext'
+import Router from 'next/router'
+import { Role } from '../../assembly/model'
 
 const ContentTypes: NextPage = () => {
-  const { contract } = useContext(NearContext)
+  const { contract, currentUser } = useContext(NearContext)
   const [contentTypes, setContentTypes] = useState<ContentType[]>([])
 
   useEffect(() => {
@@ -25,6 +27,10 @@ const ContentTypes: NextPage = () => {
   const init = (): void => {
     if (!contract) {
       return
+    }
+
+    if (!currentUser || currentUser.role !== Role.Admin) {
+      Router.push('/')
     }
 
     contract.getContentTypes().then((ct: ContentType[]) => {

@@ -5,9 +5,10 @@ import Link from "next/link";
 import Router from "next/router";
 import { Content } from '../../assembly/main'
 import { NearContext } from "../../context/NearContext";
+import { Role } from "../../assembly/model";
 
 const Contents: NextPage = () => {
-  const { contract } = useContext(NearContext)
+  const { contract, currentUser } = useContext(NearContext)
   const [content, setContent] = useState<Content[]>([])
   
   useEffect(() => {
@@ -26,6 +27,10 @@ const Contents: NextPage = () => {
   const init = (): void => {
     if (!contract) {
       return
+    }
+
+    if (!currentUser || currentUser.role > Role.Editor) {
+      Router.push('/')
     }
 
     contract.getContents().then((ct: Content[]) => {

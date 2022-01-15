@@ -8,9 +8,10 @@ import { Content, ContentType, Field } from '../../assembly/main'
 import FieldsEditor from '../../components/FieldsEditor'
 import { NearContext } from '../../context/NearContext'
 import { put } from '../../services/db'
+import { Role } from '../../assembly/model'
 
 const NewField: NextPage = () => {
-  const { contract } = useContext(NearContext)
+  const { contract, currentUser } = useContext(NearContext)
   const [name, setName] = useState('')
   const [fields, setFields] = useState<Field[]>([])
   const [contentTypes, setContentTypes] = useState<ContentType[]>([])
@@ -32,6 +33,10 @@ const NewField: NextPage = () => {
   const init = (): void => {
     if (!contract) {
       return
+    }
+
+    if (!currentUser || currentUser.role > Role.Editor) {
+      Router.push('/')
     }
 
     contract.getContentTypes().then((ct: ContentType[]) => {

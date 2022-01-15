@@ -13,7 +13,6 @@ const Home: NextPage = () => {
 
   const signIn = () => {
     if (!wallet || !nearConfig || !contract) {
-      console.error('No wallet')
       return
     }
 
@@ -27,7 +26,6 @@ const Home: NextPage = () => {
 
   const signOut = () => {
     if (!wallet) {
-      console.error('No wallet')
       return
     }
 

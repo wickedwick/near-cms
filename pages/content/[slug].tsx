@@ -7,9 +7,10 @@ import { Field, Content, ContentType } from "../../assembly/main"
 import FieldsEditor from "../../components/FieldsEditor"
 import { NearContext } from "../../context/NearContext"
 import { get, put } from "../../services/db"
+import { Role } from "../../assembly/model"
 
 const EditContent: NextPage = () => {
-  const { contract } = useContext(NearContext)
+  const { contract, currentUser } = useContext(NearContext)
   const [name, setName] = useState('')
   const [fields, setFields] = useState<Field[]>([])
   const [currentContent, setCurrentContent] = useState<Content | null>(null)
@@ -33,6 +34,10 @@ const EditContent: NextPage = () => {
   const init = async (): Promise<void> => {
     if (!contract) {
       return
+    }
+
+    if (!currentUser || currentUser.role > Role.Editor) {
+      Router.push('/')
     }
 
     const ct: Content = await contract.getContent({ slug })

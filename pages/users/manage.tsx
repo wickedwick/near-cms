@@ -7,11 +7,11 @@ import { Role, roleOptions } from '../../assembly/model'
 import { NearContext } from '../../context/NearContext'
 
 const ManageUsers: NextPage = () => {
-  const { contract } = useContext(NearContext)
+  const { contract, currentUser } = useContext(NearContext)
   const [accountId, setAccountId] = useState('')
   const [role, setRole] = useState<number>(Role.Public)
   const [users, setUsers] = useState<UserRole[]>([])
-  const [validationSummary, setValidationSummary] = useState<string>([])
+  const [validationSummary, setValidationSummary] = useState<string>('')
 
   useEffect(() => {
     if (!contract) {
@@ -30,10 +30,23 @@ const ManageUsers: NextPage = () => {
       return
     }
 
+    if (!currentUser || currentUser.role !== Role.Admin) {
+      Router.push('/')
+    }
+
     contract.getUsers().then((userRoles: UserRole[]) => {
       setUsers(userRoles)
     })
   }
+
+  const editUserRole = (userRole: UserRole): void => {
+    if (!contract) {
+      return
+    }
+
+    Router.push('/users/manage/[id]', `/users/manage/${userRole.username}`)
+  }
+
 
   const handleSubmit = async (): Promise<void> => {
     setValidationSummary('')
@@ -79,7 +92,7 @@ const ManageUsers: NextPage = () => {
                 <td>{user.username}</td>
                 <td>{roleOptions[user.role].label}</td>
                 <td>
-                  <button>Edit</button>
+                  <button onClick={() => editUserRole(user)}>Edit</button>
                 </td>
               </tr>
             ))}
