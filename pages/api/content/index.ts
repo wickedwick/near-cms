@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { getServerSideContract } from '../../services/contracts'
+import { getServerSideContract } from '../../../services/contracts'
 
 type Data = {
   name: string

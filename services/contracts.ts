@@ -20,8 +20,8 @@ export const getServerSideContract = async () => {
     account,
     nearConfig.contractName,
     {
-      viewMethods: ['getContentType', 'getContentTypes', 'getContents', 'getContent', 'getUserRole', 'getUser', 'getUsers'],
-      changeMethods: ['setContentType', 'deleteContentType', 'setContent', 'deleteContent', 'setUserRole', 'deleteUserRole', 'setUser'],
+      viewMethods: ['getContentType', 'getContentTypes', 'getContents', 'getContent', 'getUserRole', 'getUser', 'getUsers', 'getClients', 'getClient'],
+      changeMethods: ['setContentType', 'deleteContentType', 'setContent', 'deleteContent', 'setUserRole', 'deleteUserRole', 'setUser', 'setClient', 'deleteClient'],
       sender: account.accountId,
     }
   )
@@ -47,8 +47,8 @@ export const initContract = async () => {
     walletConnection.account(),
     nearConfig.contractName,
     {
-      viewMethods: ['getContentType', 'getContentTypes', 'getContents', 'getContent', 'getUserRole', 'getUser', 'getUsers'],
-      changeMethods: ['setContentType', 'deleteContentType', 'setContent', 'deleteContent', 'setUserRole', 'deleteUserRole', 'setUser'],
+      viewMethods: ['getContentType', 'getContentTypes', 'getContents', 'getContent', 'getUserRole', 'getUser', 'getUsers', 'getClients', 'getClient'],
+      changeMethods: ['setContentType', 'deleteContentType', 'setContent', 'deleteContent', 'setUserRole', 'deleteUserRole', 'setUser', 'setClient', 'deleteClient'],
       sender: walletConnection.getAccountId(),
     }
   )

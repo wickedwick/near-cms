@@ -45,6 +45,22 @@ export function deleteContent(content: Content): void {
   contents.delete(content.slug || '')
 }
 
+export function getClient(slug: string): Client {
+  return clientRegistry.get(slug) as Client
+}
+
+export function setClient(client: Client): void {
+  clientRegistry.set(client.slug || '', client)
+}
+
+export function deleteClient(slug: string): void {
+  clientRegistry.delete(slug)
+}
+
+export function getClients(): Client[] {
+  return clientRegistry.values() as Client[]
+}
+
 export function setUser(user: User, role: Role): void {
   const userRole: UserRole = {
     username: user.accountId,
@@ -62,6 +78,7 @@ export function getUsers(): UserRole[] {
   return userRegistry.values() as UserRole[]
 }
 
+export const clientRegistry = new PersistentUnorderedMap<string, Client>('clientRegistry')
 export const userRegistry = new PersistentUnorderedMap<string, UserRole>('ku2DjgA6tMcswJ3Y')
 export const contentTypes = new PersistentUnorderedMap<string, ContentType>("pfB4RNkXKt66x5Wd")
 export const contents = new PersistentUnorderedMap<string, Content>("r6g9FALgD8KNf3QE")
@@ -100,5 +117,11 @@ class User {
   balance: string
 }
 
+@nearBindgen
+class Client {
+  slug: string
+  name: string
+  owner: string
+}
 
-export { ContentType, Field, Content, User, UserRole }
+export { ContentType, Field, Content, User, UserRole, Client }

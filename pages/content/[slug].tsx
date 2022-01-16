@@ -8,8 +8,10 @@ import FieldsEditor from "../../components/FieldsEditor"
 import { NearContext } from "../../context/NearContext"
 import { get, put } from "../../services/db"
 import { Role } from "../../assembly/model"
+import { DbContext } from "../../context/DbContext"
 
 const EditContent: NextPage = () => {
+  const { db } = useContext(DbContext)
   const { contract, currentUser } = useContext(NearContext)
   const [name, setName] = useState('')
   const [fields, setFields] = useState<Field[]>([])
@@ -44,8 +46,12 @@ const EditContent: NextPage = () => {
     setName(ct.name)
     
     const contentType: ContentType = await contract.getContentType({ name: ct.type.name })
-    const savedFields: Field[] = contentType.fields.map(f => {
-      return get(`fields/${ct.slug}/${f.name}/fields/${ct.slug}/${f.name}`)
+    const savedFields: Field[] = []
+    
+    contentType.fields.forEach(f => {
+      db.get('content').get(`${ct.slug}`).get('fields').get(`${f.name}`).on(data => {
+        savedFields.push(data)
+      })
     })
 
     setFields(savedFields)
@@ -60,7 +66,7 @@ const EditContent: NextPage = () => {
     
     const content: Content = { ...currentContent as Content, name, updatedAt: new Date().toISOString() }
     fields.forEach(f => {
-      put(`fields/${content.slug}/${f.name}`, f)
+      db.get('content').get(`${slug}`).get('fields').get(`${f.name}`).put(f)
     })
 
     contract.setContent({ content }).then(() => {

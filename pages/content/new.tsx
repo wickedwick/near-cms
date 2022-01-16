@@ -7,10 +7,11 @@ import Router from 'next/router'
 import { Content, ContentType, Field } from '../../assembly/main'
 import FieldsEditor from '../../components/FieldsEditor'
 import { NearContext } from '../../context/NearContext'
-import { put } from '../../services/db'
 import { Role } from '../../assembly/model'
+import { DbContext } from '../../context/DbContext'
 
 const NewField: NextPage = () => {
+  const { db } = useContext(DbContext)
   const { contract, currentUser } = useContext(NearContext)
   const [name, setName] = useState('')
   const [fields, setFields] = useState<Field[]>([])
@@ -76,7 +77,7 @@ const NewField: NextPage = () => {
     }
 
     fields.forEach(f => {
-      put(`fields/${content.slug}/${f.name}`, f)
+      db.get('content').get(`${slug}`).get('fields').get(`${f.name}`).put(f)
     })
 
     contract.setContent({ content }).then(() => {

@@ -2,7 +2,7 @@ import { NextApiRequest, NextApiResponse } from "next"
 import { Content, ContentType, Field } from "../../../assembly/main"
 import { ContentData } from "../../../assembly/model"
 import { getServerSideContract } from "../../../services/contracts"
-import { get } from "../../../services/db"
+import { db } from "../../../services/db"
 
 type Data = {
   name: string
@@ -22,8 +22,11 @@ export default async (
     return
   }
 
-  const savedFields: Field[] = contentType.fields.map(f => {
-    return get(`fields/${content.slug}/${f.name}/fields/${content.slug}/${f.name}`)
+  const savedFields: Field[] = []
+  contentType.fields.forEach(f => {
+    return db.get('content').get(`${slug}`).get('fields').get(`${f.name}`).on(data => {
+      savedFields.push(data)
+    })
   })
 
   const contentData: ContentData = {

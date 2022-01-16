@@ -11,7 +11,6 @@ export const get = (key: string) => {
   db.get(key).on(data => {
     ret = data
   })
-
   return ret
 }
 

@@ -60,6 +60,10 @@ const Home: NextPage = () => {
           <a>Manage Users</a>
         </Link>
 
+        <Link href="/clients/manage">
+          <a>Manage Clients</a>
+        </Link>
+
         { !currentUser && <p>Not logged in</p> }
 
         <p className={styles.description}>

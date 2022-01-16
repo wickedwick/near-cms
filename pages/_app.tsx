@@ -6,7 +6,7 @@ import { UserRole } from '../assembly/main'
 import { DbContext } from '../context/DbContext'
 import { NearContext } from '../context/NearContext'
 import { initContract } from '../services/contracts'
-import { user } from '../services/db'
+import { db, user } from '../services/db'
 import { AppParams } from '../types/app'
 import { NetworkConfiguration } from '../types/configuration'
 import '../styles/globals.css'
@@ -19,7 +19,6 @@ function MyApp({ Component, pageProps }: AppProps) {
   const [currentUser, setCurrentUser] = React.useState<UserRole | undefined>(undefined)
   const [nearConfig, setNearConfig] = React.useState<NetworkConfiguration | null>(null)
   const [walletConnection, setWalletConnection] = React.useState<nearAPI.WalletConnection | null>(null)
-  let db: any
   
   useEffect(() => {
     initContract().then(({ contract, currentUser, nearConfig, walletConnection }) => {
