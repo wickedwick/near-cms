@@ -11,7 +11,7 @@
     "nodemo": "nodemon --watch assembly -e ts --exec && yarn dev:start",
     "dev:start": "env-cmd -f ./neardev/dev-account.env next dev",
     "test:start": "env-cmd -f ./neardev/dev-account.env next start",
-    "start": "yarn build:contract:debug && near dev-deploy && yarn dev:start",
+    "start": "NEAR_ENV=testnet yarn build:contract:debug && near dev-deploy && yarn dev:start",
     "lint": "next lint"
   },
   "dependencies": {
