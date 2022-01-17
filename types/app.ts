@@ -14,3 +14,8 @@ export type DbContextParams = {
   db: any | null
   user: any | null
 }
+
+export type LayoutProps = {
+  children: React.ReactNode
+  home: boolean
+}

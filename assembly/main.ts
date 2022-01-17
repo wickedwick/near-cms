@@ -29,6 +29,20 @@ export function deleteUserRole(name: string): void {
   userRegistry.delete(name)
 }
 
+export function getPublicContents(): Content[] {
+  const allContents: Content[] = contents.values()
+  return allContents.filter(content => content.isPublic)
+}
+
+export function getPublicContent(slug: string): Content | null {
+  const subject = getContent(slug)
+  if (subject && subject.isPublic) {
+    return subject
+  }
+
+  return null
+}
+
 export function getContents(): Content[] {
   return contents.values() as Content[]
 }
@@ -101,6 +115,7 @@ class Content {
   name: string
   slug: string
   type: ContentType
+  isPublic: boolean
   createdAt: string
   updatedAt: string
 }

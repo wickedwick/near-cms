@@ -4,9 +4,9 @@ import { SignJWT } from 'jose'
 import { getServerSideContract } from '../../services/contracts'
 import { db } from '../../services/db'
 import { TextEncoder } from 'util'
+import { Client, UserRole } from '../../assembly/main'
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
-  // get username, apiKey from request
   const username = req.headers['client_id'] as string
   const apiKey = req.headers['client_secret'] as string
 
@@ -15,14 +15,14 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     return
   }
 
-  // get user from contract and gun db
   const contract = await getServerSideContract()
   let isUser = true
-  let user = await contract.getUser({ username })
+  let user: UserRole | Client = await contract.getUser({ username })
 
   if (!user) {
     isUser = false
     user = await contract.getClient({ slug: username })
+    console.log('user', username)
   }
 
   let storedKey = ''
@@ -41,14 +41,12 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     return
   }
 
-  // check if apiKey matches
+  console.log('storedKey', storedKey)
   if (storedKey !== apiKey) {
     res.status(401).json({ error: 'Invalid API key' })
     return
   }
 
-  // return token
-  //const token = createToken(username)
   const payload: JwtPayload = {
     identifier: username
   }

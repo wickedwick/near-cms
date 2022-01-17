@@ -1,8 +1,8 @@
 import { NextApiRequest, NextApiResponse } from "next"
-import { Content, ContentType, Field } from "../../../assembly/main"
-import { ContentData } from "../../../assembly/model"
-import { getServerSideContract } from "../../../services/contracts"
-import { db } from "../../../services/db"
+import { Content, ContentType, Field } from "../../../../assembly/main"
+import { ContentData } from "../../../../assembly/model"
+import { getServerSideContract } from "../../../../services/contracts"
+import { db } from "../../../../services/db"
 
 type Data = {
   name: string
@@ -14,7 +14,7 @@ export default async (
 ) => {
   const { slug } = req.query
   const contract = await getServerSideContract()
-  const content: Content = await contract.getContent({ slug })
+  const content: Content = await contract.getPublicContent({ slug })
   const contentType: ContentType = await contract.getContentType({ name: content.type.name })
   
   if (!contentType) {

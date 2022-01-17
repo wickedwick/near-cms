@@ -1,5 +1,6 @@
 .container {
   padding: 0 2rem;
+  max-width: 100%;
 }
 
 .main {
@@ -16,7 +17,7 @@
   display: flex;
   flex: 1;
   padding: 2rem 0;
-  border-top: 1px solid #eaeaea;
+  border-top: 1px solid #EFF1F3;
   justify-content: center;
   align-items: center;
 }
@@ -29,7 +30,7 @@
 }
 
 .title a {
-  color: #0070f3;
+  color: #009FB7;
   text-decoration: none;
 }
 
@@ -39,25 +40,8 @@
   text-decoration: underline;
 }
 
-.title {
-  margin: 0;
-  line-height: 1.15;
-  font-size: 4rem;
-}
-
-.title,
-.description {
-  text-align: center;
-}
-
-.description {
-  margin: 4rem 0;
-  line-height: 1.5;
-  font-size: 1.5rem;
-}
-
 .code {
-  background: #fafafa;
+  background: #EFF1F3;
   border-radius: 5px;
   padding: 0.75rem;
   font-size: 1.1rem;
@@ -79,7 +63,7 @@
   text-align: left;
   color: inherit;
   text-decoration: none;
-  border: 1px solid #eaeaea;
+  border: 1px solid #EFF1F3;
   border-radius: 10px;
   transition: color 0.15s ease, border-color 0.15s ease;
   max-width: 300px;
@@ -88,8 +72,8 @@
 .card:hover,
 .card:focus,
 .card:active {
-  color: #0070f3;
-  border-color: #0070f3;
+  color: #009FB7;
+  border-color: #009FB7;
 }
 
 .card h2 {
