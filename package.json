@@ -6,11 +6,12 @@
     "build:contract": "asb",
     "build:contract:debug": "asb --target debug",
     "build:web": "next build",
-    "deploy": "yarn build && near deploy",
+    "deploy": "yarn build:contract:debug && near dev-deploy",
     "dev": "yarn build:contract:debug && near dev-deploy && yarn dev:start",
     "nodemo": "nodemon --watch assembly -e ts --exec && yarn dev:start",
     "dev:start": "env-cmd -f ./neardev/dev-account.env next dev",
-    "start": "yarn deploy && next start",
+    "test:start": "env-cmd -f ./neardev/dev-account.env next start",
+    "start": "yarn deploy && yarn test:start",
     "lint": "next lint"
   },
   "dependencies": {
