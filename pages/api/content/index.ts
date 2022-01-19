@@ -1,20 +1,23 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
+import { Content } from '../../../assembly/main'
 import { getServerSideContract } from '../../../services/contracts'
-
-type Data = {
-  name: string
-}
 
 export default async (
   req: NextApiRequest,
-  res: NextApiResponse<Data | { error: string }>
+  res: NextApiResponse<Content[] | { error: string }>
 ) => {
   const contract = await getServerSideContract()
-  const content = await contract.getContents()
+  let content: Content[] = await contract.getContents()
   
   if (!content) {
     res.status(404).json({ error: "Content type not found" })
     return
+  }
+
+  const { type } = req.query
+  
+  if (type) {
+    content = content.filter(c => c.type.name.toLowerCase() === type)
   }
 
   res.status(200).json(content)
