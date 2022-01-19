@@ -76,6 +76,7 @@ const NewField: NextPage = () => {
       type: selectedContentType as ContentType,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
+      isPublic,
     }
 
     fields.forEach(f => {

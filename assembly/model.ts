@@ -2,6 +2,7 @@ import { Content, Field } from "./main"
 
 export enum Fieldtype {
   String,
+  RichText,
   Int,
   Float,
   Boolean,
@@ -24,6 +25,7 @@ export class Option {
 
 export const fieldTypeOptions: Option[] = [
   { label: 'String', value: 'String' },
+  { label: 'RichText', value: 'RichText' },
   { label: 'Int', value: 'Int' },
   { label: 'Float', value: 'Float' },
   { label: 'Boolean', value: 'Boolean' },

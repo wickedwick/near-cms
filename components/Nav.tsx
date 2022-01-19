@@ -41,7 +41,7 @@ const Nav = (): JSX.Element => {
               <a className="px-3 py-2 m-3 x-4 shadow-sm text-gray-light focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue hover:text-blue text-xl">d CMS</a>
             </Link>
           </div>
-          <div className="flex-1 flex items-center justify-end sm:items-stretch sm:justify-start">
+          <div className="flex-1 flex items-center justify-end sm:items-stretch">
             {currentUser && currentUser.role <= Role.Editor && (
               <Link href="/content">
                 <a className="px-3 py-2 m-3 x-4 shadow-sm text-gray-light focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue hover:bg-blue">Content</a>

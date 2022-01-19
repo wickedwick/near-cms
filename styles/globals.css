@@ -51,6 +51,9 @@ td, th {
   color: #009FB7;
 }
 
+.ck.ck-editor__main>.ck-editor__editable {
+  color: #272727;
+}
 
 @tailwind base;
 @tailwind components;
