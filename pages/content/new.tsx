@@ -1,7 +1,6 @@
 import { useContext, useEffect, useState } from 'react'
 import { nanoid } from 'nanoid'
 import type { NextPage } from 'next'
-import Head from 'next/head'
 import Link from 'next/link'
 import Router from 'next/router'
 import { Content, ContentType, Field } from '../../assembly/main'
@@ -80,7 +79,7 @@ const NewField: NextPage = () => {
     }
 
     fields.forEach(f => {
-      db.get('content').get(`${slug}`).get('fields').get(`${f.name}`).put(f)
+      db.get('content').get(`${slug}`).get('fields').set(f)
     })
 
     contract.setContent({ content }).then(() => {

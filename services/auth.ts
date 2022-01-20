@@ -18,9 +18,7 @@ export async function verifyToken(req: NextRequest) {
 
   try {
     const { payload, protectedHeader } = await jwtVerify(token, new TextEncoder().encode(SECRET))
-    console.log('payload', payload)
-    console.log('protectedHeader', protectedHeader)
-
+    
     if (payload) return
     
     return 'Invalid token'

@@ -105,6 +105,7 @@ class ContentType {
 
 @nearBindgen
 class Field {
+  id: string
   fieldType: string
   name: string
   value: string

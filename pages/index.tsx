@@ -20,7 +20,7 @@ const Home: NextPage = () => {
         {title}
       </h2>
 
-      {!currentUser && <p className="description">Please log in to contiue</p>}
+      {!currentUser && <p className="description">Please log in to continue</p>}
 
       <div className={styles.grid}>
         {currentUser && currentUser.role <= Role.Editor && (

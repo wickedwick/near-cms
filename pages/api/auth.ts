@@ -22,7 +22,6 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   if (!user) {
     isUser = false
     user = await contract.getClient({ slug: username })
-    console.log('user', username)
   }
 
   let storedKey = ''
@@ -41,7 +40,6 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     return
   }
 
-  console.log('storedKey', storedKey)
   if (storedKey !== apiKey) {
     res.status(401).json({ error: 'Invalid API key' })
     return

@@ -19,7 +19,7 @@ function MyApp({ Component, pageProps }: AppProps) {
   const [currentUser, setCurrentUser] = React.useState<UserRole | undefined>(undefined)
   const [nearConfig, setNearConfig] = React.useState<NetworkConfiguration | null>(null)
   const [walletConnection, setWalletConnection] = React.useState<nearAPI.WalletConnection | null>(null)
-  
+
   useEffect(() => {
     initContract().then(({ contract, currentUser, nearConfig, walletConnection }) => {
       currentUser && contract.getUser({ username: currentUser.accountId }).then((user: UserRole) => {
@@ -36,7 +36,7 @@ function MyApp({ Component, pageProps }: AppProps) {
     currentUser,
     nearConfig,
     wallet: walletConnection,
-    setCurrentUser,
+    setCurrentUser
   }
 
   return (

@@ -2,10 +2,9 @@ import { useContext, useState, useEffect } from "react"
 import { NextPage } from "next"
 import Link from "next/link"
 import Router, { useRouter } from "next/router"
-import { Field, Content, ContentType } from "../../assembly/main"
+import { Field, Content } from "../../assembly/main"
 import FieldsEditor from "../../components/FieldsEditor"
 import { NearContext } from "../../context/NearContext"
-import { get, put } from "../../services/db"
 import { Role } from "../../assembly/model"
 import { DbContext } from "../../context/DbContext"
 import Layout from "../../components/Layout"
@@ -20,6 +19,8 @@ const EditContent: NextPage = () => {
   
   const router = useRouter()
   const { slug } = router.query
+  
+  const gunFields = db.get('content').get(`${slug}`).get('fields')
 
   useEffect(() => {
     if (!contract) {
@@ -47,14 +48,11 @@ const EditContent: NextPage = () => {
     setName(ct.name)
     setIsPublic(ct.isPublic)
     
-    console.log('content', ct)
-    const contentType: ContentType = await contract.getContentType({ name: ct.type.name })
     const savedFields: Field[] = []
     
-    contentType.fields.forEach(f => {
-      db.get('content').get(`${ct.slug}`).get('fields').get(`${f.name}`).on(data => {
-        savedFields.push(data)
-      })
+    gunFields.map().on((data, id) => {
+      const field: Field = {...data, id}
+      savedFields.push(field)
     })
 
     setFields(savedFields)
@@ -69,7 +67,8 @@ const EditContent: NextPage = () => {
     
     const content: Content = { ...currentContent as Content, name, isPublic, updatedAt: new Date().toISOString() }
     fields.forEach(f => {
-      db.get('content').get(`${slug}`).get('fields').get(`${f.name}`).put(f)
+      const {id, ...fieldWithoutId} = f
+      gunFields.get(f.id).put(fieldWithoutId)
     })
 
     contract.setContent({ content }).then(() => {
