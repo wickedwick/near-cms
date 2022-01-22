@@ -15,18 +15,12 @@ export default async (
   const { slug } = req.query
   const contract = await getServerSideContract()
   const content: Content = await contract.getPublicContent({ slug })
-  const contentType: ContentType = await contract.getContentType({ name: content.type.name })
-  
-  if (!contentType) {
-    res.status(404).json({ error: "Content type not found" })
-    return
-  }
-
+  const gunFields = db.get('content').get(`${slug}`).get('fields')
   const savedFields: Field[] = []
-  contentType.fields.forEach(f => {
-    return db.get('content').get(`${slug}`).get('fields').get(`${f.name}`).on(data => {
-      savedFields.push(data)
-    })
+  
+  await gunFields.map().on((data, id) => {
+    const field: Field = {...data, id}
+    savedFields.push(field)
   })
 
   const contentData: ContentData = {

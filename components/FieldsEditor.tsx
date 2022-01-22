@@ -1,11 +1,25 @@
-import { FieldTypesEditorProps } from "../types/components"
-import { CKEditor } from '@ckeditor/ckeditor5-react'
-import ClassicEditor from '@ckeditor/ckeditor5-build-classic'
+import { useEffect, useRef, useState } from "react";
+// import { CKEditor } from '@ckeditor/ckeditor5-react'
+// import ClassicEditor from '@ckeditor/ckeditor5-build-classic'
 import DatePicker from "react-datepicker";
+import { FieldTypesEditorProps } from "../types/components"
 
 import "react-datepicker/dist/react-datepicker.css";
 
 const FieldsEditor = ({ fields, setFields }: FieldTypesEditorProps) => {
+  const editorRef = useRef()
+  const [editorLoaded, setEditorLoaded] = useState(false)
+  const { CKEditor, ClassicEditor } = editorRef.current || { CKEditor: null, ClassicEditor: null }
+
+  useEffect(() => {
+    editorRef.current = {
+      CKEditor: require('@ckeditor/ckeditor5-react').CKEditor,
+      ClassicEditor: require('@ckeditor/ckeditor5-build-classic')
+    }
+    setEditorLoaded(true)
+  }, [])
+
+  console.log('FieldsEditor', fields)
   const handleFieldChange = (index: number, event: React.ChangeEvent<HTMLInputElement>): void => {
     const newFields = [...fields]
     newFields[index].value = event.target.value
@@ -14,7 +28,7 @@ const FieldsEditor = ({ fields, setFields }: FieldTypesEditorProps) => {
 
   return (
     <div>
-      {fields && fields.map((field, index) => {
+      {editorLoaded && fields && fields.map((field, index) => {
         return (
           <div key={index}>
             <label htmlFor={`${field.name}-value`}>{field.name}</label>

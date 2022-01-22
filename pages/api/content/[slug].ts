@@ -15,17 +15,9 @@ export default async (
   const { slug } = req.query
   const contract = await getServerSideContract()
   const content: Content = await contract.getContent({ slug })
-  const contentType: ContentType = await contract.getContentType({ name: content.type.name })
-  
   const gunFields = db.get('content').get(`${slug}`).get('fields')
-
-  if (!contentType) {
-    res.status(404).json({ error: "Content type not found" })
-    return
-  }
-
   const savedFields: Field[] = []
-
+  
   await gunFields.map().on((data, id) => {
     const field: Field = {...data, id}
     savedFields.push(field)

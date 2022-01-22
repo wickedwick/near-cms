@@ -1,6 +1,8 @@
 import * as nearAPI from 'near-api-js';
+import { Dispatch, SetStateAction } from 'react';
 import { UserRole } from '../assembly/main';
 import { NetworkConfiguration } from './configuration';
+import { IPFSHTTPClient } from 'ipfs-http-client'
 
 export type AppParams = {
   contract: nearAPI.Contract | null
@@ -18,4 +20,9 @@ export type DbContextParams = {
 export type LayoutProps = {
   children: React.ReactNode
   home: boolean
+}
+
+export type IpfsContextParams = {
+  ipfs: any | null
+  saveToIpfs: (ipfs: IPFSHTTPClient, file: File) => Promise<string>
 }

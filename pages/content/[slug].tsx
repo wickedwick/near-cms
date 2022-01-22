@@ -8,6 +8,7 @@ import { NearContext } from "../../context/NearContext"
 import { Role } from "../../assembly/model"
 import { DbContext } from "../../context/DbContext"
 import Layout from "../../components/Layout"
+import LoadButton from "../../components/LoadButton"
 
 const EditContent: NextPage = () => {
   const { db } = useContext(DbContext)
@@ -79,27 +80,28 @@ const EditContent: NextPage = () => {
   return (
     <Layout home={false}>
       <h1 className="title">Edit Your Content</h1>
-      <label htmlFor="name">Name</label>
-      <input className="block px-3 py-2 mb-3 w-full" type="text" value={name} onChange={(e) => setName(e.target.value)} />
-      
-      {fields && (
+      {contract && currentUser && !fields.length && <LoadButton initFunction={init} />}
+      {currentUser && contract && fields && (
         <>
+          <label htmlFor="name">Name</label>
+          <input className="block px-3 py-2 mb-3 w-full" type="text" value={name} onChange={(e) => setName(e.target.value)} />
+
           <label htmlFor="fields">Fields</label>
           <FieldsEditor fields={fields} setFields={setFields} />
+
+          <label className="block">
+            Public?&nbsp;
+            <input
+              name="isPublic"
+              type="checkbox"
+              checked={isPublic}
+              onChange={(e) => setIsPublic(!isPublic)}
+              />
+          </label>
+
+          <button className="px-3 py-2 my-3 mr-3 x-4 border border-blue shadow-sm text-gray-light bg-blue hover:bg-blue focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue" onClick={handleSubmit}>Update</button>
         </>
       )}
-
-      <label className="block">
-        Public?&nbsp;
-        <input
-          name="isPublic"
-          type="checkbox"
-          checked={isPublic}
-          onChange={(e) => setIsPublic(!isPublic)}
-        />
-      </label>
-
-      <button className="px-3 py-2 my-3 mr-3 x-4 border border-blue shadow-sm text-gray-light bg-blue hover:bg-blue focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue" onClick={handleSubmit}>Update</button>
       <Link href="/content">
         <a>Back</a>
       </Link>

@@ -43,9 +43,14 @@ const Nav = (): JSX.Element => {
           </div>
           <div className="flex-1 flex items-center justify-end sm:items-stretch">
             {currentUser && currentUser.role <= Role.Editor && (
-              <Link href="/content">
-                <a className="px-3 py-2 m-3 x-4 shadow-sm text-gray-light focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue hover:bg-blue">Content</a>
-              </Link>
+              <>
+                <Link href="/content">
+                  <a className="px-3 py-2 m-3 x-4 shadow-sm text-gray-light focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue hover:bg-blue">Content</a>
+                </Link>
+                <Link href="/media">
+                  <a className="px-3 py-2 m-3 x-4 shadow-sm text-gray-light focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue hover:bg-blue">Media</a>
+                </Link>
+              </>
             )}
             {currentUser && currentUser.role === Role.Admin && (
               <>

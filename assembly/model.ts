@@ -48,6 +48,12 @@ export enum Role {
   Public,
 }
 
+export enum MediaType {
+  Image,
+  Video,
+  File
+}
+
 export class RoleOption {
   label: string
   value: Role

@@ -1,5 +1,5 @@
 import { PersistentUnorderedMap } from "near-sdk-as"
-import { Role } from "./model"
+import { MediaType, Role } from "./model"
 
 export function getContentTypes(): ContentType[] {
   return contentTypes.values() as ContentType[]
@@ -92,10 +92,27 @@ export function getUsers(): UserRole[] {
   return userRegistry.values() as UserRole[]
 }
 
+export function getMedia(): Media[] {
+  return mediaCollection.values() as Media[]
+}
+
+export function getMediaBySlug(slug: string): Media | null {
+  return mediaCollection.get(slug) as Media
+}
+
+export function setMedia(media: Media): void {
+  mediaCollection.set(media.slug || '', media)
+}
+
+export function deleteMedia(media: Media): void {
+  mediaCollection.delete(media.slug || '')
+}
+
 export const clientRegistry = new PersistentUnorderedMap<string, Client>('clientRegistry')
 export const userRegistry = new PersistentUnorderedMap<string, UserRole>('ku2DjgA6tMcswJ3Y')
 export const contentTypes = new PersistentUnorderedMap<string, ContentType>("pfB4RNkXKt66x5Wd")
 export const contents = new PersistentUnorderedMap<string, Content>("r6g9FALgD8KNf3QE")
+export const mediaCollection = new PersistentUnorderedMap<string, Media>("mZXUuB86uwqkhAe7")
 
 @nearBindgen
 class ContentType {
@@ -122,6 +139,27 @@ class Content {
 }
 
 @nearBindgen
+class Media {
+  constructor(name: string, filename: string, mediaType: MediaType) {
+    this.name = name
+    this.url = ''
+    this.slug = ''
+    this.cid = ''
+    this.uploadedAt = ''
+    this.filename = filename
+    this.mediaType = mediaType
+  }
+
+  name: string
+  url: string
+  slug: string
+  cid: string
+  uploadedAt: string
+  mediaType: MediaType
+  filename: string
+}
+
+@nearBindgen
 class UserRole {
   role: Role
   username: string
@@ -140,4 +178,4 @@ class Client {
   owner: string
 }
 
-export { ContentType, Field, Content, User, UserRole, Client }
+export { ContentType, Field, Content, User, UserRole, Client, Media }

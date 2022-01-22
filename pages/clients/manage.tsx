@@ -1,12 +1,13 @@
-import { nanoid } from "nanoid"
-import { NextPage } from "next"
-import Router from "next/router"
-import { useContext, useEffect, useState } from "react"
+import { nanoid } from 'nanoid'
+import { NextPage } from 'next'
+import Router from 'next/router'
+import { useContext, useEffect, useState } from 'react'
 import { Client } from '../../assembly/main'
-import { Role } from "../../assembly/model"
-import Layout from "../../components/Layout"
-import { DbContext } from "../../context/DbContext"
-import { NearContext } from "../../context/NearContext"
+import { Role } from '../../assembly/model'
+import Layout from '../../components/Layout'
+import LoadButton from '../../components/LoadButton'
+import { DbContext } from '../../context/DbContext'
+import { NearContext } from '../../context/NearContext'
 
 const ManageClients: NextPage = () => {
   const { db } = useContext(DbContext)
@@ -101,28 +102,33 @@ const ManageClients: NextPage = () => {
         </div>
       )}
 
-      <table className="my-3">
-        <thead>
-          <tr>
-            <th>Actions</th>
-            <th>Name</th>
-            <th>Owner</th>
-          </tr>
-        </thead>
-        <tbody>
-          {clients.map(client => (
-            <tr key={client.slug}>
-              <td>
-                <button className="px-3 py-2 my-3 mr-3 x-4 border border-blue bg-blue shadow-sm text-gray-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue" onClick={() => editClient(client)}>Edit</button>
-                <button className="px-3 py-2 my-3 mr-3 x-4 border border-blue shadow-sm text-gray-light focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue" onClick={() => handleSetApiKey(client)}>Regenerate</button>
-                <button className="px-3 py-2 my-3 mr-3 x-4 border border-blue shadow-sm text-gray-light focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue" onClick={() => handleShowModal(client)}>Key</button>
-              </td>
-              <td>{client.name}</td>
-              <td>{client.owner}</td>
+      {contract && !clients.length && <LoadButton initFunction={init} />}
+      {contract && clients.length > 0 && (
+        <table className="my-3">
+          <thead>
+            <tr>
+              <th>Actions</th>
+              <th>Client ID</th>
+              <th>Name</th>
+              <th>Owner</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {clients.map(client => (
+              <tr key={client.slug}>
+                <td>
+                  <button className="px-3 py-2 my-3 mr-3 x-4 border border-blue bg-blue shadow-sm text-gray-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue" onClick={() => editClient(client)}>Edit</button>
+                  <button className="px-3 py-2 my-3 mr-3 x-4 border border-blue shadow-sm text-gray-light focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue" onClick={() => handleSetApiKey(client)}>Regenerate</button>
+                  <button className="px-3 py-2 my-3 mr-3 x-4 border border-blue shadow-sm text-gray-light focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue" onClick={() => handleShowModal(client)}>Key</button>
+                </td>
+                <td>{client.slug}</td>
+                <td>{client.name}</td>
+                <td>{client.owner}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
 
       <hr />
       <div className="my-3">

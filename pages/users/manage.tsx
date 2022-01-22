@@ -7,6 +7,7 @@ import { NearContext } from '../../context/NearContext'
 import { nanoid } from 'nanoid'
 import { DbContext } from '../../context/DbContext'
 import Layout from '../../components/Layout'
+import LoadButton from '../../components/LoadButton'
 
 const ManageUsers: NextPage = () => {
   const { db } = useContext(DbContext)
@@ -108,28 +109,31 @@ const ManageUsers: NextPage = () => {
         </div>
       )}
 
-      <table className="my-3">
-        <thead>
-          <tr>
-            <th>Actions</th>
-            <th>Account ID</th>
-            <th>Role</th>
-          </tr>
-        </thead>
-        <tbody>
-          {users.map(user => (
-            <tr key={user.username}>
-              <td>
-                <button className="px-3 py-2 my-3 mr-3 x-4 border border-blue bg-blue shadow-sm text-gray-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue" onClick={() => editUserRole(user)}>Edit</button>
-                <button className="px-3 py-2 my-3 mr-3 x-4 border border-blue shadow-sm text-gray-light focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue" onClick={() => handleSetApiKey(user)}>Regenerate</button>
-                <button className="px-3 py-2 my-3 x-4 border border-blue shadow-sm text-gray-light focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue" onClick={() => handleShowModal(user)}>Key</button>
-              </td>
-              <td>{user.username}</td>
-              <td>{roleOptions[user.role].label}</td>
+      {contract && !users.length && <LoadButton initFunction={init} />}
+      {contract && users.length > 0 && (
+        <table className="my-3">
+          <thead>
+            <tr>
+              <th>Actions</th>
+              <th>Account ID</th>
+              <th>Role</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {users.map(user => (
+              <tr key={user.username}>
+                <td>
+                  <button className="px-3 py-2 my-3 mr-3 x-4 border border-blue bg-blue shadow-sm text-gray-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue" onClick={() => editUserRole(user)}>Edit</button>
+                  <button className="px-3 py-2 my-3 mr-3 x-4 border border-blue shadow-sm text-gray-light focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue" onClick={() => handleSetApiKey(user)}>Regenerate</button>
+                  <button className="px-3 py-2 my-3 x-4 border border-blue shadow-sm text-gray-light focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue" onClick={() => handleShowModal(user)}>Key</button>
+                </td>
+                <td>{user.username}</td>
+                <td>{roleOptions[user.role].label}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
       <hr />
       <div className="my-3">
         <label htmlFor="accountId">Account ID</label>
