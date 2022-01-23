@@ -12,16 +12,29 @@ export default async (
   req: NextApiRequest,
   res: NextApiResponse<Data | { error: string }>
 ) => {
+  const fileTypes = ['image', 'video', 'file']
   const { slug } = req.query
   const contract = await getServerSideContract()
   const content: Content = await contract.getPublicContent({ slug })
   const gunFields = db.get('content').get(`${slug}`).get('fields')
   const savedFields: Field[] = []
   
-  await gunFields.map().on((data, id) => {
+  await gunFields.map().on(async (data, id) => {
     const field: Field = {...data, id}
+
+    if (fileTypes.includes(field.fieldType.toLowerCase())) {
+      const slug = field.value
+      const media = await contract.getMediaBySlug({ slug })
+      field.value = media
+    }
+
     savedFields.push(field)
   })
+
+  if (!content) {
+    res.status(404).json({ error: 'Content not found' })
+    return
+  }
 
   const contentData: ContentData = {
     content,

@@ -24,12 +24,21 @@ const Home: NextPage = () => {
 
       <div className={styles.grid}>
         {currentUser && currentUser.role <= Role.Editor && (
-          <Link href="/content">
-            <a className={styles.card}>
-              <h2>Content &rarr;</h2>
-              <p>Create, edit, and view your content.</p>
-            </a>
-          </Link>
+          <>
+            <Link href="/content">
+              <a className={styles.card}>
+                <h2>Content &rarr;</h2>
+                <p>Create, edit, and view your content.</p>
+              </a>
+            </Link>
+
+            <Link href="/media">
+              <a className={styles.card}>
+                <h2>Media &rarr;</h2>
+                <p>Upload and organize your files.</p>
+              </a>
+            </Link>
+          </>
         )}
 
         {currentUser && currentUser.role === Role.Admin && (

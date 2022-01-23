@@ -3,9 +3,10 @@ import { NextPage } from 'next'
 import Link from 'next/link'
 import Router from 'next/router'
 import { Media } from '../../assembly/main'
-import { Role } from '../../assembly/model'
+import { MediaType, Role } from '../../assembly/model'
 import Layout from '../../components/Layout'
 import LoadButton from '../../components/LoadButton'
+import MediaCards from '../../components/MediaCards'
 import { NearContext } from '../../context/NearContext'
 
 const MediaIndex: NextPage = () => {
@@ -49,15 +50,7 @@ const MediaIndex: NextPage = () => {
         </Link>
       </div>
       {contract && media.length > 0 &&(
-        <div className="grid grid-cols-4 gap-4">
-          {media.map((m: Media) => (
-            <div key={m.slug} className="flex flex-col">
-              <p>{m.name}</p>
-              <p>{m.mediaType}</p>
-              <p>{m.filename}</p>
-            </div>
-          ))}
-        </div>
+        <MediaCards media={media} />
       )}
     </Layout>
   )

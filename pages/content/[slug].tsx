@@ -24,15 +24,6 @@ const EditContent: NextPage = () => {
   const gunFields = db.get('content').get(`${slug}`).get('fields')
 
   useEffect(() => {
-    if (!contract) {
-      setTimeout(() => {
-        init
-      }
-      , 5000)
-
-      return
-    }
-
     init()
   }, [])
   

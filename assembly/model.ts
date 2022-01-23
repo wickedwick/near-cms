@@ -15,6 +15,9 @@ export enum Fieldtype {
   Phone,
   PostalCode,
   IP,
+  Image,
+  Video,
+  File,
   Custom,
 }
 
@@ -38,6 +41,9 @@ export const fieldTypeOptions: Option[] = [
   { label: 'Phone', value: 'Phone' },
   { label: 'Postal Code', value: 'PostalCode' },
   { label: 'IP', value: 'IP' },
+  { label: 'Image', value: 'Image' },
+  { label: 'Video', value: 'Video' },
+  { label: 'File', value: 'File' },
   { label: 'Custom', value: 'Custom' }
 ]
 
