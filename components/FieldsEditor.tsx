@@ -7,7 +7,7 @@ import { FieldTypesEditorProps } from '../types/components'
 import "react-datepicker/dist/react-datepicker.css"
 
 const FieldsEditor = ({ fields, setFields }: FieldTypesEditorProps) => {
-  const editorRef = useRef()
+  const editorRef = useRef<{ CKEditor: any; ClassicEditor: any; }>()
   const [editorLoaded, setEditorLoaded] = useState(false)
   const { CKEditor, ClassicEditor } = editorRef.current || { CKEditor: null, ClassicEditor: null }
   const [showMediaModal, setShowMediaModal] = useState(false)

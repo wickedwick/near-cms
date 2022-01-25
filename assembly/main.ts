@@ -1,4 +1,4 @@
-import { PersistentUnorderedMap } from "near-sdk-as"
+import { context, PersistentUnorderedMap } from "near-sdk-as"
 import { MediaType, Role } from "./model"
 
 export function getContentTypes(): ContentType[] {
@@ -10,10 +10,22 @@ export function getContentType(name: string): ContentType | null {
 }
 
 export function setContentType(contentType: ContentType): void {
+  const sender = context.sender
+  const userWithRole = userRegistry.get(sender)
+  if (!userWithRole || userWithRole.role !== Role.Admin) {
+    throw new Error("User is not registered")
+  }
+
   contentTypes.set(contentType.name || '', contentType)
 }
 
 export function deleteContentType(name: string): void {
+  const sender = context.sender
+  const userWithRole = userRegistry.get(sender)
+  if (!userWithRole || userWithRole.role !== Role.Admin) {
+    throw new Error("User is not registered")
+  }
+  
   contentTypes.delete(name)
 }
 
@@ -116,12 +128,24 @@ export const mediaCollection = new PersistentUnorderedMap<string, Media>("mZXUuB
 
 @nearBindgen
 class ContentType {
+  constructor() {
+    this.fields = []
+    this.name = ''
+  }
+
   fields: Field[]
   name: string
 }
 
 @nearBindgen
 class Field {
+  constructor() {
+    this.id = ''
+    this.name = ''
+    this.fieldType = ''
+    this.value = ''
+  }
+
   id: string
   fieldType: string
   name: string
@@ -130,6 +154,18 @@ class Field {
 
 @nearBindgen
 class Content {
+  constructor() {
+    this.name = ''
+    this.slug = ''
+    this.type = {
+      name: '',
+      fields: []
+    }
+    this.isPublic = false
+    this.createdAt = ''
+    this.updatedAt = ''
+  }
+
   name: string
   slug: string
   type: ContentType
@@ -161,18 +197,34 @@ class Media {
 
 @nearBindgen
 class UserRole {
+  constructor() {
+    this.username = ''
+    this.role = Role.Public
+  }
+
   role: Role
   username: string
 }
 
 @nearBindgen
 class User {
+  constructor() {
+    this.accountId = ''
+    this.balance = ''
+  }
+
   accountId: string
   balance: string
 }
 
 @nearBindgen
 class Client {
+  constructor() {
+    this.name = ''
+    this.slug = ''
+    this.owner = ''
+  }
+
   slug: string
   name: string
   owner: string

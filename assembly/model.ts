@@ -22,6 +22,11 @@ export enum Fieldtype {
 }
 
 export class Option {
+  constructor() {
+    this.label = ''
+    this.value = ''
+  }
+
   label: string
   value: string
 }
@@ -61,6 +66,11 @@ export enum MediaType {
 }
 
 export class RoleOption {
+  constructor() {
+    this.label = ''
+    this.value = Role.Public
+  }
+
   label: string
   value: Role
 }
@@ -73,6 +83,12 @@ export const roleOptions: RoleOption[] = [
 ]
 
 export class ContentData {
+  constructor() {
+    this.name = ''
+    this.content = new Content()
+    this.values = []
+  }
+  
   content: Content
   name: string
   values: Field[]
