@@ -128,24 +128,12 @@ export const mediaCollection = new PersistentUnorderedMap<string, Media>("mZXUuB
 
 @nearBindgen
 class ContentType {
-  constructor() {
-    this.fields = []
-    this.name = ''
-  }
-
   fields: Field[]
   name: string
 }
 
 @nearBindgen
 class Field {
-  constructor() {
-    this.id = ''
-    this.name = ''
-    this.fieldType = ''
-    this.value = ''
-  }
-
   id: string
   fieldType: string
   name: string
@@ -154,38 +142,17 @@ class Field {
 
 @nearBindgen
 class Content {
-  constructor() {
-    this.name = ''
-    this.slug = ''
-    this.type = {
-      name: '',
-      fields: []
-    }
-    this.isPublic = false
-    this.createdAt = ''
-    this.updatedAt = ''
-  }
-
   name: string
   slug: string
   type: ContentType
   isPublic: boolean
+  isEncrypted: boolean
   createdAt: string
   updatedAt: string
 }
 
 @nearBindgen
 class Media {
-  constructor(name: string, filename: string, mediaType: MediaType) {
-    this.name = name
-    this.url = ''
-    this.slug = ''
-    this.cid = ''
-    this.uploadedAt = ''
-    this.filename = filename
-    this.mediaType = mediaType
-  }
-
   name: string
   url: string
   slug: string
@@ -197,34 +164,18 @@ class Media {
 
 @nearBindgen
 class UserRole {
-  constructor() {
-    this.username = ''
-    this.role = Role.Public
-  }
-
   role: Role
   username: string
 }
 
 @nearBindgen
 class User {
-  constructor() {
-    this.accountId = ''
-    this.balance = ''
-  }
-
   accountId: string
   balance: string
 }
 
 @nearBindgen
 class Client {
-  constructor() {
-    this.name = ''
-    this.slug = ''
-    this.owner = ''
-  }
-
   slug: string
   name: string
   owner: string

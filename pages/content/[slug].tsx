@@ -9,6 +9,7 @@ import { Role } from "../../assembly/model"
 import { DbContext } from "../../context/DbContext"
 import Layout from "../../components/Layout"
 import LoadButton from "../../components/LoadButton"
+import { SEA } from "gun"
 
 const EditContent: NextPage = () => {
   const { db } = useContext(DbContext)
@@ -16,6 +17,7 @@ const EditContent: NextPage = () => {
   const [name, setName] = useState('')
   const [fields, setFields] = useState<Field[]>([])
   const [isPublic, setIsPublic] = useState(false)
+  const [isEncrypted, setIsEncrypted] = useState(false)
   const [currentContent, setCurrentContent] = useState<Content | null>(null)
   
   const router = useRouter()
@@ -39,11 +41,17 @@ const EditContent: NextPage = () => {
     const ct: Content = await contract.getContent({ slug })
     setName(ct.name)
     setIsPublic(ct.isPublic)
+    setIsEncrypted(ct.isEncrypted)
     
     const savedFields: Field[] = []
-    
-    gunFields.map().on((data, id) => {
-      const field: Field = {...data, id}
+
+    await gunFields.map().on(async (data, id) => {
+      let field: Field = {...data, id}
+      
+      if (ct.isEncrypted) {
+        field.value = await SEA.decrypt(field.value, 'xgzSmRn5XJcJJefH') as string
+      }
+
       savedFields.push(field)
     })
 
@@ -52,14 +60,19 @@ const EditContent: NextPage = () => {
   }
 
   // TODO: Get update working right.
-  const handleSubmit = (): void => {
+  const handleSubmit = async (): Promise<void> => {
     if (!contract) {
       return
     }
     
-    const content: Content = { ...currentContent as Content, name, isPublic, updatedAt: new Date().toISOString() }
-    fields.forEach(f => {
-      const {id, ...fieldWithoutId} = f
+    const content: Content = { ...currentContent as Content, name, isPublic, isEncrypted, updatedAt: new Date().toISOString() }
+    fields.forEach(async f => {
+      let {id, ...fieldWithoutId} = f
+
+      if (content.isEncrypted) {
+        fieldWithoutId.value = await SEA.encrypt(fieldWithoutId.value, 'xgzSmRn5XJcJJefH')
+      }
+      
       gunFields.get(f.id).put(fieldWithoutId)
     })
 
@@ -83,10 +96,22 @@ const EditContent: NextPage = () => {
           <label className="block">
             Public?&nbsp;
             <input
+              className='ml-2'
               name="isPublic"
               type="checkbox"
               checked={isPublic}
               onChange={(e) => setIsPublic(!isPublic)}
+              />
+          </label>
+
+          <label className="block">
+            Encrypt?&nbsp;
+            <input
+              className='ml-2'
+              name="isEncrypted"
+              type="checkbox"
+              checked={isEncrypted}
+              onChange={(e) => setIsEncrypted(!isEncrypted)}
               />
           </label>
 

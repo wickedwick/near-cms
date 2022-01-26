@@ -39,6 +39,7 @@ const Contents: NextPage = () => {
       return
     }
 
+    // TODO: delete in gun
     contract.deleteContent({ content: ct }).then(() => {
       init()
     })
@@ -71,6 +72,7 @@ const Contents: NextPage = () => {
                 <th>Name</th>
                 <th>Content Type</th>
                 <th>Public</th>
+                <th>Encrypted</th>
               </tr>
             </thead>
             <tbody>
@@ -84,6 +86,7 @@ const Contents: NextPage = () => {
                   <td>{ct.name}</td>
                   <td>{ct.type.name}</td>
                   <td>{ct.isPublic ? 'Yes' : 'No'}</td>
+                  <td>{ct.isEncrypted ? 'Yes' : 'No'}</td>
                 </tr>
               )
             })}

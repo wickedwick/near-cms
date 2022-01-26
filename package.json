@@ -12,7 +12,8 @@
     "dev:start": "env-cmd -f ./neardev/dev-account.env next dev",
     "test:start": "env-cmd -f ./neardev/dev-account.env next start",
     "start": "NEAR_ENV=testnet yarn build:contract:debug && near dev-deploy && yarn dev:start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "export": "next export"
   },
   "dependencies": {
     "@ckeditor/ckeditor5-build-classic": "^31.1.0",

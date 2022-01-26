@@ -9,6 +9,7 @@ import { NearContext } from '../../context/NearContext'
 import { Role } from '../../assembly/model'
 import { DbContext } from '../../context/DbContext'
 import Layout from '../../components/Layout'
+import { SEA } from 'gun'
 
 const NewField: NextPage = () => {
   const { db } = useContext(DbContext)
@@ -18,6 +19,7 @@ const NewField: NextPage = () => {
   const [contentTypes, setContentTypes] = useState<ContentType[]>([])
   const [selectedContentType, setSelectedContentType] = useState<ContentType>()
   const [isPublic, setIsPublic] = useState(false)
+  const [isEncrypted, setIsEncrypted] = useState(false)
 
   useEffect(() => {
     if (!contract) {
@@ -57,7 +59,7 @@ const NewField: NextPage = () => {
     setFields(contentType.fields)
   }
 
-  const handleSubmit = (): void => {
+  const handleSubmit = async(): void => {
     if (!contract) {
       return
     }
@@ -76,10 +78,16 @@ const NewField: NextPage = () => {
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
       isPublic,
+      isEncrypted,
     }
 
-    fields.forEach(f => {
-      db.get('content').get(`${slug}`).get('fields').set(f)
+    fields.forEach(async f => {
+      let newField = { ...f }
+      if (content.isEncrypted) {
+        newField.value = await SEA.encrypt(f.value, 'xgzSmRn5XJcJJefH')
+      }
+
+      db.get('content').get(`${slug}`).get('fields').set(newField)
     })
 
     contract.setContent({ content }).then(() => {
@@ -112,10 +120,22 @@ const NewField: NextPage = () => {
       <label className="block">
         Public?&nbsp;
         <input
+          className='ml-2'
           name="isPublic"
           type="checkbox"
           checked={isPublic}
           onChange={(e) => setIsPublic(!isPublic)}
+        />
+      </label>
+
+      <label className="block py-2">
+        Encrypt?&nbsp;
+        <input
+          className='ml-2'
+          name="isEncrypted"
+          type="checkbox"
+          checked={isEncrypted}
+          onChange={(e) => setIsEncrypted(!isEncrypted)}
         />
       </label>
 
