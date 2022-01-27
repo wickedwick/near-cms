@@ -28,9 +28,7 @@ export async function instantiateIpfs(setIpfs: Dispatch<SetStateAction<IPFSHTTPC
 }
 
 export async function instantiateIpfsServerSide(): Promise<IPFSHTTPClient | null> {
-  const multiaddr: string = '/ip4/127.0.0.1/tcp/5001'
-
-  const http = create(multiaddr)
+  const http = create()
   const isOnline = await http.isOnline()
 
   if (isOnline) {
