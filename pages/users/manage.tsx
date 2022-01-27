@@ -94,7 +94,7 @@ const ManageUsers: NextPage = () => {
 
   return (
     <Layout home={false}>
-      <h1 className="title">Manage Users</h1>
+      <h1 className="title mb-3">Manage Users</h1>
 
       {validationSummary && <p>{validationSummary}</p>}
       
@@ -111,21 +111,21 @@ const ManageUsers: NextPage = () => {
 
       {contract && !users.length && <LoadButton initFunction={init} />}
       {contract && users.length > 0 && (
-        <table className="my-3">
-          <thead>
+        <table className="table-auto min-w-full divide-y divide-gray">
+          <thead className="bg-gray">
             <tr>
-              <th>Actions</th>
-              <th>Account ID</th>
-              <th>Role</th>
+              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-light uppercase tracking-wider">Actions</th>
+              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-light uppercase tracking-wider">Account ID</th>
+              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-light uppercase tracking-wider">Role</th>
             </tr>
           </thead>
-          <tbody>
-            {users.map(user => (
-              <tr key={user.username}>
+          <tbody className="bg-gray-medium text-gray">
+            {users.map((user, index) => (
+              <tr key={user.username} className={index % 2 === 0 ? 'bg-gray-light' : ''}>
                 <td>
                   <button className="px-3 py-2 my-3 mr-3 x-4 border border-blue bg-blue shadow-sm text-gray-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue" onClick={() => editUserRole(user)}>Edit</button>
-                  <button className="px-3 py-2 my-3 mr-3 x-4 border border-blue shadow-sm text-gray-light focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue" onClick={() => handleSetApiKey(user)}>Regenerate</button>
-                  <button className="px-3 py-2 my-3 x-4 border border-blue shadow-sm text-gray-light focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue" onClick={() => handleShowModal(user)}>Key</button>
+                  <button className="px-3 py-2 my-3 mr-3 x-4 border border-blue shadow-sm text-gray-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue" onClick={() => handleSetApiKey(user)}>Regenerate</button>
+                  <button className="px-3 py-2 my-3 x-4 border border-yellow shadow-sm text-gray-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue" onClick={() => handleShowModal(user)}>Key</button>
                 </td>
                 <td>{user.username}</td>
                 <td>{roleOptions[user.role].label}</td>
@@ -135,7 +135,8 @@ const ManageUsers: NextPage = () => {
         </table>
       )}
       <hr />
-      <div className="my-3">
+      <div className="mb-3 mt-5">
+        <h3 className="text-xl">Add a new user</h3>
         <label htmlFor="accountId">Account ID</label>
         <input className="block px-3 py-2 mb-3 w-full" type="text" value={accountId} onChange={(e) => setAccountId(e.target.value)} />
         <select className="block px-3 py-2 mb-3 w-full" value={role} onChange={(e) => setRole(parseInt(e.target.value, 10))}>

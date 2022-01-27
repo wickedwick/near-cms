@@ -65,23 +65,23 @@ const Contents: NextPage = () => {
               <a className="px-3 py-2 my-3 x-4 border border-yellow bg-blue shadow-sm text-gray-light focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue">Create New</a>
             </Link>
           </div>
-          <table>
-            <thead>
+          <table className="table-auto min-w-full divide-y divide-gray">
+            <thead className="bg-gray">
               <tr>
-                <th>Actions</th>
-                <th>Name</th>
-                <th>Content Type</th>
-                <th>Public</th>
-                <th>Encrypted</th>
+                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-light uppercase tracking-wider">Actions</th>
+                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-light uppercase tracking-wider">Name</th>
+                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-light uppercase tracking-wider">Content Type</th>
+                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-light uppercase tracking-wider">Public</th>
+                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-light uppercase tracking-wider">Encrypted</th>
               </tr>
             </thead>
-            <tbody>
-            {contract && content && content.map((ct) => {
+            <tbody className="bg-gray-medium text-gray">
+            {contract && content && content.map((ct, index) => {
               return (
-                <tr key={`${ct.slug}-${ct.name}`}>
+                <tr key={`${ct.slug}-${ct.name}`} className={index % 2 === 0 ? 'bg-gray-light' : ''}>
                   <td>
-                    <button className="px-3 py-2 my-3 mr-3 x-4 border border-yellow bg-blue shadow-sm text-gray-light focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue" onClick={() => editContent(ct)}>Edit</button>
-                    <button className="px-3 py-2 my-3 x-4 border border-blue bg-yellow shadow-sm text-gray-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue" onClick={() => deleteContent(ct)}>Delete</button>
+                    <button className="px-3 py-2 my-3 mr-3 x-4 border border-blue bg-blue shadow-sm text-gray-light focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue" onClick={() => editContent(ct)}>Edit</button>
+                    <button className="px-3 py-2 my-3 x-4 border border-yellow shadow-sm text-gray-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue" onClick={() => deleteContent(ct)}>Delete</button>
                   </td>
                   <td>{ct.name}</td>
                   <td>{ct.type.name}</td>

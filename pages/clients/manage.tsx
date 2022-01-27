@@ -89,7 +89,7 @@ const ManageClients: NextPage = () => {
 
   return (
     <Layout home={false}>
-      <h1 className="title">Manage Clients</h1>
+      <h1 className="title mb-3">Manage Clients</h1>
 
       {modalOpen && (
         <div className="modal">
@@ -104,22 +104,22 @@ const ManageClients: NextPage = () => {
 
       {contract && !clients.length && <LoadButton initFunction={init} />}
       {contract && clients.length > 0 && (
-        <table className="my-3">
-          <thead>
+        <table className="table-auto min-w-full divide-y divide-gray">
+          <thead className="bg-gray">
             <tr>
-              <th>Actions</th>
-              <th>Client ID</th>
-              <th>Name</th>
-              <th>Owner</th>
+              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-light uppercase tracking-wider">Actions</th>
+              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-light uppercase tracking-wider">Client ID</th>
+              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-light uppercase tracking-wider">Name</th>
+              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-light uppercase tracking-wider">Owner</th>
             </tr>
           </thead>
-          <tbody>
-            {clients.map(client => (
-              <tr key={client.slug}>
+          <tbody className="bg-gray-medium text-gray">
+            {clients.map((client, index) => (
+              <tr key={client.slug} className={index % 2 === 0 ? 'bg-gray-light' : ''}>
                 <td>
                   <button className="px-3 py-2 my-3 mr-3 x-4 border border-blue bg-blue shadow-sm text-gray-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue" onClick={() => editClient(client)}>Edit</button>
-                  <button className="px-3 py-2 my-3 mr-3 x-4 border border-blue shadow-sm text-gray-light focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue" onClick={() => handleSetApiKey(client)}>Regenerate</button>
-                  <button className="px-3 py-2 my-3 mr-3 x-4 border border-blue shadow-sm text-gray-light focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue" onClick={() => handleShowModal(client)}>Key</button>
+                  <button className="px-3 py-2 my-3 mr-3 x-4 border border-blue shadow-sm text-gray-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue" onClick={() => handleSetApiKey(client)}>Regenerate</button>
+                  <button className="px-3 py-2 my-3 mr-3 x-4 border border-yellow shadow-sm text-gray-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue" onClick={() => handleShowModal(client)}>Key</button>
                 </td>
                 <td>{client.slug}</td>
                 <td>{client.name}</td>

@@ -10,22 +10,18 @@ export function getContentType(name: string): ContentType | null {
 }
 
 export function setContentType(contentType: ContentType): void {
-  const sender = context.sender
-  const userWithRole = userRegistry.get(sender)
-  if (!userWithRole || userWithRole.role !== Role.Admin) {
-    throw new Error("User is not registered")
+  if (!senderIsAdmin()) {
+    throw new Error("Unauthorized")
   }
 
   contentTypes.set(contentType.name || '', contentType)
 }
 
 export function deleteContentType(name: string): void {
-  const sender = context.sender
-  const userWithRole = userRegistry.get(sender)
-  if (!userWithRole || userWithRole.role !== Role.Admin) {
-    throw new Error("User is not registered")
+  if (!senderIsAdmin()) {
+    throw new Error("Unauthorized")
   }
-  
+
   contentTypes.delete(name)
 }
 
@@ -34,10 +30,18 @@ export function getUserRole(name: string): UserRole | null {
 }
 
 export function setUserRole(role: UserRole): void {
+  if (!senderIsAdmin()) {
+    throw new Error("Unauthorized")
+  }
+
   userRegistry.set(role.username, role)
 }
 
 export function deleteUserRole(name: string): void {
+  if (!senderIsAdmin()) {
+    throw new Error("Unauthorized")
+  }
+
   userRegistry.delete(name)
 }
 
@@ -64,10 +68,18 @@ export function getContent(slug: string): Content | null {
 }
 
 export function setContent(content: Content): void {
+  if (!senderIsEditor()) {
+    throw new Error("Unauthorized")
+  }
+
   contents.set(content.slug || '', content)
 }
 
 export function deleteContent(content: Content): void {
+  if (!senderIsEditor()) {
+    throw new Error("Unauthorized")
+  }
+
   contents.delete(content.slug || '')
 }
 
@@ -76,10 +88,18 @@ export function getClient(slug: string): Client {
 }
 
 export function setClient(client: Client): void {
+  if (!senderIsAdmin()) {
+    throw new Error("Unauthorized")
+  }
+
   clientRegistry.set(client.slug || '', client)
 }
 
 export function deleteClient(slug: string): void {
+  if (!senderIsAdmin()) {
+    throw new Error("Unauthorized")
+  }
+
   clientRegistry.delete(slug)
 }
 
@@ -88,6 +108,10 @@ export function getClients(): Client[] {
 }
 
 export function setUser(user: User, role: Role): void {
+  if (!senderIsAdmin()) {
+    throw new Error("Unauthorized")
+  }
+
   const userRole: UserRole = {
     username: user.accountId,
     role
@@ -113,11 +137,37 @@ export function getMediaBySlug(slug: string): Media | null {
 }
 
 export function setMedia(media: Media): void {
+  if (!senderIsEditor()) {
+    throw new Error("Unauthorized")
+  }
+
   mediaCollection.set(media.slug || '', media)
 }
 
 export function deleteMedia(media: Media): void {
+  if (!senderIsEditor()) {
+    throw new Error("Unauthorized")
+  }
+
   mediaCollection.delete(media.slug || '')
+}
+
+const senderIsAdmin = (): boolean => {
+  const sender: string = context.sender
+  const userWithRole: UserRole | null = userRegistry.get(sender)
+  
+  if (!userWithRole) return false
+
+  return userWithRole.role === Role.Admin
+}
+
+const senderIsEditor = (): boolean => {
+  const sender: string = context.sender
+  const userWithRole = userRegistry.get(sender)
+  
+  if (!userWithRole) return false
+
+  return userWithRole.role <= Role.Editor
 }
 
 export const clientRegistry = new PersistentUnorderedMap<string, Client>('clientRegistry')

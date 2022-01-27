@@ -48,7 +48,7 @@ const FieldsEditor = ({ fields, setFields }: FieldTypesEditorProps) => {
             )}
 
             {(field.fieldType.toLowerCase() === 'date' || field.fieldType.toLowerCase() === 'datetime') && (
-              <DatePicker selected={field.value ? new Date(field.value) : null} onChange={(date) => handleFieldChange(index, { target: { value: date.toISOString() } })} />
+              <DatePicker className="mb-3 px-3 py-2" selected={field.value ? new Date(field.value) : null} onChange={(date) => handleFieldChange(index, { target: { value: date.toISOString() } })} />
             )}
 
             {field.fieldType.toLowerCase() === 'image' && (

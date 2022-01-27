@@ -55,6 +55,10 @@ td, th {
   color: #272727;
 }
 
+.ck-editor__editable_inline {
+  min-height: 300px;
+}
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;

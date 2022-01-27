@@ -36,7 +36,7 @@ const FieldTypesEditor = ({ fields, setFields }: FieldTypesEditorProps) => {
           )
         })}
       </select>
-      <button className="block px-3 py-2 mb-3 w-full" onClick={handleAddField}>Add Field</button>
+      <button className="px-3 py-2 my-3 mr-3 x-4 border border-blue shadow-sm text-gray-light bg-blue hover:bg-blue focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue" onClick={handleAddField} disabled={!fieldName.length}>Add Field</button>
     </div>
   )
 }

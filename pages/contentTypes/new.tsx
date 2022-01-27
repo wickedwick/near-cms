@@ -14,15 +14,6 @@ const NewContentType: NextPage = () => {
   const [fields, setFields] = useState<Field[]>([])
 
   useEffect(() => {
-    if (!contract) {
-      setTimeout(() => {
-        init
-      }
-      , 5000)
-
-      return
-    }
-
     init()
   }, [])
   
@@ -60,23 +51,29 @@ const NewContentType: NextPage = () => {
   return (
     <Layout home={false}>
       <h1 className="title">Create a Content Type</h1>
-
+      <label htmlFor="name">Name</label>
       <input className="block px-3 py-2 mb-3 w-full" type="text" value={contentTypeName} onChange={(e) => handleContentTypeNameChange(e)} />
       <h2>Fields</h2>
-      <div className="flex flex-wrap">
+      <div className="">
+        <FieldTypesEditor fields={fields} setFields={setFields} />
         {fields.map((field, index) => {
           return (
-            <div key={`${field.name}-${index}`}>
-              <p>{index}. {field.name} {field.fieldType}
-                <button onClick={() => {handleDeleteField(index)}}>x</button>
+            <div key={`${field.name}-${index}`} className="block mb-3">
+              <p>{index + 1}. {field.name}: {field.fieldType} &nbsp;
+                <button className="bg-blue px-1" onClick={() => {handleDeleteField(index)}}>x</button>
               </p>
             </div>
           )
         })}
       </div>
-      <FieldTypesEditor fields={fields} setFields={setFields} />
 
-      <button className="px-3 py-2 my-3 mr-3 x-4 border border-blue shadow-sm text-gray-light bg-blue hover:bg-blue focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue" onClick={handleSubmit}>Submit</button>
+      <button
+        className="px-3 py-2 my-3 mr-3 x-4 border border-blue shadow-sm text-gray-light bg-blue hover:bg-blue focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue"
+        onClick={handleSubmit}
+        disabled={!contentTypeName.length || !fields.length}
+      >
+        Submit
+      </button>
       <Link href="/contentTypes">
         <a>Back</a>
       </Link>

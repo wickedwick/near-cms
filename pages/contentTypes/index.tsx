@@ -56,18 +56,18 @@ const ContentTypes: NextPage = () => {
               <a className="px-3 py-2 my-3 x-4 border border-yellow bg-blue shadow-sm text-gray-light focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue">Create New</a>
             </Link>
           </div>
-          <table>
-            <thead>
+          <table className="table-auto min-w-full divide-y divide-gray">
+            <thead className="bg-gray">
               <tr>
-                <th>Actions</th>
-                <th>Name</th>
+                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-light uppercase tracking-wider">Actions</th>
+                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-light uppercase tracking-wider">Name</th>
               </tr>
             </thead>
-            <tbody>
-            {contract && contentTypes && contentTypes.map((ct) => {
+            <tbody className="bg-gray-medium text-gray">
+            {contract && contentTypes && contentTypes.map((ct, index) => {
               return (
-                <tr key={ct.name}>
-                  <td><button className="px-3 py-2 my-3 x-4 border border-blue bg-yellow shadow-sm text-gray-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue" onClick={() => deleteContentType(ct)}>Delete</button></td>
+                <tr key={ct.name} className={index % 2 === 0 ? 'bg-gray-light' : ''}>
+                  <td><button className="px-3 py-2 my-3 x-4 border border-yellow shadow-sm text-gray-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue" onClick={() => deleteContentType(ct)}>Delete</button></td>
                   <td>{ct.name}</td>
                 </tr>
               )

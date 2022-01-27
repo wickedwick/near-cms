@@ -90,7 +90,6 @@ const EditContent: NextPage = () => {
           <label htmlFor="name">Name</label>
           <input className="block px-3 py-2 mb-3 w-full" type="text" value={name} onChange={(e) => setName(e.target.value)} />
 
-          <label htmlFor="fields">Fields</label>
           <FieldsEditor fields={fields} setFields={setFields} />
 
           <label className="block">

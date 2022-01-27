@@ -45,6 +45,8 @@ const NewField: NextPage = () => {
 
     contract.getContentTypes().then((ct: ContentType[]) => {
       setContentTypes(ct)
+      setSelectedContentType(ct[0])
+      setFields(ct[0].fields)
     })
   }
 
@@ -112,7 +114,6 @@ const NewField: NextPage = () => {
       
       {fields && (
         <>
-          <label htmlFor="fields">Fields</label>
           <FieldsEditor fields={fields} setFields={setFields} />
         </>
       )}
