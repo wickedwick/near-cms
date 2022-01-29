@@ -89,7 +89,7 @@ const EditContent: NextPage = () => {
       <h1 className="title">Edit Your Content</h1>
       {!contract && <div>Loading...</div>}
       {contract && !contractLoaded && !fields.length && <LoadButton initFunction={init} />}
-      {contract && contractLoaded && !fields.length && (
+      {contract && contractLoaded && fields.length && (
         <>
           <label htmlFor="name">Name</label>
           <input className="block px-3 py-2 mb-3 w-full" type="text" value={name} onChange={(e) => setName(e.target.value)} />
