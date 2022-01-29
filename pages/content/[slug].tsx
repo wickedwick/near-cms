@@ -46,7 +46,7 @@ const EditContent: NextPage = () => {
     setIsPublic(ct.isPublic)
     setIsEncrypted(ct.isEncrypted)
     
-    const savedFields: Field[] = []
+    let savedFields: Field[] = []
 
     await gunFields.map().on(async (data, id) => {
       let field: Field = {...data, id}
@@ -58,6 +58,10 @@ const EditContent: NextPage = () => {
       savedFields.push(field)
     })
 
+    savedFields = savedFields.filter((f, index) => {
+      return savedFields.indexOf(f) === index
+    })
+    
     setFields(savedFields)
     setCurrentContent(ct)
   }

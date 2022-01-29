@@ -1,6 +1,5 @@
 import { nanoid } from 'nanoid'
 import { NextPage } from 'next'
-import Link from 'next/link'
 import Router from 'next/router'
 import { useContext, useEffect, useState } from 'react'
 import { Client } from '../../assembly/main'
@@ -142,7 +141,7 @@ const ManageClients: NextPage = () => {
         <label htmlFor="owner">Owner Address</label>
         <input className="block px-3 py-2 mb-3 w-full" type="text" value={owner} onChange={(e) => setOwner(e.target.value)} />
 
-        <button className="px-3 py-2 my-3 mr-3 x-4 border border-blue shadow-sm text-gray-light bg-blue hover:bg-blue focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue" onClick={handleSubmit}>Add User</button>
+        <button className="px-3 py-2 my-3 mr-3 x-4 border border-blue shadow-sm text-gray-light bg-blue hover:bg-blue focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue" onClick={handleSubmit}>Add Client</button>
       </div>
     </Layout>
   )

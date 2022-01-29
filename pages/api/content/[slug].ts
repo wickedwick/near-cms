@@ -1,8 +1,5 @@
-import axios from "axios"
-import { IPFSHTTPClient } from "ipfs-http-client"
 import { NextApiRequest, NextApiResponse } from "next"
-import { useState } from "react"
-import { Content, ContentType, Field } from "../../../assembly/main"
+import { Content, Field } from "../../../assembly/main"
 import { ContentData } from "../../../assembly/model"
 import { getServerSideContract } from "../../../services/contracts"
 import { db } from "../../../services/db"
@@ -20,7 +17,7 @@ export default async (
   const contract = await getServerSideContract()
   const content: Content = await contract.getContent({ slug })
   const gunFields = db.get('content').get(`${slug}`).get('fields')
-  const savedFields: Field[] = []
+  let savedFields: Field[] = []
   
   await gunFields.map().on(async (data, id) => {
     const field: Field = {...data, id}
@@ -32,6 +29,10 @@ export default async (
     }
 
     savedFields.push(field)
+  })
+  
+  savedFields = savedFields.filter((f, index) => {
+    return savedFields.indexOf(f) === index
   })
 
   const contentData: ContentData = {

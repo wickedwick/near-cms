@@ -16,12 +16,14 @@
     "export": "next export"
   },
   "dependencies": {
+    "@apollo/client": "^3.5.8",
     "@ckeditor/ckeditor5-build-classic": "^31.1.0",
     "@ckeditor/ckeditor5-react": "^3.0.3",
     "axios": "^0.25.0",
     "big.js": "^6.1.1",
     "cors": "^2.8.5",
     "env-cmd": "^10.1.0",
+    "graphql": "^16.3.0",
     "gun": "^0.2020.1235",
     "ipfs-http-client": "^55.0.0",
     "jose": "^4.3.8",

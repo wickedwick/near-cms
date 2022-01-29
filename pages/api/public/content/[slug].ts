@@ -17,7 +17,7 @@ export default async (
   const contract = await getServerSideContract()
   const content: Content = await contract.getPublicContent({ slug })
   const gunFields = db.get('content').get(`${slug}`).get('fields')
-  const savedFields: Field[] = []
+  let savedFields: Field[] = []
   
   await gunFields.map().on(async (data, id) => {
     const field: Field = {...data, id}
@@ -29,6 +29,10 @@ export default async (
     }
 
     savedFields.push(field)
+  })
+
+  savedFields = savedFields.filter((f, index) => {
+    return savedFields.indexOf(f) === index
   })
 
   if (!content) {

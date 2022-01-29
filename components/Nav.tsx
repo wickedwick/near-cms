@@ -65,6 +65,10 @@ const Nav = (): JSX.Element => {
                 <Link href="/clients/manage">
                   <a className="px-3 py-2 m-3 x-4 shadow-sm text-gray-light focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue hover:bg-blue">Clients</a>
                 </Link>
+
+                <Link href="/analytics">
+                  <a className="px-3 py-2 m-3 x-4 shadow-sm text-gray-light focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue hover:bg-blue">History</a>
+                </Link>
               </>
             )}
             {currentUser

@@ -63,6 +63,13 @@ const Home: NextPage = () => {
                 <p>Add and edit access for client apps.</p>
               </a>
             </Link>
+
+            <Link href="/analytics">
+              <a className={styles.card}>
+                <h2>History &rarr;</h2>
+                <p>View transactions to Near</p>
+              </a>
+            </Link>
           </>
         )}
       </div>

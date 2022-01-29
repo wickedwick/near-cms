@@ -7,11 +7,13 @@ import { Role } from '../../assembly/model'
 import Layout from '../../components/Layout'
 import LoadButton from '../../components/LoadButton'
 import { NearContext } from '../../context/NearContext'
+import SchemaModal from '../../components/SchemaModal'
 
 const ContentTypes: NextPage = () => {
   const { contract, currentUser } = useContext(NearContext)
   const [contentTypes, setContentTypes] = useState<ContentType[]>([])
   const [contractLoaded, setContractedLoaded] = useState(false)
+  const [contentType, setContentType] = useState<ContentType | null>(null)
 
   useEffect(() => {
     init()
@@ -46,15 +48,17 @@ const ContentTypes: NextPage = () => {
     <Layout home={false}>
       <h1 className="title">Content Types</h1>
       {!contract && <div>Loading...</div>}
-      {contract && !contentTypes.length && <LoadButton initFunction={init} />}
+      {contract && !contractLoaded && <LoadButton initFunction={init} />}
       
       <div className="my-3">
         <Link href="/contentTypes/new">
           <a className="px-3 py-2 my-3 x-4 border border-yellow bg-blue shadow-sm text-gray-light focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue">Create New</a>
         </Link>
       </div>
-      
-      {contract && contentTypes.length > 0 && (
+
+      <SchemaModal contentType={contentType as ContentType} setContentType={setContentType} />
+
+      {contract && contractLoaded && contentTypes.length > 0 && (
         <>
           <table className="table-auto min-w-full divide-y divide-gray">
             <thead className="bg-gray">
@@ -67,7 +71,10 @@ const ContentTypes: NextPage = () => {
             {contract && contentTypes && contentTypes.map((ct, index) => {
               return (
                 <tr key={ct.name} className={index % 2 === 0 ? 'bg-gray-light' : ''}>
-                  <td><button className="px-3 py-2 my-3 x-4 border border-yellow shadow-sm text-gray-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue" onClick={() => deleteContentType(ct)}>Delete</button></td>
+                  <td>
+                    <button className="px-3 py-2 my-3 x-4 border border-blue bg-blue shadow-sm text-gray-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue" onClick={() => setContentType(ct)}>Show</button>
+                    <button className="px-3 py-2 my-3 x-4 border border-yellow shadow-sm text-gray-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue" onClick={() => deleteContentType(ct)}>Delete</button>
+                  </td>
                   <td>{ct.name}</td>
                 </tr>
               )

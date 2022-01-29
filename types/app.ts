@@ -1,5 +1,4 @@
 import * as nearAPI from 'near-api-js';
-import { Dispatch, SetStateAction } from 'react';
 import { UserRole } from '../assembly/main';
 import { NetworkConfiguration } from './configuration';
 import { IPFSHTTPClient } from 'ipfs-http-client'
@@ -25,4 +24,23 @@ export type LayoutProps = {
 export type IpfsContextParams = {
   ipfs: any | null
   saveToIpfs: (ipfs: IPFSHTTPClient, file: File) => Promise<string>
+}
+
+export type Receipt = {
+  kind: number
+  signerId: string
+  data: string
+  functionName: string
+  timestamp: number
+}
+
+export enum ActionKind {
+  CREATE_ACCOUNT = 0,
+  DEPLOY_CONTRACT = 1,
+  FUNCTION_CALL = 2,
+  TRANSFER = 3,
+  STAKE = 4,
+  ADD_KEY = 5,
+  DELETE_KEY = 6,
+  DELETE_ACCOUNT = 7,
 }
