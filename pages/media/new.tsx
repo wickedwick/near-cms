@@ -8,6 +8,7 @@ import { MediaType, Role } from '../../assembly/model'
 import Layout from '../../components/Layout'
 import { NearContext } from '../../context/NearContext'
 import { IpfsContext } from '../../context/IpfsContext'
+import LoadButton from '../../components/LoadButton'
 
 const NewMedia: NextPage = () => {
   const { contract, currentUser } = useContext(NearContext)
@@ -18,20 +19,19 @@ const NewMedia: NextPage = () => {
   const [filename, setFilename] = useState('')
   const [file, setFile] = useState<File | null>(null)
   const [description, setDescription] = useState('')
+  const [contractLoaded, setContractedLoaded] = useState(false)
 
   useEffect(() => {
-    if (!contract) {
-      return
-    }
-
     init()
   }, [])
 
   const init = (): void => {
     if (!contract) {
+      setContractedLoaded(false)
       return
     }
 
+    setContractedLoaded(true)
     if (!currentUser || currentUser.role > Role.Editor) {
       Router.push('/')
     }
@@ -96,13 +96,17 @@ const NewMedia: NextPage = () => {
     <Layout home={false}>
       <h1 className="title">Add Media</h1>
       {!contract && <div>Loading...</div>}
+      {contract && !contractLoaded && <LoadButton initFunction={init} />}
+      
       {file && (
         <div>
           <p>{file.name} | {file.type} | {file.size} bytes</p>
         </div>
       )}
+      
       {description && <p>{description}</p>}
-      {contract && (
+      
+      {contract && contractLoaded && (
         <>
           <label htmlFor="name">Name</label>
           <input className="block px-3 py-2 mb-3 w-full" type="text" value={name} onChange={(e) => setName(e.target.value)} />

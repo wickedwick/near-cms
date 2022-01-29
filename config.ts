@@ -1,6 +1,6 @@
 import { NetworkConfiguration } from "../types/configuration";
 
-const CONTRACT_NAME = process.env.CONTRACT_NAME || 'dev-1641709731586-99971157649148'//'wickham.testnet';
+const CONTRACT_NAME = process.env.CONTRACT_NAME || 'wickham.testnet'; // 'dev-1641709731586-99971157649148';
 
 function getConfig(env: string): NetworkConfiguration {
   switch(env) {

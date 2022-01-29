@@ -18,31 +18,25 @@ const ManageUsers: NextPage = () => {
   const [validationSummary, setValidationSummary] = useState<string>('')
   const [modalOpen, setModalOpen] = useState(false)
   const [displayKey, setDisplayKey] = useState('')
+  const [contractLoaded, setContractedLoaded] = useState(false)
 
   useEffect(() => {
-    if (!contract) {
-      setTimeout(() => {
-        init()
-      }, 5000)
-
-      return
-    }
-
     init()
   }, [])
 
-  const init = (): void => {
+  const init = async (): Promise<void> => {
     if (!contract) {
+      setContractedLoaded(false)
       return
     }
 
-    if (!currentUser || currentUser.role !== Role.Admin) {
-      Router.push('/')
-    }
+    setContractedLoaded(true)
+    // if (!currentUser || currentUser.role !== Role.Admin) {
+    //   Router.push('/')
+    // }
 
-    contract.getUsers().then((userRoles: UserRole[]) => {
-      setUsers(userRoles)
-    })
+    const userRoles = await contract.getUsers()
+    setUsers(userRoles)
   }
 
   const editUserRole = (userRole: UserRole): void => {
@@ -72,7 +66,7 @@ const ManageUsers: NextPage = () => {
       role 
     }
     
-    await contract.setUser(userRole)
+    await contract.setUserRole({ role: userRole })
     handleSetApiKey(user)
     setUsers([...users, userRole])
   }
@@ -109,8 +103,8 @@ const ManageUsers: NextPage = () => {
         </div>
       )}
 
-      {contract && !users.length && <LoadButton initFunction={init} />}
-      {contract && users.length > 0 && (
+      {contract && !contractLoaded && <LoadButton initFunction={init} />}
+      {contract && contractLoaded && users.length > 0 && (
         <table className="table-auto min-w-full divide-y divide-gray">
           <thead className="bg-gray">
             <tr>
@@ -134,20 +128,24 @@ const ManageUsers: NextPage = () => {
           </tbody>
         </table>
       )}
-      <hr />
-      <div className="mb-3 mt-5">
-        <h3 className="text-xl">Add a new user</h3>
-        <label htmlFor="accountId">Account ID</label>
-        <input className="block px-3 py-2 mb-3 w-full" type="text" value={accountId} onChange={(e) => setAccountId(e.target.value)} />
-        <select className="block px-3 py-2 mb-3 w-full" value={role} onChange={(e) => setRole(parseInt(e.target.value, 10))}>
-          {roleOptions.map((key) => {
-            return (
-              <option value={key.value} key={key.value}>{key.label}</option>
-            )
-          })}
-        </select>
-        <button className="px-3 py-2 my-3 mr-3 x-4 border border-blue shadow-sm text-gray-light bg-blue hover:bg-blue focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue" onClick={handleSubmit}>Add User</button>
-      </div>
+      {contract && contractLoaded && (
+        <>
+          <hr />
+          <div className="mb-3 mt-5">
+            <h3 className="text-xl">Add a new user</h3>
+            <label htmlFor="accountId">Account ID</label>
+            <input className="block px-3 py-2 mb-3 w-full" type="text" value={accountId} onChange={(e) => setAccountId(e.target.value)} />
+            <select className="block px-3 py-2 mb-3 w-full" value={role} onChange={(e) => setRole(parseInt(e.target.value, 10))}>
+              {roleOptions.map((key) => {
+                return (
+                  <option value={key.value} key={key.value}>{key.label}</option>
+                  )
+                })}
+            </select>
+            <button className="px-3 py-2 my-3 mr-3 x-4 border border-blue shadow-sm text-gray-light bg-blue hover:bg-blue focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue" onClick={handleSubmit}>Add User</button>
+          </div>
+        </>
+      )}
     </Layout>
   )
 }

@@ -1,5 +1,6 @@
 import { nanoid } from 'nanoid'
 import { NextPage } from 'next'
+import Link from 'next/link'
 import Router from 'next/router'
 import { useContext, useEffect, useState } from 'react'
 import { Client } from '../../assembly/main'
@@ -17,24 +18,19 @@ const ManageClients: NextPage = () => {
   const [owner, setOwner] = useState('')
   const [displayKey, setDisplayKey] = useState('')
   const [modalOpen, setModalOpen] = useState(false)
+  const [contractLoaded, setContractedLoaded] = useState(false)
 
   useEffect(() => {
-    if (!contract) {
-      setTimeout(() => {
-        init()
-      }, 5000)
-  
-      return
-    }
-  
     init()
   }, [])
 
   const init = (): void => {
     if (!contract) {
+      setContractedLoaded(false)
       return
     }
   
+    setContractedLoaded(true)
     if (!currentUser || currentUser.role !== Role.Admin) {
       Router.push('/')
     }
@@ -102,8 +98,16 @@ const ManageClients: NextPage = () => {
         </div>
       )}
 
-      {contract && !clients.length && <LoadButton initFunction={init} />}
-      {contract && clients.length > 0 && (
+      {!contract && <div>Loading...</div>}
+      {contract && !contractLoaded && <LoadButton initFunction={init} />}
+      
+      {contract && contractLoaded && !clients.length && (
+        <div>
+          No clients.
+        </div>
+      )}
+      
+      {contract && contractLoaded && clients.length > 0 && (
         <table className="table-auto min-w-full divide-y divide-gray">
           <thead className="bg-gray">
             <tr>

@@ -7,17 +7,25 @@ import FieldTypesEditor from '../../components/FieldTypesEditor'
 import { NearContext } from '../../context/NearContext'
 import { Role } from '../../assembly/model'
 import Layout from '../../components/Layout'
+import LoadButton from '../../components/LoadButton'
 
 const NewContentType: NextPage = () => {
   const { contract, currentUser } = useContext(NearContext)
   const [contentTypeName, setContentTypeName] = useState('')
   const [fields, setFields] = useState<Field[]>([])
+  const [contractLoaded, setContractedLoaded] = useState(false)
 
   useEffect(() => {
     init()
   }, [])
   
   const init = (): void => {
+    if (!contract) {
+      setContractedLoaded(false)
+      return
+    }
+
+    setContractedLoaded(true)
     if (!currentUser || currentUser.role !== Role.Admin) {
       Router.push('/')
     }
@@ -51,32 +59,38 @@ const NewContentType: NextPage = () => {
   return (
     <Layout home={false}>
       <h1 className="title">Create a Content Type</h1>
-      <label htmlFor="name">Name</label>
-      <input className="block px-3 py-2 mb-3 w-full" type="text" value={contentTypeName} onChange={(e) => handleContentTypeNameChange(e)} />
-      <h2>Fields</h2>
-      <div className="">
-        <FieldTypesEditor fields={fields} setFields={setFields} />
-        {fields.map((field, index) => {
-          return (
-            <div key={`${field.name}-${index}`} className="block mb-3">
-              <p>{index + 1}. {field.name}: {field.fieldType} &nbsp;
-                <button className="bg-blue px-1" onClick={() => {handleDeleteField(index)}}>x</button>
-              </p>
-            </div>
-          )
-        })}
-      </div>
+      {!contract && <div>Loading...</div>}
+      {contract && !contractLoaded && <LoadButton initFunction={init} />}
+      {contract && contractLoaded && (
+        <>
+          <label htmlFor="name">Name</label>
+          <input className="block px-3 py-2 mb-3 w-full" type="text" value={contentTypeName} onChange={(e) => handleContentTypeNameChange(e)} />
+          <h2>Fields</h2>
+          <div className="">
+            <FieldTypesEditor fields={fields} setFields={setFields} />
+            {fields.map((field, index) => {
+              return (
+                <div key={`${field.name}-${index}`} className="block mb-3">
+                  <p>{index + 1}. {field.name}: {field.fieldType} &nbsp;
+                    <button className="bg-blue px-1" onClick={() => {handleDeleteField(index)}}>x</button>
+                  </p>
+                </div>
+              )
+            })}
+          </div>
 
-      <button
-        className="px-3 py-2 my-3 mr-3 x-4 border border-blue shadow-sm text-gray-light bg-blue hover:bg-blue focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue"
-        onClick={handleSubmit}
-        disabled={!contentTypeName.length || !fields.length}
-      >
-        Submit
-      </button>
-      <Link href="/contentTypes">
-        <a>Back</a>
-      </Link>
+          <button
+            className="px-3 py-2 my-3 mr-3 x-4 border border-blue shadow-sm text-gray-light bg-blue hover:bg-blue focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue"
+            onClick={handleSubmit}
+            disabled={!contentTypeName.length || !fields.length}
+          >
+            Submit
+          </button>
+          <Link href="/contentTypes">
+            <a>Back</a>
+          </Link>
+        </>
+      )}
     </Layout>
   )
 }

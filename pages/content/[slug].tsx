@@ -19,6 +19,7 @@ const EditContent: NextPage = () => {
   const [isPublic, setIsPublic] = useState(false)
   const [isEncrypted, setIsEncrypted] = useState(false)
   const [currentContent, setCurrentContent] = useState<Content | null>(null)
+  const [contractLoaded, setContractedLoaded] = useState(false)
   
   const router = useRouter()
   const { slug } = router.query
@@ -31,9 +32,11 @@ const EditContent: NextPage = () => {
   
   const init = async (): Promise<void> => {
     if (!contract) {
+      setContractedLoaded(false)
       return
     }
 
+    setContractedLoaded(true)
     if (!currentUser || currentUser.role > Role.Editor) {
       Router.push('/')
     }
@@ -84,8 +87,9 @@ const EditContent: NextPage = () => {
   return (
     <Layout home={false}>
       <h1 className="title">Edit Your Content</h1>
-      {contract && currentUser && !fields.length && <LoadButton initFunction={init} />}
-      {currentUser && contract && fields && (
+      {!contract && <div>Loading...</div>}
+      {contract && !contractLoaded && !fields.length && <LoadButton initFunction={init} />}
+      {contract && contractLoaded && !fields.length && (
         <>
           <label htmlFor="name">Name</label>
           <input className="block px-3 py-2 mb-3 w-full" type="text" value={name} onChange={(e) => setName(e.target.value)} />

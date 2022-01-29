@@ -11,9 +11,11 @@ import { NearContext } from '../../context/NearContext'
 const Contents: NextPage = () => {
   const { contract, currentUser } = useContext(NearContext)
   const [content, setContent] = useState<Content[]>([])
+  const [contractLoaded, setContractedLoaded] = useState(false)
   
   useEffect(() => {
     if (!contract) {
+      setContractedLoaded(false)
       return
     }
 
@@ -25,6 +27,7 @@ const Contents: NextPage = () => {
       return
     }
 
+    setContractedLoaded(true)
     if (!currentUser || currentUser.role > Role.Editor) {
       Router.push('/')
     }
@@ -57,42 +60,47 @@ const Contents: NextPage = () => {
     <Layout home={false}>
       <h1 className="title">Content</h1>
       {!contract && <div>Loading...</div>}
-      {contract && !content.length && <LoadButton initFunction={init} />}
+      {contract && !contractLoaded && !content.length && <LoadButton initFunction={init} />}
+      {contract && contractLoaded && !content.length && (
+        <div>
+          No content
+        </div>
+      )}
+
+      <div className="my-3">
+        <Link href="/content/new">
+          <a className="px-3 py-2 my-3 x-4 border border-yellow bg-blue shadow-sm text-gray-light focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue">Create New</a>
+        </Link>
+      </div>
+      
       {contract && content.length > 0 && (
-        <>
-          <div className="my-3">
-            <Link href="/content/new">
-              <a className="px-3 py-2 my-3 x-4 border border-yellow bg-blue shadow-sm text-gray-light focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue">Create New</a>
-            </Link>
-          </div>
-          <table className="table-auto min-w-full divide-y divide-gray">
-            <thead className="bg-gray">
-              <tr>
-                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-light uppercase tracking-wider">Actions</th>
-                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-light uppercase tracking-wider">Name</th>
-                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-light uppercase tracking-wider">Content Type</th>
-                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-light uppercase tracking-wider">Public</th>
-                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-light uppercase tracking-wider">Encrypted</th>
+        <table className="table-auto min-w-full divide-y divide-gray">
+          <thead className="bg-gray">
+            <tr>
+              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-light uppercase tracking-wider">Actions</th>
+              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-light uppercase tracking-wider">Name</th>
+              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-light uppercase tracking-wider">Content Type</th>
+              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-light uppercase tracking-wider">Public</th>
+              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-light uppercase tracking-wider">Encrypted</th>
+            </tr>
+          </thead>
+          <tbody className="bg-gray-medium text-gray">
+          {contract && content && content.map((ct, index) => {
+            return (
+              <tr key={`${ct.slug}-${ct.name}`} className={index % 2 === 0 ? 'bg-gray-light' : ''}>
+                <td>
+                  <button className="px-3 py-2 my-3 mr-3 x-4 border border-blue bg-blue shadow-sm text-gray-light focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue" onClick={() => editContent(ct)}>Edit</button>
+                  <button className="px-3 py-2 my-3 x-4 border border-yellow shadow-sm text-gray-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue" onClick={() => deleteContent(ct)}>Delete</button>
+                </td>
+                <td>{ct.name}</td>
+                <td>{ct.type.name}</td>
+                <td>{ct.isPublic ? 'Yes' : 'No'}</td>
+                <td>{ct.isEncrypted ? 'Yes' : 'No'}</td>
               </tr>
-            </thead>
-            <tbody className="bg-gray-medium text-gray">
-            {contract && content && content.map((ct, index) => {
-              return (
-                <tr key={`${ct.slug}-${ct.name}`} className={index % 2 === 0 ? 'bg-gray-light' : ''}>
-                  <td>
-                    <button className="px-3 py-2 my-3 mr-3 x-4 border border-blue bg-blue shadow-sm text-gray-light focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue" onClick={() => editContent(ct)}>Edit</button>
-                    <button className="px-3 py-2 my-3 x-4 border border-yellow shadow-sm text-gray-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue" onClick={() => deleteContent(ct)}>Delete</button>
-                  </td>
-                  <td>{ct.name}</td>
-                  <td>{ct.type.name}</td>
-                  <td>{ct.isPublic ? 'Yes' : 'No'}</td>
-                  <td>{ct.isEncrypted ? 'Yes' : 'No'}</td>
-                </tr>
-              )
-            })}
-            </tbody>
-          </table>
-        </>
+            )
+          })}
+          </tbody>
+        </table>
       )}
     </Layout>
   )
