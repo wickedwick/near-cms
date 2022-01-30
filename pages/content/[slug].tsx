@@ -1,15 +1,17 @@
-import { useContext, useState, useEffect } from "react"
-import { NextPage } from "next"
-import Link from "next/link"
-import Router, { useRouter } from "next/router"
-import { Field, Content } from "../../assembly/main"
-import FieldsEditor from "../../components/FieldsEditor"
-import { NearContext } from "../../context/NearContext"
-import { Role } from "../../assembly/model"
-import { DbContext } from "../../context/DbContext"
-import Layout from "../../components/Layout"
-import LoadButton from "../../components/LoadButton"
-import { SEA } from "gun"
+import { useContext, useState, useEffect } from 'react'
+import { NextPage } from 'next'
+import Link from 'next/link'
+import Router, { useRouter } from 'next/router'
+import { Field, Content } from '../../assembly/main'
+import FieldsEditor from '../../components/FieldsEditor'
+import { NearContext } from '../../context/NearContext'
+import { Role } from '../../assembly/model'
+import { DbContext } from '../../context/DbContext'
+import Layout from '../../components/Layout'
+import LoadButton from '../../components/LoadButton'
+import { SEA } from 'gun'
+import Alert from '../../components/Alert'
+import { validateContent } from '../../validators/content'
 
 const EditContent: NextPage = () => {
   const { db } = useContext(DbContext)
@@ -20,6 +22,7 @@ const EditContent: NextPage = () => {
   const [isEncrypted, setIsEncrypted] = useState(false)
   const [currentContent, setCurrentContent] = useState<Content | null>(null)
   const [contractLoaded, setContractedLoaded] = useState(false)
+  const [validationSummary, setValidationSummary] = useState<string[]>([])
   
   const router = useRouter()
   const { slug } = router.query
@@ -61,7 +64,7 @@ const EditContent: NextPage = () => {
     savedFields = savedFields.filter((f, index) => {
       return savedFields.indexOf(f) === index
     })
-    
+
     setFields(savedFields)
     setCurrentContent(ct)
   }
@@ -73,6 +76,13 @@ const EditContent: NextPage = () => {
     }
     
     const content: Content = { ...currentContent as Content, name, isPublic, isEncrypted, updatedAt: new Date().toISOString() }
+    
+    const validationResult = validateContent(content, fields)
+    if (!validationResult.isValid) {
+      setValidationSummary(validationResult.validationMessages)
+      return
+    }
+
     fields.forEach(async f => {
       let {id, ...fieldWithoutId} = f
 
@@ -83,8 +93,9 @@ const EditContent: NextPage = () => {
       gunFields.get(f.id).put(fieldWithoutId)
     })
 
-    contract.setContent({ content }).then(() => {
-      Router.push('/content')
+    contract.setContent({
+      args: { content }, 
+      callbackUrl: `${process.env.baseUrl}/content`,
     })
   }
 
@@ -92,6 +103,11 @@ const EditContent: NextPage = () => {
     <Layout home={false}>
       <h1 className="title">Edit Your Content</h1>
       {!contract && <div>Loading...</div>}
+
+      {validationSummary.length > 0 && (
+        <Alert heading="Error!" messages={validationSummary} />
+      )}
+
       {contract && !contractLoaded && !fields.length && <LoadButton initFunction={init} />}
       {contract && contractLoaded && fields.length && (
         <>

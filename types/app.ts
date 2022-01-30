@@ -7,7 +7,7 @@ export type AppParams = {
   contract: nearAPI.Contract | null
   currentUser: UserRole | undefined
   nearConfig: NetworkConfiguration | null
-  wallet: nearAPI.WalletConnection | null,
+  wallet: nearAPI.WalletConnection | null
   setCurrentUser: (user: UserRole | undefined) => void
 }
 

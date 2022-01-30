@@ -4,6 +4,7 @@ import Router, { useRouter } from "next/router"
 import { useContext, useState, useEffect } from "react"
 import { UserRole } from "../../../assembly/main"
 import { Role, roleOptions } from "../../../assembly/model"
+import Alert from "../../../components/Alert"
 import Layout from "../../../components/Layout"
 import LoadButton from "../../../components/LoadButton"
 import { NearContext } from "../../../context/NearContext"
@@ -12,7 +13,7 @@ const EditUserRole: NextPage = () => {
   const { contract, currentUser } = useContext(NearContext)
   const [role, setRole] = useState<number>(Role.Public)
   const [userRole, setUserRole] = useState<UserRole | null>(null)
-  const [validationSummary, setValidationSummary] = useState<string>('')
+  const [validationSummary, setValidationSummary] = useState<string[]>([])
   const [contractLoaded, setContractedLoaded] = useState(false)
   
   const router = useRouter()
@@ -39,10 +40,12 @@ const EditUserRole: NextPage = () => {
   }
 
   const handleSubmit = async (): Promise<void> => {
-    setValidationSummary('')
+    setValidationSummary([])
 
     if (!contract) {
-      setValidationSummary('Contract is not available')
+      const valSummary = [...validationSummary]
+      valSummary.push('Contract is not loaded')
+      setValidationSummary(valSummary)
       return
     }
 
@@ -54,8 +57,11 @@ const EditUserRole: NextPage = () => {
       <h1 className="title">Update Role for {userRole?.username}</h1>
       {!contract && <div>Loading...</div>}
       {contract && !contractLoaded && <LoadButton initFunction={init} />}
-      {validationSummary && <p>{validationSummary}</p>}
       
+      {validationSummary.length > 0 && (
+        <Alert heading="Error!" messages={validationSummary} />
+      )}
+
       {contract && contractLoaded && (
         <>
           <select className="block px-3 py-2 mb-3 w-full" value={role} onChange={(e) => setRole(parseInt(e.target.value, 10))}>

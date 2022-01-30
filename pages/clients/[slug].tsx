@@ -8,12 +8,15 @@ import { NearContext } from "../../context/NearContext"
 import Link from "next/link"
 import Layout from "../../components/Layout"
 import LoadButton from "../../components/LoadButton"
+import { validateClient } from "../../validators/client"
+import Alert from "../../components/Alert"
 
 const EditClient: NextPage = () => {
   const { contract, currentUser } = useContext(NearContext)
   const [name, setName] = useState('')
   const [owner, setOwner] = useState('')
   const [contractLoaded, setContractedLoaded] = useState(false)
+  const [validationSummary, setValidationSummary] = useState<string[]>([])
 
   const router = useRouter()
   const { slug } = router.query
@@ -57,14 +60,28 @@ const EditClient: NextPage = () => {
     }
 
     const clientUpdate: Client = {...client, name, owner}
-    await contract.setClient(clientUpdate)
-    Router.push('/clients/manage')
+    const validationResult = validateClient(clientUpdate)
+    if (!validationResult.isValid) {
+      setValidationSummary(validationResult.validationMessages)
+      return
+    }
+
+    await contract.setClient({
+      args: { clientUpdate }, 
+      callbackUrl: `${process.env.baseUrl}/clients/manage`,
+    })
   }
 
   return (
     <Layout home={false}>
       <h1 className="title">Edit Client</h1>
+
+      {validationSummary.length > 0 && (
+        <Alert heading="Error!" messages={validationSummary} />
+      )}
+
       {contract && currentUser && !contractLoaded && <LoadButton initFunction={init} />}
+
       {currentUser && contract && contractLoaded && (
         <>
           <label htmlFor="name">Client Name</label>
@@ -73,7 +90,7 @@ const EditClient: NextPage = () => {
           <label htmlFor="owner">Owner Address</label>
           <input className="block px-3 py-2 mb-3 w-full" type="text" value={owner} onChange={(e) => setOwner(e.target.value)} />
 
-          <button className="px-3 py-2 my-3 mr-3 x-4 border border-blue shadow-sm text-gray-light bg-blue hover:bg-blue focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue" onClick={handleSubmit}>Add User</button>
+          <button className="px-3 py-2 my-3 mr-3 x-4 border border-blue shadow-sm text-gray-light bg-blue hover:bg-blue focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue" onClick={handleSubmit}>Save Client</button>
           <Link href="/clients/manage">
             <a>Back</a>
           </Link>

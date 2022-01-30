@@ -11,6 +11,8 @@ import { DbContext } from '../../context/DbContext'
 import Layout from '../../components/Layout'
 import { SEA } from 'gun'
 import LoadButton from '../../components/LoadButton'
+import { validateContent } from '../../validators/content'
+import Alert from '../../components/Alert'
 
 const NewField: NextPage = () => {
   const { db } = useContext(DbContext)
@@ -22,6 +24,7 @@ const NewField: NextPage = () => {
   const [isPublic, setIsPublic] = useState(false)
   const [isEncrypted, setIsEncrypted] = useState(false)
   const [contractLoaded, setContractedLoaded] = useState(false)
+  const [validationSummary, setValidationSummary] = useState<string[]>([])
 
   useEffect(() => {
     init()
@@ -55,7 +58,7 @@ const NewField: NextPage = () => {
     setFields(contentType.fields)
   }
 
-  const handleSubmit = async(): void => {
+  const handleSubmit = async (): Promise<void> => {
     if (!contract) {
       return
     }
@@ -77,6 +80,12 @@ const NewField: NextPage = () => {
       isEncrypted,
     }
 
+    const validationResult = validateContent(content, fields)
+    if (!validationResult.isValid) {
+      setValidationSummary(validationResult.validationMessages)
+      return
+    }
+
     fields.forEach(async f => {
       let newField = { ...f }
       if (content.isEncrypted) {
@@ -86,8 +95,9 @@ const NewField: NextPage = () => {
       db.get('content').get(`${slug}`).get('fields').set(newField)
     })
 
-    contract.setContent({ content }).then(() => {
-      Router.push('/content')
+    contract.setContent({
+      args: { content }, 
+      callbackUrl: `${process.env.baseUrl}/content`,
     })
   }
 
@@ -95,6 +105,11 @@ const NewField: NextPage = () => {
     <Layout home={false}>
       <h1 className="title">Create Some Content</h1>
       {!contract && <div>Loading...</div>}
+
+      {validationSummary.length > 0 && (
+        <Alert heading="Error!" messages={validationSummary} />
+      )}
+
       {contract && !contractLoaded && <LoadButton initFunction={init} />}
       {contract && contractLoaded && (
         <>

@@ -10,3 +10,9 @@ export type SchemaModalProps = {
   contentType: ContentType,
   setContentType: Dispatch<SetStateAction<ContentType | null>>
 }
+
+export type AlertProps = {
+  heading: string,
+  transactionHashes?: string,
+  messages?: string[],
+}

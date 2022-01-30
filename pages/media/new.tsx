@@ -5,10 +5,12 @@ import Router from 'next/router'
 import { nanoid } from 'nanoid'
 import { Media } from '../../assembly/main'
 import { MediaType, Role } from '../../assembly/model'
+import Alert from '../../components/Alert'
 import Layout from '../../components/Layout'
 import { NearContext } from '../../context/NearContext'
 import { IpfsContext } from '../../context/IpfsContext'
 import LoadButton from '../../components/LoadButton'
+import { validateMedia } from '../../validators/media'
 
 const NewMedia: NextPage = () => {
   const { contract, currentUser } = useContext(NearContext)
@@ -20,6 +22,7 @@ const NewMedia: NextPage = () => {
   const [file, setFile] = useState<File | null>(null)
   const [description, setDescription] = useState('')
   const [contractLoaded, setContractedLoaded] = useState(false)
+  const [validationSummary, setValidationSummary] = useState<string[]>([])
 
   useEffect(() => {
     init()
@@ -87,8 +90,15 @@ const NewMedia: NextPage = () => {
       uploadedAt: new Date().toISOString(),
     }
 
-    contract.setMedia({ media }).then(() => {
-      Router.push('/media')
+    const validationResult = validateMedia(media)
+    if (!validationResult.isValid) {
+      setValidationSummary(validationResult.validationMessages)
+      return
+    }
+
+    contract.setMedia({
+      args: { media }, 
+      callbackUrl: `${process.env.baseUrl}/media`,
     })
   }
 
@@ -96,6 +106,11 @@ const NewMedia: NextPage = () => {
     <Layout home={false}>
       <h1 className="title">Add Media</h1>
       {!contract && <div>Loading...</div>}
+
+      {validationSummary.length > 0 && (
+        <Alert heading="Error!" messages={validationSummary} />
+      )}
+
       {contract && !contractLoaded && <LoadButton initFunction={init} />}
       
       {file && (

@@ -43,7 +43,7 @@ function MyApp({ Component, pageProps }: AppProps) {
     currentUser,
     nearConfig,
     wallet: walletConnection,
-    setCurrentUser
+    setCurrentUser,
   }
 
   const ipfsState = {

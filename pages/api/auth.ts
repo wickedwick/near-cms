@@ -18,7 +18,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   const contract = await getServerSideContract()
   let isUser = true
   let user: UserRole | Client = await contract.getUser({ username })
-
+  
   if (!user) {
     isUser = false
     user = await contract.getClient({ slug: username })

@@ -8,6 +8,8 @@ import { nanoid } from 'nanoid'
 import { DbContext } from '../../context/DbContext'
 import Layout from '../../components/Layout'
 import LoadButton from '../../components/LoadButton'
+import Alert from '../../components/Alert'
+import { validateUserRole } from '../../validators/user'
 
 const ManageUsers: NextPage = () => {
   const { db } = useContext(DbContext)
@@ -15,12 +17,14 @@ const ManageUsers: NextPage = () => {
   const [accountId, setAccountId] = useState('')
   const [role, setRole] = useState<number>(Role.Public)
   const [users, setUsers] = useState<UserRole[]>([])
-  const [validationSummary, setValidationSummary] = useState<string>('')
+  const [validationSummary, setValidationSummary] = useState<string[]>('')
   const [modalOpen, setModalOpen] = useState(false)
   const [displayKey, setDisplayKey] = useState('')
   const [contractLoaded, setContractedLoaded] = useState(false)
+  const [transactionHashes, setTransactionHashes] = useState<string>('')
 
   useEffect(() => {
+    setTransactionHashes(Router.query.transactionHashes as string)
     init()
   }, [])
 
@@ -48,16 +52,19 @@ const ManageUsers: NextPage = () => {
   }
 
   const handleSubmit = async (): Promise<void> => {
-    setValidationSummary('')
+    setValidationSummary([])
+    const valSummary = [...validationSummary]
 
     if (!contract) {
-      setValidationSummary('Contract is not available')
+      valSummary.push('Contract is not loaded')
+      setValidationSummary(valSummary)
       return
     }
 
     const user = await contract.getUser({ username: accountId })
     if (user) {
-      setValidationSummary('User already exists')
+      valSummary.push('User already exists')
+      setValidationSummary(valSummary)
       return
     }
 
@@ -66,9 +73,14 @@ const ManageUsers: NextPage = () => {
       role 
     }
     
-    await contract.setUserRole({ role: userRole })
+    const validationResult = validateUserRole(userRole)
+    if (!validationResult.isValid) {
+      setValidationSummary(validationResult.validationMessages)
+      return
+    }
+
     handleSetApiKey(user)
-    setUsers([...users, userRole])
+    await contract.setUserRole({ role: userRole })
   }
 
   const handleSetApiKey = async (userRole: UserRole): Promise<void> => {
@@ -90,8 +102,10 @@ const ManageUsers: NextPage = () => {
     <Layout home={false}>
       <h1 className="title mb-3">Manage Users</h1>
 
-      {validationSummary && <p>{validationSummary}</p>}
-      
+      {validationSummary.length > 0 && (
+        <Alert heading="Error!" messages={validationSummary} />
+      )}
+
       {modalOpen && (
         <div className="modal">
           <div className="modal-content">
@@ -101,6 +115,10 @@ const ManageUsers: NextPage = () => {
             </div>
           </div>
         </div>
+      )}
+
+      {transactionHashes && (
+        <Alert heading="Success!" transactionHashes={transactionHashes} />
       )}
 
       {contract && !contractLoaded && <LoadButton initFunction={init} />}

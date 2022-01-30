@@ -14,6 +14,14 @@ export function setContentType(contentType: ContentType): void {
     throw new Error("Unauthorized")
   }
 
+  if (!contentType.name) {
+    throw new Error("Content type name is required")
+  }
+
+  if (!contentType.fields.length) {
+    throw new Error("Content type fields are required")
+  }
+
   contentTypes.set(contentType.name || '', contentType)
 }
 
@@ -72,6 +80,18 @@ export function setContent(content: Content): void {
     throw new Error("Unauthorized")
   }
 
+  if (!content.slug) {
+    throw new Error("Content slug is required")
+  }
+  
+  if (!content.name) {
+    throw new Error("Content name is required")
+  }
+
+  if (!content.type) {
+    throw new Error("Content type is required")
+  }
+
   contents.set(content.slug || '', content)
 }
 
@@ -90,6 +110,18 @@ export function getClient(slug: string): Client {
 export function setClient(client: Client): void {
   if (!senderIsAdmin()) {
     throw new Error("Unauthorized")
+  }
+
+  if (!client.slug) {
+    throw new Error("Client slug is required")
+  }
+
+  if (!client.name) {
+    throw new Error("Client name is required")
+  }
+
+  if (!client.owner) {
+    throw new Error("Client owner is required")
   }
 
   clientRegistry.set(client.slug || '', client)
@@ -135,6 +167,26 @@ export function getMediaBySlug(slug: string): Media | null {
 export function setMedia(media: Media): void {
   if (!senderIsEditor()) {
     throw new Error("Unauthorized")
+  }
+
+  if (!media.name) {
+    throw new Error("Media name is required")
+  }
+  
+  if (!media.slug) {
+    throw new Error("Media slug is required")
+  }
+
+  if (!media.cid) {
+    throw new Error("Media cid is required")
+  }
+
+  if (!media.mediaType) {
+    throw new Error("Media type is required")
+  }
+
+  if (!media.filename) {
+    throw new Error("Media filename is required")
   }
 
   mediaCollection.set(media.slug || '', media)

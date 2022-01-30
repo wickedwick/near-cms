@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next"
-import { Content, ContentType, Field } from "../../../../assembly/main"
+import { Content, Field } from "../../../../assembly/main"
 import { ContentData } from "../../../../assembly/model"
 import { getServerSideContract } from "../../../../services/contracts"
 import { db } from "../../../../services/db"

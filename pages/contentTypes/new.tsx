@@ -8,12 +8,15 @@ import { NearContext } from '../../context/NearContext'
 import { Role } from '../../assembly/model'
 import Layout from '../../components/Layout'
 import LoadButton from '../../components/LoadButton'
+import { validateContentType } from '../../validators/contentType'
+import Alert from '../../components/Alert'
 
 const NewContentType: NextPage = () => {
   const { contract, currentUser } = useContext(NearContext)
   const [contentTypeName, setContentTypeName] = useState('')
   const [fields, setFields] = useState<Field[]>([])
   const [contractLoaded, setContractedLoaded] = useState(false)
+  const [validationSummary, setValidationSummary] = useState<string[]>([])
 
   useEffect(() => {
     init()
@@ -51,8 +54,15 @@ const NewContentType: NextPage = () => {
       fields,
     }
 
-    contract.setContentType({ contentType }).then(() => {
-      Router.push('/contentTypes')
+    const validationResult = validateContentType(contentType)
+    if (!validationResult.isValid) {
+      setValidationSummary(validationResult.validationMessages)
+      return
+    }
+
+    contract.setContentType({
+      args: { contentType }, 
+      callbackUrl: `${process.env.baseUrl}/contentTypes`,
     })
   }
 
@@ -60,12 +70,18 @@ const NewContentType: NextPage = () => {
     <Layout home={false}>
       <h1 className="title">Create a Content Type</h1>
       {!contract && <div>Loading...</div>}
+
+      {validationSummary.length > 0 && (
+        <Alert heading="Error!" messages={validationSummary} />
+      )}
+
       {contract && !contractLoaded && <LoadButton initFunction={init} />}
       {contract && contractLoaded && (
         <>
           <label htmlFor="name">Name</label>
           <input className="block px-3 py-2 mb-3 w-full" type="text" value={contentTypeName} onChange={(e) => handleContentTypeNameChange(e)} />
           <h2>Fields</h2>
+          
           <div className="">
             <FieldTypesEditor fields={fields} setFields={setFields} />
             {fields.map((field, index) => {
@@ -86,6 +102,7 @@ const NewContentType: NextPage = () => {
           >
             Submit
           </button>
+
           <Link href="/contentTypes">
             <a>Back</a>
           </Link>

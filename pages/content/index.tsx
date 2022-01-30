@@ -1,28 +1,29 @@
 import { useContext, useEffect, useState } from 'react'
 import { NextPage } from 'next'
 import Link from 'next/link'
-import Router from 'next/router'
-import { Content } from '../../assembly/main'
+import Router, { useRouter } from 'next/router'
+import { Content, Field } from '../../assembly/main'
 import { Role } from '../../assembly/model'
 import Layout from '../../components/Layout'
 import LoadButton from '../../components/LoadButton'
 import { NearContext } from '../../context/NearContext'
+import Alert from '../../components/Alert'
+import { getServerSideContract } from '../../services/contracts'
 
 const Contents: NextPage = () => {
   const { contract, currentUser } = useContext(NearContext)
   const [content, setContent] = useState<Content[]>([])
   const [contractLoaded, setContractedLoaded] = useState(false)
+  const [transactionHashes, setTransactionHashes] = useState<string>('')
+  const { query } = useRouter();
   
   useEffect(() => {
-    if (!contract) {
-      setContractedLoaded(false)
-      return
-    }
-
     init()
   }, [])
   
-  const init = (): void => {
+  const init = async (): Promise<void> => {
+    setTransactionHashes(query.transactionHashes as string)
+    
     if (!contract) {
       return
     }
@@ -32,9 +33,8 @@ const Contents: NextPage = () => {
       Router.push('/')
     }
 
-    contract.getContents().then((ct: Content[]) => {
-      setContent(ct)
-    })
+    const ct: Content[] = await contract.getContents()
+    setContent(ct)
   }
 
   const deleteContent = (ct: Content): void => {
@@ -43,9 +43,7 @@ const Contents: NextPage = () => {
     }
 
     // TODO: delete in gun
-    contract.deleteContent({ content: ct }).then(() => {
-      init()
-    })
+    contract.deleteContent({ content: ct })
   }
 
   const editContent = (ct: Content): void => {
@@ -60,6 +58,11 @@ const Contents: NextPage = () => {
     <Layout home={false}>
       <h1 className="title">Content</h1>
       {!contract && <div>Loading...</div>}
+      
+      {transactionHashes && (
+        <Alert heading="Success!" transactionHashes={transactionHashes} />
+      )}
+
       {contract && !contractLoaded && !content.length && <LoadButton initFunction={init} />}
       {contract && contractLoaded && !content.length && (
         <div>

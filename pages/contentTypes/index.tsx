@@ -8,18 +8,22 @@ import Layout from '../../components/Layout'
 import LoadButton from '../../components/LoadButton'
 import { NearContext } from '../../context/NearContext'
 import SchemaModal from '../../components/SchemaModal'
+import Alert from '../../components/Alert'
 
 const ContentTypes: NextPage = () => {
   const { contract, currentUser } = useContext(NearContext)
   const [contentTypes, setContentTypes] = useState<ContentType[]>([])
   const [contractLoaded, setContractedLoaded] = useState(false)
   const [contentType, setContentType] = useState<ContentType | null>(null)
+  const [transactionHashes, setTransactionHashes] = useState<string>('')
 
   useEffect(() => {
     init()
   }, [])
   
   const init = async (): Promise<void> => {
+    setTransactionHashes(Router.query.transactionHashes as string)
+    
     if (!contract) {
       setContractedLoaded(false)
       return
@@ -39,15 +43,18 @@ const ContentTypes: NextPage = () => {
       return
     }
 
-    contract.deleteContentType({ name: ct.name }).then(() => {
-      init()
-    })
+    contract.deleteContentType({ name: ct.name })
   }
 
   return (
     <Layout home={false}>
       <h1 className="title">Content Types</h1>
       {!contract && <div>Loading...</div>}
+
+      {transactionHashes && (
+        <Alert heading="Success!" transactionHashes={transactionHashes} />
+      )}
+
       {contract && !contractLoaded && <LoadButton initFunction={init} />}
       
       <div className="my-3">

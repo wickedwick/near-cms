@@ -8,17 +8,21 @@ import Layout from '../../components/Layout'
 import LoadButton from '../../components/LoadButton'
 import MediaCards from '../../components/MediaCards'
 import { NearContext } from '../../context/NearContext'
+import Alert from '../../components/Alert'
 
 const MediaIndex: NextPage = () => {
   const { contract, currentUser } = useContext(NearContext)
   const [media, setMedia] = useState<Media[]>([])
   const [contractLoaded, setContractedLoaded] = useState(false)
+  const [transactionHashes, setTransactionHashes] = useState<string>('')
   
   useEffect(() => {
     init()
   }, [])
 
   const init = async (): Promise<void> => {
+    setTransactionHashes(Router.query.transactionHashes as string)
+    
     if (!contract) {
       setContractedLoaded(false)
       return
@@ -37,6 +41,11 @@ const MediaIndex: NextPage = () => {
     <Layout home={false}>
       <h1 className="title">Media</h1>
       {!contract && <div>Loading...</div>}
+
+      {transactionHashes && (
+        <Alert heading="Success!" transactionHashes={transactionHashes} />
+      )}
+
       {contract && !contractLoaded && !media.length && <LoadButton initFunction={init} />}
       {contract && contractLoaded && !media.length && (
         <div>No media found</div>

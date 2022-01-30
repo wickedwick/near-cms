@@ -6,4 +6,5 @@ export const NearContext = React.createContext({
   currentUser: undefined,
   nearConfig: null,
   wallet: null,
+  setCurrentUser: () => {},
 } as AppParams)

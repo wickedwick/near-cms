@@ -14,6 +14,9 @@ module.exports = {
     // !! WARN !!
     ignoreBuildErrors: true,
   },
+  env: {
+    baseUrl: process.env.NODE_ENV === 'testnet' ? 'https://d-cms-test.herokuapp.com' : 'http://localhost:3000',
+  },
   async headers() {
     return [
       {

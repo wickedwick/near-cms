@@ -4,10 +4,12 @@ import Router from 'next/router'
 import { useContext, useEffect, useState } from 'react'
 import { Client } from '../../assembly/main'
 import { Role } from '../../assembly/model'
+import Alert from '../../components/Alert'
 import Layout from '../../components/Layout'
 import LoadButton from '../../components/LoadButton'
 import { DbContext } from '../../context/DbContext'
 import { NearContext } from '../../context/NearContext'
+import { validateClient } from '../../validators/client'
 
 const ManageClients: NextPage = () => {
   const { db } = useContext(DbContext)
@@ -18,8 +20,11 @@ const ManageClients: NextPage = () => {
   const [displayKey, setDisplayKey] = useState('')
   const [modalOpen, setModalOpen] = useState(false)
   const [contractLoaded, setContractedLoaded] = useState(false)
+  const [transactionHashes, setTransactionHashes] = useState<string>('')
+  const [validationSummary, setValidationSummary] = useState<string[]>([])
 
   useEffect(() => {
+    setTransactionHashes(Router.query.transactionHashes as string)
     init()
   }, [])
 
@@ -62,9 +67,14 @@ const ManageClients: NextPage = () => {
       owner
     }
 
-    await contract.setClient({ client })
+    const validationResult = validateClient(client)
+    if (!validationResult.isValid) {
+      setValidationSummary(validationResult.validationMessages)
+      return
+    }
+
     handleSetApiKey(client)
-    setClients([...clients, client])
+    await contract.setClient({ client })
   }
 
   const handleSetApiKey = async (client: Client): Promise<void> => {
@@ -98,6 +108,15 @@ const ManageClients: NextPage = () => {
       )}
 
       {!contract && <div>Loading...</div>}
+
+      {validationSummary.length > 0 && (
+        <Alert heading="Error!" messages={validationSummary} />
+      )}
+
+      {transactionHashes && (
+        <Alert heading="Success!" transactionHashes={transactionHashes} />
+      )}
+
       {contract && !contractLoaded && <LoadButton initFunction={init} />}
       
       {contract && contractLoaded && !clients.length && (
