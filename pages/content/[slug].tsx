@@ -84,14 +84,12 @@ const EditContent: NextPage = () => {
       return
     }
 
-    fields.forEach(async f => {
-      let {id, ...fieldWithoutId} = f
-
+    fields.forEach(async (f) => {
       if (content.isEncrypted) {
-        fieldWithoutId.value = await SEA.encrypt(fieldWithoutId.value, 'xgzSmRn5XJcJJefH')
+        f.value = await SEA.encrypt(f.value, 'xgzSmRn5XJcJJefH')
       }
       
-      gunFields.get(f.id).put(fieldWithoutId)
+      db.get('content').get(`${slug}`).get('fields').get(f.id).get('value').put(f)
     })
 
     contract.setContent({
