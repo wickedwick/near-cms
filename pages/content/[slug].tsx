@@ -62,7 +62,8 @@ const EditContent: NextPage = () => {
     })
 
     savedFields = savedFields.filter((f, index) => {
-      return savedFields.indexOf(f) === index
+      const firstField = savedFields.find((f2) => f.name === f2.name && f.value === f.value) as Field
+      return savedFields.indexOf(firstField) === index
     })
 
     setFields(savedFields)
