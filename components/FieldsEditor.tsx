@@ -37,12 +37,15 @@ const FieldsEditor = ({ fields, setFields }: FieldTypesEditorProps): JSX.Element
       {editorLoaded && fields && fields.map((field, index) => {
         return (
           <div key={index}>
-            <label htmlFor={`${field.name}-value`}>{field.name}</label>
+            <label htmlFor={`${field.name}-value`}>{field.name}{field.required ? ' (required)' : ''}</label>
             {field.fieldType.toLowerCase() === 'string' && (
               <input
                 id={`${field.name}-value`}
                 className="block px-3 py-2 mb-3 w-full"
-                type="text" value={field.value}
+                type="text"
+                value={field.value}
+                required={field.required}
+                maxLength={field.maxLength}
                 onChange={(e) => handleFieldChange(index, e)}
               />
             )}

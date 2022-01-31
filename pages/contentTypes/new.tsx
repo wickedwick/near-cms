@@ -3,13 +3,13 @@ import type { NextPage } from 'next'
 import Router from 'next/router'
 import Link from 'next/link'
 import { ContentType, Field } from '../../assembly/main'
-import FieldTypesEditor from '../../components/FieldTypesEditor'
-import { NearContext } from '../../context/NearContext'
 import { Role } from '../../assembly/model'
+import Alert from '../../components/Alert'
+import FieldTypesEditor from '../../components/FieldTypesEditor'
 import Layout from '../../components/Layout'
 import LoadButton from '../../components/LoadButton'
+import { NearContext } from '../../context/NearContext'
 import { validateContentType } from '../../validators/contentType'
-import Alert from '../../components/Alert'
 
 const NewContentType: NextPage = () => {
   const { contract, currentUser } = useContext(NearContext)
@@ -83,16 +83,16 @@ const NewContentType: NextPage = () => {
           <h2>Fields</h2>
           
           <div className="">
-            <FieldTypesEditor fields={fields} setFields={setFields} />
             {fields.map((field, index) => {
               return (
                 <div key={`${field.name}-${index}`} className="block mb-3">
-                  <p>{index + 1}. {field.name}: {field.fieldType} &nbsp;
+                  <p>{index + 1}. {field.name}: {field.fieldType} {field.required ? 'required' : ''} {field.maxLength ? `${field.maxLength} maximum` : ''} &nbsp;
                     <button className="bg-blue px-1" onClick={() => {handleDeleteField(index)}}>x</button>
                   </p>
                 </div>
               )
             })}
+            <FieldTypesEditor fields={fields} setFields={setFields} />
           </div>
 
           <button

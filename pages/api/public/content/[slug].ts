@@ -1,3 +1,4 @@
+import { SEA } from "gun"
 import { NextApiRequest, NextApiResponse } from "next"
 import { Content, Field } from "../../../../assembly/main"
 import { ContentData } from "../../../../assembly/model"
@@ -26,6 +27,10 @@ export default async (
       const slug = field.value
       const media = await contract.getMediaBySlug({ slug })
       field.value = media
+    }
+
+    if (content.isEncrypted) {
+      field.value = await SEA.decrypt(field.value, 'xgzSmRn5XJcJJefH')
     }
 
     savedFields.push(field)

@@ -20,6 +20,17 @@ export const validateContent = (content: Content, fields: Field[]): ValidationRe
     validationMessages.push("Content fields are required")
   }
 
+  fields.forEach(field => {
+    if (field.required && !field.value) {
+      validationMessages.push(`Field ${field.name} is required`)
+    }
+
+    console.log('length', field.value?.length)
+    if (field.maxLength > 0 && field.value && field.value.length > field.maxLength) {
+      validationMessages.push(`Field ${field.name} is too long`)
+    }
+  })
+
   return {
     isValid: validationMessages.length === 0,
     validationMessages,

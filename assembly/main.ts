@@ -240,6 +240,8 @@ class Field {
   fieldType: string
   name: string
   value: string
+  required: boolean
+  maxLength: i64
 }
 
 @nearBindgen

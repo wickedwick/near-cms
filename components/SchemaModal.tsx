@@ -21,8 +21,10 @@ const SchemaModal = ({ contentType, setContentType }: SchemaModalProps): JSX.Ele
                         return (
                           <div key={index}>
                             <pre>{'{'}</pre>
-                            <pre>&nbsp;&nbsp;"Name": "{f.name}"</pre>
-                            <pre>&nbsp;&nbsp;"FieldType": "{f.fieldType}"</pre>
+                            <pre>&nbsp;&nbsp;"Name": "{f.name}",</pre>
+                            <pre>&nbsp;&nbsp;"FieldType": "{f.fieldType}",</pre>
+                            <pre>&nbsp;&nbsp;"Required": {f.required ? 'true' : 'false'},</pre>
+                            {f.maxLength.toString() !== '0' && <pre>&nbsp;&nbsp;"MaxLength": {f.maxLength},</pre>}
                             <pre>{'},'}</pre>
                           </div>
                         )
