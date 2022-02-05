@@ -1,8 +1,8 @@
 import axios from "axios"
-import { create, IPFSHTTPClient } from "ipfs-http-client"
+import { create, IPFS } from "ipfs-core"
 import { Dispatch, SetStateAction } from "react"
 
-export const saveToIpfs = async(ipfs: IPFSHTTPClient, file: File): Promise<string> => {
+export const saveToIpfs = async(ipfs: IPFS, file: File): Promise<string> => {
   if (!ipfs) {
     return ''
   }
@@ -16,26 +16,14 @@ export const saveToIpfs = async(ipfs: IPFSHTTPClient, file: File): Promise<strin
   }
 }
 
-export async function instantiateIpfs(setIpfs: Dispatch<SetStateAction<IPFSHTTPClient | null>>): Promise<void> {
-  const multiaddr: string = '/ip4/127.0.0.1/tcp/5001'
-
-  const http = create(multiaddr)
-  const isOnline = await http.isOnline()
-  
-  if (isOnline) {
-    setIpfs(http)
-  }
+export async function instantiateIpfs(setIpfs: Dispatch<SetStateAction<IPFS | null>>): Promise<void> {
+  const node: IPFS = await create()
+  setIpfs(node)
 }
 
-export async function instantiateIpfsServerSide(): Promise<IPFSHTTPClient | null> {
-  const http = create()
-  const isOnline = await http.isOnline()
-
-  if (isOnline) {
-    return http as IPFSHTTPClient
-  }
-
-  return null
+export async function instantiateIpfsServerSide(): Promise<IPFS | null> {
+  const node: IPFS = await create()
+  return node
 }
 
 export const getBase64 = async (cid: string): Promise<string> => {

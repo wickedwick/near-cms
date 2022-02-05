@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import Big from 'big.js'
+import { IPFS } from 'ipfs-core'
 import * as nearAPI from 'near-api-js'
 import type { AppProps } from 'next/app'
-import { IPFSHTTPClient } from 'ipfs-http-client'
 import { UserRole } from '../assembly/main'
 import { DbContext } from '../context/DbContext'
 import { IpfsContext } from '../context/IpfsContext'
@@ -23,7 +23,7 @@ function MyApp({ Component, pageProps }: AppProps) {
   const [currentUser, setCurrentUser] = useState<UserRole | undefined>(undefined)
   const [nearConfig, setNearConfig] = useState<NetworkConfiguration | null>(null)
   const [walletConnection, setWalletConnection] = useState<nearAPI.WalletConnection | null>(null)
-  const [ipfs, setIpfs] = useState<IPFSHTTPClient | null>(null)  
+  const [ipfs, setIpfs] = useState<IPFS | null>(null)  
 
   useEffect(() => {
     initContract().then(({ contract, currentUser, nearConfig, walletConnection }) => {
@@ -34,9 +34,11 @@ function MyApp({ Component, pageProps }: AppProps) {
       setWalletConnection(walletConnection)
       setContract(contract)
       
+      if (ipfs) return
+
       instantiateIpfs(setIpfs)
     })
-  }, [])
+  }, [ipfs])
 
   const initialState: AppParams = {
     contract,

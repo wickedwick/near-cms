@@ -1,8 +1,8 @@
-import { IPFSHTTPClient } from 'ipfs-http-client'
-import React, { Dispatch, SetStateAction } from 'react'
+import { IPFS } from 'ipfs-core'
+import React from 'react'
 import { IpfsContextParams } from '../types/app'
 
 export const IpfsContext = React.createContext({
   ipfs: null,
-  saveToIpfs: (ipfs: IPFSHTTPClient, file: File) => {}
+  saveToIpfs: (ipfs: IPFS, file: File) => {}
 } as IpfsContextParams)

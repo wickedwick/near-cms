@@ -1,7 +1,7 @@
+import { IPFS } from "ipfs-core"
 import * as nearAPI from 'near-api-js';
 import { UserRole } from '../assembly/main';
 import { NetworkConfiguration } from './configuration';
-import { IPFSHTTPClient } from 'ipfs-http-client'
 
 export type AppParams = {
   contract: nearAPI.Contract | null
@@ -23,7 +23,7 @@ export type LayoutProps = {
 
 export type IpfsContextParams = {
   ipfs: any | null
-  saveToIpfs: (ipfs: IPFSHTTPClient, file: File) => Promise<string>
+  saveToIpfs: (ipfs: IPFS, file: File) => Promise<string>
 }
 
 export type Receipt = {

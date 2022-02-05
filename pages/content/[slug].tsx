@@ -70,7 +70,6 @@ const EditContent: NextPage = () => {
     setCurrentContent(ct)
   }
 
-  // TODO: Get update working right.
   const handleSubmit = async (): Promise<void> => {
     if (!contract) {
       return
