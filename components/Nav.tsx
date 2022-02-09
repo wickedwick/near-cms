@@ -3,6 +3,7 @@ import Router from "next/router"
 import { useContext } from "react"
 import { Role } from "../assembly/model"
 import { NearContext } from "../context/NearContext"
+import { changeMethods, viewMethods } from "../services/contracts"
 
 const Nav = (): JSX.Element => {
   const { contract, currentUser, nearConfig, wallet, setCurrentUser } = useContext(NearContext)
@@ -11,13 +12,13 @@ const Nav = (): JSX.Element => {
     if (!wallet || !nearConfig || !contract) {
       return
     }
-
+    
     wallet.requestSignIn(
-      {contractId: nearConfig.contractName, methodNames: [contract.setContentType.name]}, //contract requesting access
-      'NEAR CMS', //optional name
-      undefined, //optional URL to redirect to if the sign in was successful
-      undefined //optional URL to redirect to if the sign in was NOT successful
-    )
+      nearConfig.contractName, //contract requesting access
+      'd CMS', //optional name
+      `${process.env.baseUrl}?success=true`, //optional URL to redirect to if the sign in was successful
+      `${process.env.baseUrl}?success=false` //optional URL to redirect to if the sign in was NOT successful
+    );
   }
 
   const signOut = () => {

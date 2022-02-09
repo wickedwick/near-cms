@@ -45,7 +45,7 @@ const FieldsEditor = ({ fields, setFields }: FieldTypesEditorProps): JSX.Element
                 type="text"
                 value={field.value}
                 required={field.required}
-                maxLength={field.maxLength}
+                maxLength={field.maxLength !== '0' ? field.maxLength : undefined}
                 onChange={(e) => handleFieldChange(index, e)}
               />
             )}

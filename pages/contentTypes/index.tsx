@@ -9,6 +9,7 @@ import LoadButton from '../../components/LoadButton'
 import { NearContext } from '../../context/NearContext'
 import SchemaModal from '../../components/SchemaModal'
 import Alert from '../../components/Alert'
+import LoadingIndicator from '../../components/LoadingIndicator'
 
 const ContentTypes: NextPage = () => {
   const { contract, currentUser } = useContext(NearContext)
@@ -16,6 +17,7 @@ const ContentTypes: NextPage = () => {
   const [contractLoaded, setContractedLoaded] = useState(false)
   const [contentType, setContentType] = useState<ContentType | null>(null)
   const [transactionHashes, setTransactionHashes] = useState<string>('')
+  const [loading, setLoading] = useState(false)
 
   useEffect(() => {
     init()
@@ -29,6 +31,7 @@ const ContentTypes: NextPage = () => {
       return
     }
 
+    setLoading(true)
     setContractedLoaded(true)
     if (!currentUser || currentUser.role !== Role.Admin) {
       Router.push('/')
@@ -36,6 +39,7 @@ const ContentTypes: NextPage = () => {
 
     const ct = await contract.getContentTypes()
     setContentTypes(ct)
+    setLoading(false)
   }
 
   const deleteContentType = (ct: ContentType): void => {
@@ -43,7 +47,12 @@ const ContentTypes: NextPage = () => {
       return
     }
 
-    contract.deleteContentType({ name: ct.name })
+    setLoading(true)
+    contract.deleteContentType({ name: ct.name }).then(() => {
+      const newContentTypes = contentTypes.filter(c => c.name !== ct.name)
+      setContentTypes(newContentTypes)
+      setLoading(false)
+    })
   }
 
   return (
@@ -56,7 +65,7 @@ const ContentTypes: NextPage = () => {
       )}
 
       {contract && !contractLoaded && <LoadButton initFunction={init} />}
-      
+
       <div className="my-3">
         <Link href="/contentTypes/new">
           <a className="px-3 py-2 my-3 x-4 border border-yellow bg-blue shadow-sm text-gray-light focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue">Create New</a>
@@ -65,7 +74,11 @@ const ContentTypes: NextPage = () => {
 
       <SchemaModal contentType={contentType as ContentType} setContentType={setContentType} />
 
-      {contract && contractLoaded && contentTypes.length > 0 && (
+      {contract && contractLoaded && loading && contentTypes.length > 0 && (
+        <LoadingIndicator />
+      )}
+      
+      {contract && contractLoaded && !loading && contentTypes.length > 0 && (
         <>
           <table className="table-auto min-w-full divide-y divide-gray">
             <thead className="bg-gray">

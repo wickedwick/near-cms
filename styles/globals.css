@@ -59,6 +59,10 @@ td, th {
   min-height: 300px;
 }
 
+.visually-hidden {
+  visibility: hidden;
+}
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;

@@ -6,16 +6,17 @@ import { Content, Field } from '../../assembly/main'
 import { Role } from '../../assembly/model'
 import Layout from '../../components/Layout'
 import LoadButton from '../../components/LoadButton'
+import LoadingIndicator from '../../components/LoadingIndicator'
 import { NearContext } from '../../context/NearContext'
 import Alert from '../../components/Alert'
-import { getServerSideContract } from '../../services/contracts'
 
 const Contents: NextPage = () => {
   const { contract, currentUser } = useContext(NearContext)
   const [content, setContent] = useState<Content[]>([])
   const [contractLoaded, setContractedLoaded] = useState(false)
   const [transactionHashes, setTransactionHashes] = useState<string>('')
-  const { query } = useRouter();
+  const { query } = useRouter()
+  const [loading, setLoading] = useState(false)
   
   useEffect(() => {
     init()
@@ -28,6 +29,7 @@ const Contents: NextPage = () => {
       return
     }
 
+    setLoading(true)
     setContractedLoaded(true)
     if (!currentUser || currentUser.role > Role.Editor) {
       Router.push('/')
@@ -35,6 +37,7 @@ const Contents: NextPage = () => {
 
     const ct: Content[] = await contract.getContents()
     setContent(ct)
+    setLoading(false)
   }
 
   const deleteContent = (ct: Content): void => {
@@ -42,8 +45,13 @@ const Contents: NextPage = () => {
       return
     }
 
+    setLoading(true)
     // TODO: delete in gun
-    contract.deleteContent({ content: ct })
+    contract.deleteContent({ content: ct }).then(() => {
+      const newContent = content.filter(c => c.slug !== ct.slug)
+      setContent(newContent)
+      setLoading(false)
+    })
   }
 
   const editContent = (ct: Content): void => {
@@ -75,8 +83,12 @@ const Contents: NextPage = () => {
           <a className="px-3 py-2 my-3 x-4 border border-yellow bg-blue shadow-sm text-gray-light focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue">Create New</a>
         </Link>
       </div>
+
+      {contract && content.length > 0 && loading && (
+        <LoadingIndicator />
+      )}
       
-      {contract && content.length > 0 && (
+      {contract && content.length > 0 && !loading && (
         <table className="table-auto min-w-full divide-y divide-gray">
           <thead className="bg-gray">
             <tr>

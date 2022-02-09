@@ -2,6 +2,9 @@ import * as nearAPI from 'near-api-js'
 import { User } from '../assembly/main'
 import getConfig from '../config'
 
+export const viewMethods: string[] = ['getContentType', 'getContentTypes', 'getContents', 'getContent', 'getUserRole', 'getUser', 'getUsers', 'getClients', 'getClient', 'getPublicContent', 'getPublicContents', 'getMedia', 'getMediaBySlug']
+export const changeMethods: string[] = ['setContentType', 'deleteContentType', 'setContent', 'deleteContent', 'setUserRole', 'deleteUserRole', 'setUser', 'setClient', 'deleteClient', 'setMedia', 'deleteMedia', 'getSigningUser']
+
 export const getServerSideContract = async () => {
   const KEY_PATH = "../../neardev/shared-test/test.near.json"
   const nearConfig = getConfig('testnet')
@@ -20,8 +23,8 @@ export const getServerSideContract = async () => {
     account,
     nearConfig.contractName,
     {
-      viewMethods: ['getContentType', 'getContentTypes', 'getContents', 'getContent', 'getUserRole', 'getUser', 'getUsers', 'getClients', 'getClient', 'getPublicContent', 'getPublicContents', 'getMedia', 'getMediaBySlug'],
-      changeMethods: ['setContentType', 'deleteContentType', 'setContent', 'deleteContent', 'setUserRole', 'deleteUserRole', 'setUser', 'setClient', 'deleteClient', 'setMedia', 'deleteMedia'],
+      viewMethods,
+      changeMethods,
       sender: account.accountId,
     }
   )
@@ -47,8 +50,8 @@ export const initContract = async () => {
     walletConnection.account(),
     nearConfig.contractName,
     {
-      viewMethods: ['getContentType', 'getContentTypes', 'getContents', 'getContent', 'getUserRole', 'getUser', 'getUsers', 'getClients', 'getClient', 'getPublicContent', 'getPublicContents', 'getMedia', 'getMediaBySlug'],
-      changeMethods: ['setContentType', 'deleteContentType', 'setContent', 'deleteContent', 'setUserRole', 'deleteUserRole', 'setUser', 'setClient', 'deleteClient', 'setMedia', 'deleteMedia'],
+      viewMethods,
+      changeMethods,
       sender: walletConnection.getAccountId(),
     }
   )

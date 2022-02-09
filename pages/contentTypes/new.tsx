@@ -63,6 +63,8 @@ const NewContentType: NextPage = () => {
     contract.setContentType({
       args: { contentType }, 
       callbackUrl: `${process.env.baseUrl}/contentTypes`,
+    }).then(() => {
+      Router.push('/contentTypes')
     })
   }
 

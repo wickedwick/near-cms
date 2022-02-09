@@ -91,10 +91,12 @@ const EditContent: NextPage = () => {
       db.get('content').get(`${slug}`).get('fields').get(f.id).get('value').put(f)
     })
 
-    contract.setContent({
+    await contract.setContent({
       args: { content }, 
       callbackUrl: `${process.env.baseUrl}/content`,
     })
+
+    Router.push('/content')
   }
 
   return (
