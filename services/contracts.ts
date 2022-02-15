@@ -1,13 +1,13 @@
 import * as nearAPI from 'near-api-js'
 import { User } from '../assembly/main'
-import getConfig from '../config'
+import { getConfig, CONTRACT_NAME } from '../config'
 
 export const viewMethods: string[] = ['getContentType', 'getContentTypes', 'getContents', 'getContent', 'getUserRole', 'getUser', 'getUsers', 'getClients', 'getClient', 'getPublicContent', 'getPublicContents', 'getMedia', 'getMediaBySlug']
 export const changeMethods: string[] = ['setContentType', 'deleteContentType', 'setContent', 'deleteContent', 'setUserRole', 'deleteUserRole', 'setUser', 'setClient', 'deleteClient', 'setMedia', 'deleteMedia', 'getSigningUser']
 
 export const getServerSideContract = async () => {
   const KEY_PATH = "../../neardev/shared-test/test.near.json"
-  const nearConfig = getConfig('testnet')
+  const nearConfig = getConfig(process.env.NODE_ENV || 'testnet')
   const config = {
     networkId: nearConfig.networkId,
     headers: nearConfig.headers,
@@ -18,7 +18,7 @@ export const getServerSideContract = async () => {
   }
 
   const near = await nearAPI.connect(config)
-  const account = await near.account('wickham.testnet')
+  const account = await near.account(CONTRACT_NAME)
   const contract = new nearAPI.Contract(
     account,
     nearConfig.contractName,
@@ -33,7 +33,7 @@ export const getServerSideContract = async () => {
 }
 
 export const initContract = async () => {
-  const nearConfig = getConfig('testnet')
+  const nearConfig = getConfig(process.env.NODE_ENV || 'testnet')
   const keyStore = new nearAPI.keyStores.BrowserLocalStorageKeyStore()
   const near = await nearAPI.connect({ keyStore, ...nearConfig })
   const walletConnection = new nearAPI.WalletConnection(near, '')

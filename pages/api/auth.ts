@@ -5,6 +5,8 @@ import { getServerSideContract } from '../../services/contracts'
 import { db } from '../../services/db'
 import { TextEncoder } from 'util'
 import { Client, UserRole } from '../../assembly/main'
+import { CmsContract } from '../../types/contract'
+import { JwtPayload } from '../../types/auth'
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const username = req.headers['client_id'] as string
@@ -15,7 +17,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     return
   }
 
-  const contract = await getServerSideContract()
+  const contract = await getServerSideContract() as CmsContract
   let isUser = true
   let user: UserRole | Client = await contract.getUser({ username })
   

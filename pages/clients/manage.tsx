@@ -82,7 +82,7 @@ const ManageClients: NextPage = () => {
   }
 
   const handleShowModal = (client: Client): void => {
-    db.get('client').get(`${client.slug}`).get('apiKey').on(data => {
+    db.get('client').get(`${client.slug}`).get('apiKey').on((data: string) => {
       setDisplayKey(data)
       setModalOpen(true)
 

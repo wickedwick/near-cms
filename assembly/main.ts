@@ -38,9 +38,9 @@ export function getUserRole(name: string): UserRole | null {
 }
 
 export function setUserRole(role: UserRole): void {
-  // if (!senderIsAdmin()) {
-  //   throw new Error("Unauthorized")
-  // }
+  if (!senderIsAdmin()) {
+    throw new Error("Unauthorized")
+  }
 
   userRegistry.set(role.username, role)
 }
@@ -139,15 +139,6 @@ export function getClients(): Client[] {
   return clientRegistry.values() as Client[]
 }
 
-export function setUser(user: User, role: Role): void {
-  const userRole: UserRole = {
-    username: user.accountId,
-    role
-  }
-  
-  userRegistry.set(userRole.username || '', userRole)
-}
-
 export function getUser(username: string): UserRole | null {
   return userRegistry.get(username)
 }
@@ -202,7 +193,7 @@ export function deleteMedia(media: Media): void {
 
 const senderIsAdmin = (): boolean => {
   const sender: string = context.sender
-  if (sender === 'wickham.testnet') return true
+  if (sender === context.contractName) return true
 
   const userWithRole: UserRole | null = userRegistry.get(sender)
   
@@ -213,7 +204,7 @@ const senderIsAdmin = (): boolean => {
 
 const senderIsEditor = (): boolean => {
   const sender: string = context.sender
-  if (sender === 'wickham.testnet') return true
+  if (senderIsAdmin()) return true
 
   const userWithRole = userRegistry.get(sender)
   
@@ -230,59 +221,62 @@ export const mediaCollection = new PersistentUnorderedMap<string, Media>("mZXUuB
 
 @nearBindgen
 class ContentType {
-  fields: Field[]
-  name: string
+  fields: Field[] = []
+  name: string = ''
 }
 
 @nearBindgen
 class Field {
-  id: string
-  fieldType: string
-  name: string
-  value: string
-  required: boolean
-  maxLength: i64
+  id: string = ''
+  fieldType: string = ''
+  name: string = ''
+  value: string = ''
+  required: boolean = false
+  maxLength: i64 = 0
 }
 
 @nearBindgen
 class Content {
-  name: string
-  slug: string
-  type: ContentType
-  isPublic: boolean
-  isEncrypted: boolean
-  createdAt: string
-  updatedAt: string
+  name: string = ''
+  slug: string = ''
+  type: ContentType = {
+    fields: [],
+    name: ''
+  }
+  isPublic: boolean = false
+  isEncrypted: boolean = false
+  createdAt: string = ''
+  updatedAt: string = ''
 }
 
 @nearBindgen
 class Media {
-  name: string
-  url: string
-  slug: string
-  cid: string
-  uploadedAt: string
-  mediaType: MediaType
-  filename: string
+  name: string = ''
+  url: string = ''
+  slug: string = ''
+  cid: string = ''
+  uploadedAt: string = ''
+  mediaType: MediaType = MediaType.Image
+  filename: string = ''
 }
 
 @nearBindgen
 class UserRole {
-  role: Role
-  username: string
+  role: Role = Role.Public
+  username: string = ''
 }
 
 @nearBindgen
 class User {
-  accountId: string
-  balance: string
+  accountId: string = ''
+  balance: string = ''
 }
 
 @nearBindgen
 class Client {
-  slug: string
-  name: string
-  owner: string
+  slug: string = ''
+  name: string = ''
+  owner: string = ''
 }
 
 export { ContentType, Field, Content, User, UserRole, Client, Media }

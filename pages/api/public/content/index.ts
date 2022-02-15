@@ -1,16 +1,13 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { Content } from '../../../../assembly/main'
 import { getServerSideContract } from '../../../../services/contracts'
-
-type Data = {
-  name: string
-}
+import { CmsContract } from '../../../../types/contract'
 
 export default async (
   req: NextApiRequest,
   res: NextApiResponse<Content[] | { error: string }>
 ) => {
-  const contract = await getServerSideContract()
+  const contract = await getServerSideContract() as CmsContract
   let content: Content[] = await contract.getPublicContents()
   
   if (!content) {

@@ -14,12 +14,10 @@ import { AppParams } from '../types/app'
 import { NetworkConfiguration } from '../types/configuration'
 
 import '../styles/globals.css'
-
-const SUGGESTED_DONATION = '0'
-const BOATLOAD_OF_GAS = Big(3).times(10 ** 13).toFixed()
+import { CmsContract } from '../types/contract'
 
 function MyApp({ Component, pageProps }: AppProps) {
-  const [contract, setContract] = useState<nearAPI.Contract | null>(null)
+  const [contract, setContract] = useState<CmsContract | null>(null)
   const [currentUser, setCurrentUser] = useState<UserRole | undefined>(undefined)
   const [nearConfig, setNearConfig] = useState<NetworkConfiguration | null>(null)
   const [walletConnection, setWalletConnection] = useState<nearAPI.WalletConnection | null>(null)
@@ -32,7 +30,7 @@ function MyApp({ Component, pageProps }: AppProps) {
       })
       setNearConfig(nearConfig)
       setWalletConnection(walletConnection)
-      setContract(contract)
+      setContract(contract as CmsContract)
       
       if (ipfs) return
 

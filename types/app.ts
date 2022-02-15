@@ -2,9 +2,10 @@ import { IPFS } from "ipfs-core"
 import * as nearAPI from 'near-api-js';
 import { UserRole } from '../assembly/main';
 import { NetworkConfiguration } from './configuration';
+import { CmsContract } from "./contract";
 
 export type AppParams = {
-  contract: nearAPI.Contract | null
+  contract: CmsContract | null
   currentUser: UserRole | undefined
   nearConfig: NetworkConfiguration | null
   wallet: nearAPI.WalletConnection | null

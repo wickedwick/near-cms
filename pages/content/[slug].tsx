@@ -51,7 +51,7 @@ const EditContent: NextPage = () => {
     
     let savedFields: Field[] = []
 
-    await gunFields.map().on(async (data, id) => {
+    await gunFields.map().on(async (data: Field, id: string) => {
       let field: Field = {...data, id}
       
       if (ct.isEncrypted) {

@@ -4,6 +4,7 @@ import { Content, Field } from "../../../assembly/main"
 import { ContentData } from "../../../assembly/model"
 import { getServerSideContract } from "../../../services/contracts"
 import { db } from "../../../services/db"
+import { CmsContract } from "../../../types/contract"
 
 type Data = {
   name: string
@@ -15,7 +16,7 @@ export default async (
 ) => {
   const fileTypes = ['image', 'video', 'file']
   const { slug } = req.query
-  const contract = await getServerSideContract()
+  const contract = await getServerSideContract() as CmsContract
   const content: Content = await contract.getContent({ slug })
   const gunFields = db.get('content').get(`${slug}`).get('fields')
   let savedFields: Field[] = []

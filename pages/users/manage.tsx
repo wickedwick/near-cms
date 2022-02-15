@@ -17,7 +17,7 @@ const ManageUsers: NextPage = () => {
   const [accountId, setAccountId] = useState('')
   const [role, setRole] = useState<number>(Role.Public)
   const [users, setUsers] = useState<UserRole[]>([])
-  const [validationSummary, setValidationSummary] = useState<string[]>('')
+  const [validationSummary, setValidationSummary] = useState<string[]>([])
   const [modalOpen, setModalOpen] = useState(false)
   const [displayKey, setDisplayKey] = useState('')
   const [contractLoaded, setContractedLoaded] = useState(false)
@@ -88,7 +88,7 @@ const ManageUsers: NextPage = () => {
   }
 
   const handleShowModal = (userRole: UserRole): void => {
-    db.get(`${userRole.username}`).get('apiKey').on(data => {
+    db.get(`${userRole.username}`).get('apiKey').on((data: string) => {
       setDisplayKey(data)
       setModalOpen(true)
 
