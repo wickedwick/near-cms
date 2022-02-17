@@ -31,6 +31,7 @@ export default async (
     }
 
     if (content.isEncrypted) {
+      // TODO: Move to server side
       field.value = await SEA.decrypt(field.value, 'xgzSmRn5XJcJJefH') as string
     }
 

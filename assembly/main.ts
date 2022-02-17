@@ -172,10 +172,6 @@ export function setMedia(media: Media): void {
     throw new Error("Media cid is required")
   }
 
-  if (!media.mediaType) {
-    throw new Error("Media type is required")
-  }
-
   if (!media.filename) {
     throw new Error("Media filename is required")
   }
@@ -183,12 +179,12 @@ export function setMedia(media: Media): void {
   mediaCollection.set(media.slug || '', media)
 }
 
-export function deleteMedia(media: Media): void {
+export function deleteMedia(slug: string): void {
   if (!senderIsEditor()) {
     throw new Error("Unauthorized")
   }
 
-  mediaCollection.delete(media.slug || '')
+  mediaCollection.delete(slug || '')
 }
 
 const senderIsAdmin = (): boolean => {

@@ -74,7 +74,10 @@ const ManageClients: NextPage = () => {
     }
 
     handleSetApiKey(client)
-    await contract.setClient({ client })
+    await contract.setClient({
+      args: { clientUpdate: client }, 
+      callbackUrl: `${process.env.baseUrl}/clients/manage`,
+    })
   }
 
   const handleSetApiKey = async (client: Client): Promise<void> => {

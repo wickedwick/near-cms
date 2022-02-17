@@ -16,10 +16,6 @@ export const validateMedia = (media: Media): ValidationResult => {
     validationMessages.push("Media cid is required")
   }
 
-  if (!media.mediaType) {
-    validationMessages.push("Media type is required")
-  }
-
   if (!media.filename) {
     validationMessages.push("Media filename is required")
   }

@@ -25,6 +25,7 @@ export type LayoutProps = {
 export type IpfsContextParams = {
   ipfs: any | null
   saveToIpfs: (ipfs: IPFS, file: File) => Promise<string>
+  removeFromIpfs: (ipfs: IPFS, cid: string) => Promise<boolean>
 }
 
 export type Receipt = {

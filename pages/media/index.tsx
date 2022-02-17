@@ -12,6 +12,7 @@ import Alert from '../../components/Alert'
 
 const MediaIndex: NextPage = () => {
   const { contract, currentUser } = useContext(NearContext)
+  const [message, setMessage] = useState<string>('')
   const [media, setMedia] = useState<Media[]>([])
   const [contractLoaded, setContractedLoaded] = useState(false)
   const [transactionHashes, setTransactionHashes] = useState<string>('')
@@ -22,6 +23,7 @@ const MediaIndex: NextPage = () => {
 
   const init = async (): Promise<void> => {
     setTransactionHashes(Router.query.transactionHashes as string)
+    setMessage(Router.query.message as string)
     
     if (!contract) {
       setContractedLoaded(false)
@@ -44,6 +46,10 @@ const MediaIndex: NextPage = () => {
 
       {transactionHashes && (
         <Alert heading="Success!" transactionHashes={transactionHashes} />
+      )}
+
+      {message && (
+        <Alert heading="Success!" messages={[message]} />
       )}
 
       {contract && !contractLoaded && !media.length && <LoadButton initFunction={init} />}

@@ -1,36 +1,40 @@
-import { useContext, useEffect, useState } from 'react'
+import { nanoid } from 'nanoid'
 import { NextPage } from 'next'
 import Link from 'next/link'
-import Router from 'next/router'
-import { nanoid } from 'nanoid'
+import Router, { useRouter } from 'next/router'
+import { useContext, useEffect, useState } from 'react'
 import { Media } from '../../assembly/main'
 import { MediaType, Role } from '../../assembly/model'
 import Alert from '../../components/Alert'
 import Layout from '../../components/Layout'
-import { NearContext } from '../../context/NearContext'
-import { IpfsContext } from '../../context/IpfsContext'
 import LoadButton from '../../components/LoadButton'
+import { IpfsContext } from '../../context/IpfsContext'
+import { NearContext } from '../../context/NearContext'
 import { validateMedia } from '../../validators/media'
 
-const NewMedia: NextPage = () => {
+const EditMedia: NextPage = () => {
+  const { ipfs, saveToIpfs, removeFromIpfs } = useContext(IpfsContext)
   const { contract, currentUser } = useContext(NearContext)
-  const { ipfs, saveToIpfs } = useContext(IpfsContext)
+  const [media, setMedia] = useState<Media | null>(null)
+  const [contractLoaded, setContractedLoaded] = useState(false)
   const [name, setName] = useState('')
   const [url, setUrl] = useState('')
   const [mediaType, setMediaType] = useState<MediaType>(MediaType.Image)
   const [filename, setFilename] = useState('')
   const [file, setFile] = useState<File | null>(null)
   const [description, setDescription] = useState('')
-  const [contractLoaded, setContractedLoaded] = useState(false)
   const [validationSummary, setValidationSummary] = useState<string[]>([])
+  const [cid, setCid] = useState('')
+
+  const router = useRouter()
+  const { slug } = router.query
 
   useEffect(() => {
     init()
   }, [])
 
-  const init = (): void => {
+  const init = async (): Promise<void> => {
     if (!contract) {
-      setContractedLoaded(false)
       return
     }
 
@@ -38,6 +42,15 @@ const NewMedia: NextPage = () => {
     if (!currentUser || currentUser.role > Role.Editor) {
       Router.push('/')
     }
+
+    const mediaData: Media = await contract.getMediaBySlug({ slug })
+
+    setMedia(mediaData)
+    setName(mediaData.name)
+    setUrl(mediaData.url)
+    setMediaType(mediaData.mediaType)
+    setFilename(mediaData.filename)
+    setCid(mediaData.cid)
   }
 
   const handleSetFile = async (file: File): Promise<void> => {
@@ -45,7 +58,6 @@ const NewMedia: NextPage = () => {
     setFile(file)
     switch(file.type) {
       case 'image/jpeg':
-      case 'image/png':
         setMediaType(MediaType.Image)
         break
       case 'video/mp4':
@@ -56,41 +68,58 @@ const NewMedia: NextPage = () => {
         break
     }
   }
-  
+
+  const handleDeleteFile = async (): Promise<void> => {
+    if (!contract) {
+      return
+    }
+
+    const removed = await removeFromIpfs(ipfs, cid)
+    if (removed) {
+      await contract.deleteMedia({
+        args: { slug }, 
+        callbackUrl: `${process.env.baseUrl}/media`,
+      })
+
+      Router.push('/media?message=Media deleted')
+    }
+  }
+
   const handleSubmit = async (): Promise<void> => {
     setDescription('')
-    
+
     if (!name) {
       setDescription('Name is required')
       return
     }
-    
+
     if (!file) {
       setDescription('File is required')
       return
     }
-    
+
     if (!contract) {
       setDescription('Contract is not available')
       return
     }
-    
-    const cid = await saveToIpfs(ipfs, file)
-    if (!cid) {
+
+    await removeFromIpfs(ipfs, cid);
+    const newCid = await saveToIpfs(ipfs, file)
+    if (!newCid) {
       setDescription('Failed to save to IPFS')
       return
     }
-    
+
     const media: Media = {
       name,
       url,
       mediaType,
       filename,
       slug: nanoid(),
-      cid,
+      cid: newCid,
       uploadedAt: new Date().toISOString(),
     }
-    
+
     const validationResult = validateMedia(media)
     if (!validationResult.isValid) {
       setValidationSummary(validationResult.validationMessages)
@@ -105,7 +134,12 @@ const NewMedia: NextPage = () => {
 
   return (
     <Layout home={false}>
-      <h1 className="title">Add Media</h1>
+      {media?.name ? (
+        <h1 className="title">Edit {media.filename}</h1>
+      ) : (
+        <h1 className="title">Media</h1>
+      )}
+
       {!contract && <div>Loading...</div>}
 
       {validationSummary.length > 0 && (
@@ -114,16 +148,14 @@ const NewMedia: NextPage = () => {
 
       {contract && !contractLoaded && <LoadButton initFunction={init} />}
       
-      {file && (
-        <div>
-          <p>{file.name} | {file.type} | {file.size} bytes</p>
-        </div>
-      )}
-      
       {description && <p>{description}</p>}
       
-      {contract && contractLoaded && (
-        <>
+      {contract && contractLoaded && media && media.mediaType === MediaType.Image && (
+        <img src={`https://ipfs.io/ipfs/${media.cid}`} alt={media.name} />
+      )}
+
+      {contract && contractLoaded && media && (
+        <div className="">
           <label htmlFor="name">Name</label>
           <input className="block px-3 py-2 mb-3 w-full" type="text" value={name} onChange={(e) => setName(e.target.value)} />
 
@@ -133,14 +165,16 @@ const NewMedia: NextPage = () => {
           <label htmlFor="file">File</label>
           <input className="block px-3 py-2 mb-3 w-full" type="file" onChange={(e) => handleSetFile(e.target.files[0])} />
 
-          <button className="px-3 py-2 my-3 mr-3 x-4 border border-blue shadow-sm text-gray-light bg-blue hover:bg-blue focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue" onClick={handleSubmit}>Create</button>
-          <Link href="/media">
-            <a className="">Back</a>
-          </Link>
-        </>
+          <button className="px-3 py-2 my-3 mr-3 x-4 border border-blue shadow-sm text-gray-light bg-blue hover:bg-blue focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue" onClick={handleSubmit}>Update</button>
+        </div>
       )}
+      
+      <button className="px-3 py-2 my-3 mr-3 x-4 border border-yellow shadow-sm text-gray-dark bg-yellow hover:bg-yellow focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow" onClick={handleDeleteFile}>Delete</button>
+      <Link href="/media">
+        <a className="">Back</a>
+      </Link>
     </Layout>
   )
 }
 
-export default NewMedia
+export default EditMedia

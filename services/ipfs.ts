@@ -1,5 +1,5 @@
 import axios from "axios"
-import { create, IPFS } from "ipfs-core"
+import { CID, create, IPFS } from "ipfs-core"
 import { Dispatch, SetStateAction } from "react"
 
 export const saveToIpfs = async(ipfs: IPFS, file: File): Promise<string> => {
@@ -9,10 +9,26 @@ export const saveToIpfs = async(ipfs: IPFS, file: File): Promise<string> => {
 
   try {
     const added = await ipfs.add(file)
+    const pinned = await ipfs.pin.add(added.cid.toString())
     return added.cid.toString()
   }
   catch (err) {
     return ''
+  }
+}
+
+export const removeFromIpfs = async (ipfs: IPFS, cid: string): Promise<boolean> => {
+  if (!ipfs) {
+    return false
+  }
+
+  try {
+    await ipfs.pin.rm(CID.parse(cid))
+    return true
+  }
+  catch (err) {
+    console.error('error', err)
+    return false
   }
 }
 

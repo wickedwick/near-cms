@@ -11,6 +11,7 @@ export interface CmsContract extends nearAPI.Contract {
   getMediaBySlug: ({ slug }: { slug: string }) => Promise<Media>
   getMedia: () => Promise<Media[]>
   setMedia: ({ args, callbackUrl }: { args: { media: Media }, callbackUrl: string }) => Promise<void>
+  deleteMedia: ({ args, callbackUrl }: { args: { slug: string }, callbackUrl: string }) => Promise<void>
   getContents: () => Promise<Content[]>
   getPublicContent: ({ slug }: { slug: string }) => Promise<Content>
   getPublicContents: () => Promise<Content[]>

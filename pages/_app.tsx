@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react'
-import Big from 'big.js'
 import { IPFS } from 'ipfs-core'
 import * as nearAPI from 'near-api-js'
 import type { AppProps } from 'next/app'
@@ -8,7 +7,7 @@ import { DbContext } from '../context/DbContext'
 import { IpfsContext } from '../context/IpfsContext'
 import { NearContext } from '../context/NearContext'
 import { initContract } from '../services/contracts'
-import { instantiateIpfs, saveToIpfs } from '../services/ipfs'
+import { instantiateIpfs, saveToIpfs, removeFromIpfs } from '../services/ipfs'
 import { db, user } from '../services/db'
 import { AppParams } from '../types/app'
 import { NetworkConfiguration } from '../types/configuration'
@@ -17,7 +16,7 @@ import '../styles/globals.css'
 import { CmsContract } from '../types/contract'
 
 function MyApp({ Component, pageProps }: AppProps) {
-  const [contract, setContract] = useState<CmsContract | null>(null)
+  const [cmsContract, setContract] = useState<CmsContract | null>(null)
   const [currentUser, setCurrentUser] = useState<UserRole | undefined>(undefined)
   const [nearConfig, setNearConfig] = useState<NetworkConfiguration | null>(null)
   const [walletConnection, setWalletConnection] = useState<nearAPI.WalletConnection | null>(null)
@@ -25,12 +24,13 @@ function MyApp({ Component, pageProps }: AppProps) {
 
   useEffect(() => {
     initContract().then(({ contract, currentUser, nearConfig, walletConnection }) => {
-      currentUser && contract.getUser({ username: currentUser.accountId }).then((user: UserRole) => {
-        setCurrentUser(user)
-      })
       setNearConfig(nearConfig)
       setWalletConnection(walletConnection)
       setContract(contract as CmsContract)
+      
+      currentUser && cmsContract && cmsContract.getUser({ username: currentUser.accountId }).then((user: UserRole) => {
+        setCurrentUser(user)
+      })
       
       if (ipfs) return
 
@@ -39,7 +39,7 @@ function MyApp({ Component, pageProps }: AppProps) {
   }, [ipfs])
 
   const initialState: AppParams = {
-    contract,
+    contract: cmsContract,
     currentUser,
     nearConfig,
     wallet: walletConnection,
@@ -48,7 +48,8 @@ function MyApp({ Component, pageProps }: AppProps) {
 
   const ipfsState = {
     ipfs,
-    saveToIpfs
+    saveToIpfs,
+    removeFromIpfs
   }
 
   return (
