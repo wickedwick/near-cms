@@ -97,7 +97,7 @@ const ManageClients: NextPage = () => {
 
   return (
     <Layout home={false}>
-      <h1 className="title mb-3">Manage Clients</h1>
+      <h1 className="title mb-5">Manage Clients</h1>
 
       {modalOpen && (
         <div className="modal">
@@ -110,7 +110,7 @@ const ManageClients: NextPage = () => {
         </div>
       )}
 
-      {!contract && <div>Loading...</div>}
+      {(!contract || !currentUser) && <div>Loading...</div>}
 
       {validationSummary.length > 0 && (
         <Alert heading="Error!" messages={validationSummary} />
@@ -120,7 +120,7 @@ const ManageClients: NextPage = () => {
         <Alert heading="Success!" transactionHashes={transactionHashes} />
       )}
 
-      {contract && !contractLoaded && <LoadButton initFunction={init} />}
+      {contract && currentUser && !contractLoaded && <LoadButton initFunction={init} />}
       
       {contract && contractLoaded && !clients.length && (
         <div>
@@ -158,10 +158,10 @@ const ManageClients: NextPage = () => {
       <hr />
       <div className="my-3">
         <label htmlFor="name">Client Name</label>
-        <input className="block px-3 py-2 mb-3 w-full" type="text" value={name} onChange={(e) => setName(e.target.value)} />
+        <input className="block px-3 py-2 mb-3 w-1/2" type="text" value={name} onChange={(e) => setName(e.target.value)} />
 
         <label htmlFor="owner">Owner Address</label>
-        <input className="block px-3 py-2 mb-3 w-full" type="text" value={owner} onChange={(e) => setOwner(e.target.value)} />
+        <input className="block px-3 py-2 mb-3 w-1/2" type="text" value={owner} onChange={(e) => setOwner(e.target.value)} />
 
         <button className="px-3 py-2 my-3 mr-3 x-4 border border-blue shadow-sm text-gray-light bg-blue hover:bg-blue focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue" onClick={handleSubmit}>Add Client</button>
       </div>

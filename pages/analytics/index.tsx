@@ -86,7 +86,7 @@ const AnalyticsIndex: NextPage = () => {
 
   return (
     <Layout home={false}>
-      <h1 className="title mb-3">Transaction History</h1>
+      <h1 className="title mb-5">Transaction History</h1>
 
       {!contract && <div>Loading...</div>}
       {contract && !contractLoaded && <LoadButton initFunction={init} />}
@@ -111,7 +111,7 @@ const AnalyticsIndex: NextPage = () => {
             <tbody className="bg-gray-medium text-gray">
               {receipts.map((receipt, index) => (
                 <tr key={receipt.timestamp} className={index % 2 === 0 ? 'bg-gray-light' : ''}>
-                  <td>{ActionKind[receipt.kind]}</td>
+                  <td className="px-6 py-3">{ActionKind[receipt.kind]}</td>
                   <td>{receipt.signerId}</td>
                   <td>{receipt.functionName}</td>
                   <td>{new Date(Math.floor(receipt.timestamp/1000/1000)).toLocaleString()}</td>

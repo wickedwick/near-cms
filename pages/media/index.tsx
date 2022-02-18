@@ -42,7 +42,9 @@ const MediaIndex: NextPage = () => {
   return (
     <Layout home={false}>
       <h1 className="title">Media</h1>
-      {!contract && <div>Loading...</div>}
+      <p className="text-blue text-center text-xl mb-5">Upload and manaage files, images, and videos.</p>
+
+      {(!contract || !currentUser) && <div>Loading...</div>}
 
       {transactionHashes && (
         <Alert heading="Success!" transactionHashes={transactionHashes} />
@@ -52,15 +54,17 @@ const MediaIndex: NextPage = () => {
         <Alert heading="Success!" messages={[message]} />
       )}
 
-      {contract && !contractLoaded && !media.length && <LoadButton initFunction={init} />}
+      {contract && currentUser && !contractLoaded && !media.length && <LoadButton initFunction={init} />}
+      
       {contract && contractLoaded && !media.length && (
         <div>No media found</div>
       )}
 
-      <div className="my-3">
+      <div className="my-6">
         <Link href="/media/new">
           <a className="px-3 py-2 my-3 x-4 border border-yellow bg-blue shadow-sm text-gray-light focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue">Upload</a>
         </Link>
+        <p className="pl-5 inline text-blue">Let&apos;s upload a file!</p>
       </div>
 
       {contract && contractLoaded && media.length > 0 &&(

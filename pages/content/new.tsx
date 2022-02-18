@@ -105,21 +105,21 @@ const NewField: NextPage = () => {
 
   return (
     <Layout home={false}>
-      <h1 className="title">Create Some Content</h1>
-      {!contract && <div>Loading...</div>}
+      <h1 className="title mb-5">Create Some Content</h1>
+      {(!contract || !currentUser) && <div>Loading...</div>}
 
       {validationSummary.length > 0 && (
         <Alert heading="Error!" messages={validationSummary} />
       )}
 
-      {contract && !contractLoaded && <LoadButton initFunction={init} />}
+      {contract && currentUser && !contractLoaded && <LoadButton initFunction={init} />}
       {contract && contractLoaded && (
         <>
           <label htmlFor="name">Name</label>
-          <input className="block px-3 py-2 mb-3 w-full" type="text" value={name} onChange={(e) => setName(e.target.value)} />
+          <input className="block px-3 py-2 mb-3 w-1/2" type="text" value={name} onChange={(e) => setName(e.target.value)} />
           
           <label htmlFor="type">Content Type</label>
-          <select className="block px-3 py-2 mb-3 w-full" value={selectedContentType?.name} onChange={(e) => handleSelectContentType(e.target.value)}>
+          <select className="block px-3 py-2 mb-3 w-1/2" value={selectedContentType?.name} onChange={(e) => handleSelectContentType(e.target.value)}>
             {contentTypes.map((ct) => {
               return (
                 <option key={ct.name} value={ct.name}>{ct.name}</option>

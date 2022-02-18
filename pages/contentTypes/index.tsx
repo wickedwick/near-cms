@@ -57,19 +57,22 @@ const ContentTypes: NextPage = () => {
 
   return (
     <Layout home={false}>
-      <h1 className="title">Content Types</h1>
-      {!contract && <div>Loading...</div>}
+      <h1 className="title mb-5">Content Types</h1>
+      <p className="text-blue text-center text-xl mb-5">Define your data schema.</p>
+
+      {(!contract || !currentUser) && <div>Loading...</div>}
 
       {transactionHashes && (
         <Alert heading="Success!" transactionHashes={transactionHashes} />
       )}
 
-      {contract && !contractLoaded && <LoadButton initFunction={init} />}
+      {contract && currentUser && !contractLoaded && <LoadButton initFunction={init} />}
 
-      <div className="my-3">
+      <div className="my-6">
         <Link href="/contentTypes/new">
           <a className="px-3 py-2 my-3 x-4 border border-yellow bg-blue shadow-sm text-gray-light focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue">Create New</a>
         </Link>
+        <p className="pl-5 inline text-blue">Let&apos;s create a new content type!</p>
       </div>
 
       <SchemaModal contentType={contentType as ContentType} setContentType={setContentType} />

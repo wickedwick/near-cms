@@ -41,7 +41,7 @@ const FieldsEditor = ({ fields, setFields }: FieldTypesEditorProps): JSX.Element
             {field.fieldType.toLowerCase() === 'string' && (
               <input
                 id={`${field.name}-value`}
-                className="block px-3 py-2 mb-3 w-full"
+                className="block px-3 py-2 mb-3 w-1/2"
                 type="text"
                 value={field.value}
                 required={field.required}

@@ -54,9 +54,11 @@ const EditUserRole: NextPage = () => {
 
   return (
     <Layout home={false}>
-      <h1 className="title">Update Role for {userRole?.username}</h1>
-      {!contract && <div>Loading...</div>}
-      {contract && !contractLoaded && <LoadButton initFunction={init} />}
+      <h1 className="title mb-5">Update Role for {userRole?.username}</h1>
+      
+      {(!contract || !currentUser) && <div>Loading...</div>}
+
+      {contract && currentUser && !contractLoaded && <LoadButton initFunction={init} />}
       
       {validationSummary.length > 0 && (
         <Alert heading="Error!" messages={validationSummary} />
@@ -64,7 +66,7 @@ const EditUserRole: NextPage = () => {
 
       {contract && contractLoaded && (
         <>
-          <select className="block px-3 py-2 mb-3 w-full" value={role} onChange={(e) => setRole(parseInt(e.target.value, 10))}>
+          <select className="block px-3 py-2 mb-3 w-1/2" value={role} onChange={(e) => setRole(parseInt(e.target.value, 10))}>
             {roleOptions.map((key) => {
               return (
                 <option value={key.value} key={key.value}>{key.label}</option>

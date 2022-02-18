@@ -25,12 +25,12 @@ const FieldTypesEditor = ({ fields, setFields }: FieldTypesEditorProps) => {
   }
 
   return (
-    <div>
+    <div className="border border-white p-5">
       <label htmlFor="fieldName">Field Name</label>
-      <input className="block px-3 py-2 mb-3 w-full" type="text" value={fieldName} onChange={(e) => setFieldName(e.target.value)} />
+      <input className="block px-3 py-2 mb-3 w-1/2" type="text" value={fieldName} onChange={(e) => setFieldName(e.target.value)} />
       
       <label htmlFor="fieldType">Field Type</label>
-      <select className="block px-3 py-2 mb-3 w-full" onChange={(e) => setFieldType(e.target.value)}>
+      <select className="block px-3 py-2 mb-3 w-1/2" onChange={(e) => setFieldType(e.target.value)}>
         {fieldTypeOptions.map((key) => {
           return (
             <option value={key.value} key={key.value}>{key.label}</option>
@@ -41,7 +41,7 @@ const FieldTypesEditor = ({ fields, setFields }: FieldTypesEditorProps) => {
       {(fieldType === 'String' || fieldType === 'Int' || fieldType === 'Float') && (
         <>
           <label htmlFor="fieldName">Max Length (optional)</label>
-          <input className="block px-3 py-2 mb-3 w-full" type="text" value={length} onChange={(e) => setLength(e.target.value)} />
+          <input className="block px-3 py-2 mb-3 w-1/2" type="text" value={length} onChange={(e) => setLength(e.target.value)} />
         </>
       )}
       

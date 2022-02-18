@@ -70,19 +70,20 @@ const NewContentType: NextPage = () => {
 
   return (
     <Layout home={false}>
-      <h1 className="title">Create a Content Type</h1>
-      {!contract && <div>Loading...</div>}
+      <h1 className="title mb-5">Create a Content Type</h1>
+      {(!contract || !currentUser) && <div>Loading...</div>}
 
       {validationSummary.length > 0 && (
         <Alert heading="Error!" messages={validationSummary} />
       )}
 
-      {contract && !contractLoaded && <LoadButton initFunction={init} />}
+      {contract && currentUser && !contractLoaded && <LoadButton initFunction={init} />}
       {contract && contractLoaded && (
         <>
           <label htmlFor="name">Name</label>
-          <input className="block px-3 py-2 mb-3 w-full" type="text" value={contentTypeName} onChange={(e) => handleContentTypeNameChange(e)} />
+          <input className="block px-3 py-2 mb-5 w-1/2" type="text" value={contentTypeName} onChange={(e) => handleContentTypeNameChange(e)} />
           <h2>Fields</h2>
+          <p className="text-blue text-sm mb-1">To add fields, enter a field name, select a field type, and click &apos;Add Field&apos;.</p>
           
           <div className="">
             {fields.map((field, index) => {

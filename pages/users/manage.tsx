@@ -100,8 +100,10 @@ const ManageUsers: NextPage = () => {
 
   return (
     <Layout home={false}>
-      <h1 className="title mb-3">Manage Users</h1>
+      <h1 className="title mb-5">Manage Users</h1>
 
+      {(!contract || !currentUser) && <div>Loading...</div>}
+      
       {validationSummary.length > 0 && (
         <Alert heading="Error!" messages={validationSummary} />
       )}
@@ -121,7 +123,8 @@ const ManageUsers: NextPage = () => {
         <Alert heading="Success!" transactionHashes={transactionHashes} />
       )}
 
-      {contract && !contractLoaded && <LoadButton initFunction={init} />}
+      {contract && currentUser && !contractLoaded && <LoadButton initFunction={init} />}
+
       {contract && contractLoaded && users.length > 0 && (
         <table className="table-auto min-w-full divide-y divide-gray">
           <thead className="bg-gray">
@@ -152,8 +155,8 @@ const ManageUsers: NextPage = () => {
           <div className="mb-3 mt-5">
             <h3 className="text-xl">Add a new user</h3>
             <label htmlFor="accountId">Account ID</label>
-            <input className="block px-3 py-2 mb-3 w-full" type="text" value={accountId} onChange={(e) => setAccountId(e.target.value)} />
-            <select className="block px-3 py-2 mb-3 w-full" value={role} onChange={(e) => setRole(parseInt(e.target.value, 10))}>
+            <input className="block px-3 py-2 mb-3 w-1/2" type="text" value={accountId} onChange={(e) => setAccountId(e.target.value)} />
+            <select className="block px-3 py-2 mb-3 w-1/2" value={role} onChange={(e) => setRole(parseInt(e.target.value, 10))}>
               {roleOptions.map((key) => {
                 return (
                   <option value={key.value} key={key.value}>{key.label}</option>
