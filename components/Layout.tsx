@@ -1,5 +1,4 @@
 import Head from "next/head"
-import Image from "next/image"
 import Link from "next/link"
 import { useContext } from "react"
 import { NearContext } from "../context/NearContext"

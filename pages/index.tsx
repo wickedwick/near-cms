@@ -15,9 +15,16 @@ const Home: NextPage = () => {
   
   return (
     <Layout home>
-      <h1 className="title">
-        d CMS
-      </h1>
+      <div className="flex items-center justify-center">
+        <div className="flex-none w-1/5">
+          <img src="/d-cms-logo.png" className="w-full m-0" alt="d CMS logo" />
+        </div>  
+        <div className="flex-initial">
+          <h1 className="title">
+            d CMS
+          </h1>
+        </div>
+      </div>
 
       <h2 className="description">
         {title}

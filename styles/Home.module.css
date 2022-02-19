@@ -92,6 +92,14 @@
   margin-left: 0.5rem;
 }
 
+.show_bg {
+  background-image: url('/d-cms-logo.png');
+  width: 80%;
+  height: 200px;
+  background-size: cover;
+  color: white;
+}
+
 @media (max-width: 600px) {
   .grid {
     width: 100%;
