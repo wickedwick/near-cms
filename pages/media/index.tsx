@@ -42,7 +42,7 @@ const MediaIndex: NextPage = () => {
   return (
     <Layout home={false}>
       <h1 className="title">Media</h1>
-      <p className="text-blue text-center text-xl mb-5">Upload and manaage files, images, and videos.</p>
+      <p className="text-blue text-center text-xl mb-5">Upload and manage files, images, and videos.</p>
 
       {(!contract || !currentUser) && <div>Loading...</div>}
 
