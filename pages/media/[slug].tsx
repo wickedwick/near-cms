@@ -56,6 +56,7 @@ const EditMedia: NextPage = () => {
   const handleSetFile = async (file: File): Promise<void> => {
     setFilename(file.name)
     setFile(file)
+    console.log('file type', file.type)
     switch(file.type) {
       case 'image/jpeg':
         setMediaType(MediaType.Image)
@@ -75,14 +76,12 @@ const EditMedia: NextPage = () => {
     }
 
     const removed = await removeFromIpfs(ipfs, cid)
-    if (removed) {
-      await contract.deleteMedia({
-        args: { slug }, 
-        callbackUrl: `${process.env.baseUrl}/media`,
-      })
+    await contract.deleteMedia({
+      args: { slug }, 
+      callbackUrl: `${process.env.baseUrl}/media?message=Media deleted`,
+    })
 
-      Router.push('/media?message=Media deleted')
-    }
+    Router.push('/media?message=Media deleted')
   }
 
   const handleSubmit = async (): Promise<void> => {
@@ -126,10 +125,12 @@ const EditMedia: NextPage = () => {
       return
     }
 
-    contract.setMedia({
+    await contract.setMedia({
       args: { media }, 
       callbackUrl: `${process.env.baseUrl}/media`,
     })
+
+    Router.push('/media')
   }
 
   return (
@@ -156,6 +157,8 @@ const EditMedia: NextPage = () => {
 
       {contract && contractLoaded && media && (
         <div className="">
+          <p>URL https://ipfs.io/ipfs/{media.cid}</p>
+
           <label htmlFor="name">Name</label>
           <input className="block px-3 py-2 mb-3 w-1/2" type="text" value={name} onChange={(e) => setName(e.target.value)} />
 

@@ -10,6 +10,11 @@ const MediaCards = ({ media, handleSelection }: { media: Media[], handleSelectio
           {m.mediaType === MediaType.Image && (
             <img src={`https://ipfs.io/ipfs/${m.cid}`} alt={m.name} className="w-full object-cover" /> 
           )}
+          
+          {m.mediaType !== MediaType.Image && (
+            <img src={'/file.svg'} alt={m.name} className="h-3/4 object-cover" /> 
+          )}
+
           <p>{m.name}</p>
           <p>{m.filename}</p>
           {handleSelection && (

@@ -97,10 +97,12 @@ const NewMedia: NextPage = () => {
       return
     }
 
-    contract.setMedia({
+    await contract.setMedia({
       args: { media }, 
       callbackUrl: `${process.env.baseUrl}/media`,
     })
+
+    Router.push('/media')
   }
 
   return (

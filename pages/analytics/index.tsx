@@ -90,7 +90,8 @@ const AnalyticsIndex: NextPage = () => {
 
   return (
     <Layout home={false}>
-      <h1 className="title mb-5">Transaction History</h1>
+      <h1 className="title">Transaction History</h1>
+      <p className="text-blue text-center text-xl mb-5">Powered by The Graph.</p>
 
       {!contract && <div>Loading...</div>}
       {contract && !contractLoaded && <LoadButton initFunction={init} />}
