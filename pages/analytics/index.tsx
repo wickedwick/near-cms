@@ -26,14 +26,18 @@ const AnalyticsIndex: NextPage = () => {
       return
     }
 
-    skip * first + receipts.length
-
-    setSkip(skip - first)
+    const newSkip = skip - first
+    setSkip(newSkip)
     await getReceipts()
   }
   
   const nextPage = async (): Promise<void> => {
-    setSkip(skip + first)
+    if (skip + first >= total) {
+      return
+    }
+
+    const newSkip = skip + first
+    setSkip(newSkip)
     await getReceipts()
   }
 

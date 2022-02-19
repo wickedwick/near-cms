@@ -5,11 +5,14 @@ import styles from '../styles/Home.module.css'
 import Layout from '../components/Layout'
 import Link from 'next/link'
 import { Role } from '../assembly/model'
+import LoadingIndicator from '../components/LoadingIndicator'
+import { useRouter } from 'next/router'
 
 const Home: NextPage = () => {
-  const { currentUser } = useContext(NearContext)
+  const { contract, currentUser } = useContext(NearContext)
   const title: string = currentUser ? `Welcome, ${currentUser.username}` : 'Welcome to d CMS'
-
+  const { query } = useRouter()
+  
   return (
     <Layout home>
       <h1 className="title">
@@ -20,7 +23,8 @@ const Home: NextPage = () => {
         {title}
       </h2>
 
-      {!currentUser && <p className="description">Please log in to continue</p>}
+      {(!contract || (query.account_id && !currentUser)) && <LoadingIndicator />}
+      {contract && (!query.account_id && !currentUser) && <p className="description">Please log in to continue</p>}
 
       <div className={styles.grid}>
         {currentUser && currentUser.role <= Role.Editor && (
