@@ -8,6 +8,7 @@ import { MediaType, Role } from '../../assembly/model'
 import Alert from '../../components/Alert'
 import Layout from '../../components/Layout'
 import LoadButton from '../../components/LoadButton'
+import LoadingIndicator from '../../components/LoadingIndicator'
 import { IpfsContext } from '../../context/IpfsContext'
 import { NearContext } from '../../context/NearContext'
 import { validateMedia } from '../../validators/media'
@@ -25,6 +26,7 @@ const EditMedia: NextPage = () => {
   const [description, setDescription] = useState('')
   const [validationSummary, setValidationSummary] = useState<string[]>([])
   const [cid, setCid] = useState('')
+  const [loading, setLoading] = useState(false)
 
   const router = useRouter()
   const { slug } = router.query
@@ -75,7 +77,8 @@ const EditMedia: NextPage = () => {
       return
     }
 
-    const removed = await removeFromIpfs(ipfs, cid)
+    setLoading(true)
+    await removeFromIpfs(ipfs, cid)
     await contract.deleteMedia({
       args: { slug }, 
       callbackUrl: `${process.env.baseUrl}/media?message=Media deleted`,
@@ -85,20 +88,24 @@ const EditMedia: NextPage = () => {
   }
 
   const handleSubmit = async (): Promise<void> => {
+    setLoading(true)
     setDescription('')
 
     if (!name) {
       setDescription('Name is required')
+      setLoading(false)
       return
     }
 
     if (!file) {
       setDescription('File is required')
+      setLoading(false)
       return
     }
 
     if (!contract) {
       setDescription('Contract is not available')
+      setLoading(false)
       return
     }
 
@@ -106,6 +113,7 @@ const EditMedia: NextPage = () => {
     const newCid = await saveToIpfs(ipfs, file)
     if (!newCid) {
       setDescription('Failed to save to IPFS')
+      setLoading(false)
       return
     }
 
@@ -122,6 +130,7 @@ const EditMedia: NextPage = () => {
     const validationResult = validateMedia(media)
     if (!validationResult.isValid) {
       setValidationSummary(validationResult.validationMessages)
+      setLoading(false)
       return
     }
 
@@ -153,6 +162,10 @@ const EditMedia: NextPage = () => {
       
       {contract && contractLoaded && media && media.mediaType === MediaType.Image && (
         <img src={`https://ipfs.io/ipfs/${media.cid}`} alt={media.name} />
+      )}
+
+      {contract && loading && (
+        <LoadingIndicator />
       )}
 
       {contract && contractLoaded && media && (

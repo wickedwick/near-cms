@@ -15,8 +15,8 @@ const Contents: NextPage = () => {
   const [content, setContent] = useState<Content[]>([])
   const [contractLoaded, setContractedLoaded] = useState(false)
   const [transactionHashes, setTransactionHashes] = useState<string>('')
-  const { query } = useRouter()
   const [loading, setLoading] = useState(false)
+  const { query } = useRouter()
   
   useEffect(() => {
     init()
@@ -59,6 +59,7 @@ const Contents: NextPage = () => {
       return
     }
 
+    setLoading(true)
     Router.push('/content/[slug]', `/content/${ct.slug}`)
   }
 
@@ -88,10 +89,10 @@ const Contents: NextPage = () => {
         <p className="pl-5 inline text-blue">Let&apos;s create something new!</p>
       </div>
 
-      {contract && content.length > 0 && loading && (
+      {contract && loading && (
         <LoadingIndicator />
       )}
-      
+
       {contract && content.length > 0 && !loading && (
         <table className="table-auto min-w-full divide-y divide-gray">
           <thead className="bg-gray">

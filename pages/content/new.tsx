@@ -13,6 +13,7 @@ import { SEA } from 'gun'
 import LoadButton from '../../components/LoadButton'
 import { validateContent } from '../../validators/content'
 import Alert from '../../components/Alert'
+import LoadingIndicator from '../../components/LoadingIndicator'
 
 const NewField: NextPage = () => {
   const { db } = useContext(DbContext)
@@ -25,6 +26,7 @@ const NewField: NextPage = () => {
   const [isEncrypted, setIsEncrypted] = useState(false)
   const [contractLoaded, setContractedLoaded] = useState(false)
   const [validationSummary, setValidationSummary] = useState<string[]>([])
+  const [loading, setLoading] = useState(false)
 
   useEffect(() => {
     init()
@@ -63,6 +65,7 @@ const NewField: NextPage = () => {
       return
     }
 
+    setLoading(true)
     if (selectedContentType) {
       selectedContentType.fields = selectedContentType.fields.map(f => {
         return { ...f, value: '' }
@@ -83,6 +86,7 @@ const NewField: NextPage = () => {
     const validationResult = validateContent(content, fields)
     if (!validationResult.isValid) {
       setValidationSummary(validationResult.validationMessages)
+      setLoading(false)
       return
     }
 
@@ -113,6 +117,11 @@ const NewField: NextPage = () => {
       )}
 
       {contract && currentUser && !contractLoaded && <LoadButton initFunction={init} />}
+
+      {contract && loading && (
+        <LoadingIndicator />
+      )}
+
       {contract && contractLoaded && (
         <>
           <label htmlFor="name">Name</label>

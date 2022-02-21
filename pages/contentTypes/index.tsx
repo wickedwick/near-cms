@@ -81,7 +81,7 @@ const ContentTypes: NextPage = () => {
         <LoadingIndicator />
       )}
       
-      {contract && contractLoaded && !loading && contentTypes.length > 0 && (
+      {contract && contractLoaded && contentTypes.length > 0 && (
         <>
           <table className="table-auto min-w-full divide-y divide-gray">
             <thead className="bg-gray">

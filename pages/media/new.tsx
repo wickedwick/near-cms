@@ -11,6 +11,7 @@ import { NearContext } from '../../context/NearContext'
 import { IpfsContext } from '../../context/IpfsContext'
 import LoadButton from '../../components/LoadButton'
 import { validateMedia } from '../../validators/media'
+import LoadingIndicator from '../../components/LoadingIndicator'
 
 const NewMedia: NextPage = () => {
   const { contract, currentUser } = useContext(NearContext)
@@ -23,6 +24,7 @@ const NewMedia: NextPage = () => {
   const [description, setDescription] = useState('')
   const [contractLoaded, setContractedLoaded] = useState(false)
   const [validationSummary, setValidationSummary] = useState<string[]>([])
+  const [loading, setLoading] = useState(false)
 
   useEffect(() => {
     init()
@@ -58,26 +60,31 @@ const NewMedia: NextPage = () => {
   }
   
   const handleSubmit = async (): Promise<void> => {
+    setLoading(true)
     setDescription('')
     
     if (!name) {
       setDescription('Name is required')
+      setLoading(false)
       return
     }
     
     if (!file) {
       setDescription('File is required')
+      setLoading(false)
       return
     }
     
     if (!contract) {
       setDescription('Contract is not available')
+      setLoading(false)
       return
     }
     
     const cid = await saveToIpfs(ipfs, file)
     if (!cid) {
       setDescription('Failed to save to IPFS')
+      setLoading(false)
       return
     }
     
@@ -94,6 +101,7 @@ const NewMedia: NextPage = () => {
     const validationResult = validateMedia(media)
     if (!validationResult.isValid) {
       setValidationSummary(validationResult.validationMessages)
+      setLoading(false)
       return
     }
 
@@ -123,6 +131,10 @@ const NewMedia: NextPage = () => {
       )}
       
       {description && <p>{description}</p>}
+
+      {contract && loading && (
+        <LoadingIndicator />
+      )}
       
       {contract && contractLoaded && (
         <>

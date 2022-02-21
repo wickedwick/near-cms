@@ -10,6 +10,7 @@ import Layout from '../../components/Layout'
 import LoadButton from '../../components/LoadButton'
 import { NearContext } from '../../context/NearContext'
 import { validateContentType } from '../../validators/contentType'
+import LoadingIndicator from '../../components/LoadingIndicator'
 
 const NewContentType: NextPage = () => {
   const { contract, currentUser } = useContext(NearContext)
@@ -17,6 +18,7 @@ const NewContentType: NextPage = () => {
   const [fields, setFields] = useState<Field[]>([])
   const [contractLoaded, setContractedLoaded] = useState(false)
   const [validationSummary, setValidationSummary] = useState<string[]>([])
+  const [loading, setLoading] = useState(false)
 
   useEffect(() => {
     init()
@@ -49,6 +51,7 @@ const NewContentType: NextPage = () => {
       return
     }
 
+    setLoading(true)
     const contentType: ContentType = {
       name: contentTypeName,
       fields,
@@ -57,6 +60,7 @@ const NewContentType: NextPage = () => {
     const validationResult = validateContentType(contentType)
     if (!validationResult.isValid) {
       setValidationSummary(validationResult.validationMessages)
+      setLoading(false)
       return
     }
 
@@ -78,6 +82,11 @@ const NewContentType: NextPage = () => {
       )}
 
       {contract && currentUser && !contractLoaded && <LoadButton initFunction={init} />}
+
+      {contract && loading && (
+        <LoadingIndicator />
+      )}
+
       {contract && contractLoaded && (
         <>
           <label htmlFor="name">Name</label>

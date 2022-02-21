@@ -12,6 +12,7 @@ import Alert from '../../components/Alert'
 import { NearContext } from '../../context/NearContext'
 import { DbContext } from '../../context/DbContext'
 import { validateContent } from '../../validators/content'
+import LoadingIndicator from '../../components/LoadingIndicator'
 
 const EditContent: NextPage = () => {
   const { db } = useContext(DbContext)
@@ -23,6 +24,7 @@ const EditContent: NextPage = () => {
   const [currentContent, setCurrentContent] = useState<Content | null>(null)
   const [contractLoaded, setContractedLoaded] = useState(false)
   const [validationSummary, setValidationSummary] = useState<string[]>([])
+  const [loading, setLoading] = useState(false)
   
   const router = useRouter()
   const { slug } = router.query
@@ -75,11 +77,13 @@ const EditContent: NextPage = () => {
       return
     }
     
+    setLoading(true)
     const content: Content = { ...currentContent as Content, name, isPublic, isEncrypted, updatedAt: new Date().toISOString() }
     
     const validationResult = validateContent(content, fields)
     if (!validationResult.isValid) {
       setValidationSummary(validationResult.validationMessages)
+      setLoading(false)
       return
     }
 
@@ -109,6 +113,11 @@ const EditContent: NextPage = () => {
       )}
 
       {contract && currentUser && !contractLoaded && !fields.length && <LoadButton initFunction={init} />}
+
+      {contract && loading && (
+        <LoadingIndicator />
+      )}
+
       {contract && contractLoaded && fields.length && (
         <>
           <label htmlFor="name">Name</label>
