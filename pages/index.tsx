@@ -83,6 +83,13 @@ const Home: NextPage = () => {
             </Link>
           </>
         )}
+
+        <Link href="/public">
+          <a className={styles.card}>
+            <h2>Public Content &rarr;</h2>
+            <p>View public content.</p>
+          </a>
+        </Link>
       </div>
     </Layout>
   )

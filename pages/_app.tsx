@@ -14,6 +14,7 @@ import { NetworkConfiguration } from '../types/configuration'
 
 import '../styles/globals.css'
 import { CmsContract } from '../types/contract'
+import { Role } from '../assembly/model'
 
 function MyApp({ Component, pageProps }: AppProps) {
   const [cmsContract, setContract] = useState<CmsContract | null>(null)
@@ -22,15 +23,31 @@ function MyApp({ Component, pageProps }: AppProps) {
   const [walletConnection, setWalletConnection] = useState<nearAPI.WalletConnection | null>(null)
   const [ipfs, setIpfs] = useState<IPFS | null>(null)  
 
+  const setDefaultUser = (accountId: string) => {
+    const userRole: UserRole = {
+      username: accountId,
+      role: Role.Public,
+    }
+
+    setCurrentUser(userRole)
+  }
+
   useEffect(() => {
     initContract().then(({ contract, currentUser, nearConfig, walletConnection }) => {
       setNearConfig(nearConfig)
       setWalletConnection(walletConnection)
       setContract(contract as CmsContract)
       
-      currentUser && cmsContract && cmsContract.getUser({ username: currentUser.accountId }).then((user: UserRole) => {
-        setCurrentUser(user)
-      })
+      currentUser && cmsContract && (
+        cmsContract.getUser({ username: currentUser.accountId })
+          .then((user: UserRole) => {
+            if (!user) {
+              setDefaultUser(currentUser.accountId)
+            } else {
+              setCurrentUser(user)
+            }
+          })
+      )
       
       if (ipfs) return
 
