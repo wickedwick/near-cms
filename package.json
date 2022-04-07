@@ -31,7 +31,7 @@
     "near-api-js": "^0.44.2",
     "near-cli": "^3.1.0",
     "near-sdk-as": "^3.2.3",
-    "next": "12.0.7",
+    "next": "12.1.0",
     "react": "17.0.2",
     "react-datepicker": "^4.6.0",
     "react-dom": "17.0.2",
