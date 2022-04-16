@@ -77,10 +77,8 @@ const ContentTypes: NextPage = () => {
 
       <SchemaModal contentType={contentType as ContentType} setContentType={setContentType} />
 
-      {contract && contractLoaded && loading && contentTypes.length > 0 && (
-        <LoadingIndicator />
-      )}
-      
+      <LoadingIndicator loading={(contract && contractLoaded && loading && contentTypes.length > 0)} />
+
       {contract && contractLoaded && contentTypes.length > 0 && (
         <>
           <table className="table-auto min-w-full divide-y divide-gray">

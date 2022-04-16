@@ -5,6 +5,7 @@ import { useContext, useEffect, useState } from 'react'
 import { Role } from '../../assembly/model'
 import Layout from '../../components/Layout'
 import LoadButton from '../../components/LoadButton'
+import LoadingIndicator from '../../components/LoadingIndicator';
 import { NearContext } from '../../context/NearContext'
 import client from '../../services/apollo'
 import { ActionKind, Receipt } from '../../types/app'
@@ -93,7 +94,8 @@ const AnalyticsIndex: NextPage = () => {
       <h1 className="title">Transaction History</h1>
       <p className="text-blue text-center text-xl mb-5">Powered by The Graph.</p>
 
-      {!contract && <div>Loading...</div>}
+      <LoadingIndicator loading={!contract} />
+
       {contract && !contractLoaded && <LoadButton initFunction={init} />}
       
       {contract && contractLoaded && !receipts.length && (

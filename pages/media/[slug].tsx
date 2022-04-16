@@ -164,9 +164,7 @@ const EditMedia: NextPage = () => {
         <img src={`https://ipfs.io/ipfs/${media.cid}`} alt={media.name} />
       )}
 
-      {contract && loading && (
-        <LoadingIndicator />
-      )}
+      <LoadingIndicator loading={contract && loading} />
 
       {contract && contractLoaded && media && (
         <div className="">

@@ -11,6 +11,7 @@ import LoadButton from '../../components/LoadButton'
 import { NearContext } from '../../context/NearContext'
 import { validateContentType } from '../../validators/contentType'
 import LoadingIndicator from '../../components/LoadingIndicator'
+import TextInput from '../../components/TextInput'
 
 const NewContentType: NextPage = () => {
   const { contract, currentUser } = useContext(NearContext)
@@ -83,14 +84,18 @@ const NewContentType: NextPage = () => {
 
       {contract && currentUser && !contractLoaded && <LoadButton initFunction={init} />}
 
-      {contract && loading && (
-        <LoadingIndicator />
-      )}
+      <LoadingIndicator loading={contract && loading} />
 
       {contract && contractLoaded && (
         <>
-          <label htmlFor="name">Name</label>
-          <input className="block px-3 py-2 mb-5 w-1/2" type="text" value={contentTypeName} onChange={(e) => handleContentTypeNameChange(e)} />
+          <TextInput
+            classes="block px-3 py-2 mb-3 w-1/2"
+            for="name"
+            label="Name"
+            value={contentTypeName}
+            onChange={(e) => handleContentTypeNameChange(e)}
+          />
+
           <h2>Fields</h2>
           <p className="text-blue text-sm mb-1">To add fields, enter a field name, select a field type, and click &apos;Add Field&apos;.</p>
           
@@ -104,6 +109,7 @@ const NewContentType: NextPage = () => {
                 </div>
               )
             })}
+
             <FieldTypesEditor fields={fields} setFields={setFields} />
           </div>
 

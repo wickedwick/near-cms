@@ -14,6 +14,8 @@ import LoadButton from '../../components/LoadButton'
 import { validateContent } from '../../validators/content'
 import Alert from '../../components/Alert'
 import LoadingIndicator from '../../components/LoadingIndicator'
+import TextInput from '../../components/TextInput'
+import Checkbox from '../../components/Checkbox'
 
 const NewField: NextPage = () => {
   const { db } = useContext(DbContext)
@@ -118,14 +120,17 @@ const NewField: NextPage = () => {
 
       {contract && currentUser && !contractLoaded && <LoadButton initFunction={init} />}
 
-      {contract && loading && (
-        <LoadingIndicator />
-      )}
+      <LoadingIndicator loading={(contract && loading)} />
 
       {contract && contractLoaded && (
         <>
-          <label htmlFor="name">Name</label>
-          <input className="block px-3 py-2 mb-3 w-1/2" type="text" value={name} onChange={(e) => setName(e.target.value)} />
+          <TextInput
+            classes="block px-3 py-2 mb-3 w-1/2"
+            for="name"
+            label="Name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
           
           <label htmlFor="type">Content Type</label>
           <select className="block px-3 py-2 mb-3 w-1/2" value={selectedContentType?.name} onChange={(e) => handleSelectContentType(e.target.value)}>
@@ -141,28 +146,20 @@ const NewField: NextPage = () => {
               <FieldsEditor fields={fields} setFields={setFields} />
             </>
           )}
-          
-          <label className="block">
-            Public?&nbsp;
-            <input
-              className='ml-2'
-              name="isPublic"
-              type="checkbox"
-              checked={isPublic}
-              onChange={(e) => setIsPublic(!isPublic)}
-              />
-          </label>
+    
+          <Checkbox
+            label="Public?"
+            name="isPublic"
+            checked={isPublic}
+            onChange={() => setIsPublic(!isPublic)}
+          />
 
-          <label className="block py-2">
-            Encrypt?&nbsp;
-            <input
-              className='ml-2'
-              name="isEncrypted"
-              type="checkbox"
-              checked={isEncrypted}
-              onChange={(e) => setIsEncrypted(!isEncrypted)}
-              />
-          </label>
+          <Checkbox
+            label="Encrypt?"
+            name="isEncrypted"
+            checked={isEncrypted}
+            onChange={() => setIsEncrypted(!isEncrypted)}
+          />
 
           <button className="px-3 py-2 my-3 mr-3 x-4 border border-blue shadow-sm text-gray-light bg-blue hover:bg-blue focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue" onClick={handleSubmit}>Create</button>
           <Link href="/content">

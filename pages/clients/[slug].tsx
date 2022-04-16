@@ -10,6 +10,7 @@ import Layout from "../../components/Layout"
 import LoadButton from "../../components/LoadButton"
 import { validateClient } from "../../validators/client"
 import Alert from "../../components/Alert"
+import TextInput from "../../components/TextInput"
 
 const EditClient: NextPage = () => {
   const { contract, currentUser } = useContext(NearContext)
@@ -17,11 +18,13 @@ const EditClient: NextPage = () => {
   const [owner, setOwner] = useState('')
   const [contractLoaded, setContractedLoaded] = useState(false)
   const [validationSummary, setValidationSummary] = useState<string[]>([])
+  const [slugString, setSlugString] = useState('')
 
   const router = useRouter()
   const { slug } = router.query
 
   useEffect(() => {
+    setSlugString(slug as string)
     if (!contract) {
       setContractedLoaded(false)
       return
@@ -40,7 +43,7 @@ const EditClient: NextPage = () => {
       Router.push('/')
     }
 
-    const client: Client = await contract.getClient({ slug })
+    const client: Client = await contract.getClient({ slug: slugString })
     setName(client.name)
     setOwner(client.owner)
   }
@@ -54,7 +57,7 @@ const EditClient: NextPage = () => {
       Router.push('/')
     }
 
-    const client: Client = await contract.getClient({ slug })
+    const client: Client = await contract.getClient({ slug: slugString })
     if (!client) {
       return
     }
@@ -85,13 +88,24 @@ const EditClient: NextPage = () => {
 
       {currentUser && contract && contractLoaded && (
         <>
-          <label htmlFor="name">Client Name</label>
-          <input className="block px-3 py-2 mb-3 w-1/2" type="text" value={name} onChange={(e) => setName(e.target.value)} />
+          <TextInput
+            classes="block px-3 py-2 mb-3 w-1/2"
+            for="name"
+            label="Client Name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
 
-          <label htmlFor="owner">Owner Address</label>
-          <input className="block px-3 py-2 mb-3 w-1/2" type="text" value={owner} onChange={(e) => setOwner(e.target.value)} />
+          <TextInput
+            classes="block px-3 py-2 mb-3 w-1/2"
+            for="owner"
+            label="Owner Address"
+            value={owner}
+            onChange={(e) => setOwner(e.target.value)}
+          />
 
           <button className="px-3 py-2 my-3 mr-3 x-4 border border-blue shadow-sm text-gray-light bg-blue hover:bg-blue focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue" onClick={handleSubmit}>Save Client</button>
+          
           <Link href="/clients/manage">
             <a>Back</a>
           </Link>

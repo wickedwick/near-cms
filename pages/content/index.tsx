@@ -89,9 +89,7 @@ const Contents: NextPage = () => {
         <p className="pl-5 inline text-blue">Let&apos;s create something new!</p>
       </div>
 
-      {contract && loading && (
-        <LoadingIndicator />
-      )}
+      <LoadingIndicator loading={content && loading} />
 
       {contract && content.length > 0 && !loading && (
         <table className="table-auto min-w-full divide-y divide-gray">

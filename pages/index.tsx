@@ -30,7 +30,8 @@ const Home: NextPage = () => {
         {title}
       </h2>
 
-      {(!contract || (query.account_id && !currentUser)) && <LoadingIndicator />}
+      <LoadingIndicator loading={(!contract || (query.account_id && !currentUser))} />
+      
       {contract && (!query.account_id && !currentUser) && <p className="description">Please log in to continue</p>}
 
       <div className={styles.grid}>

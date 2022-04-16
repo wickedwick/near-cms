@@ -13,6 +13,8 @@ import { NearContext } from '../../context/NearContext'
 import { DbContext } from '../../context/DbContext'
 import { validateContent } from '../../validators/content'
 import LoadingIndicator from '../../components/LoadingIndicator'
+import Checkbox from '../../components/Checkbox'
+import TextInput from '../../components/TextInput'
 
 const EditContent: NextPage = () => {
   const { db } = useContext(DbContext)
@@ -106,7 +108,6 @@ const EditContent: NextPage = () => {
   return (
     <Layout home={false}>
       <h1 className="title mb-5">Edit Your Content</h1>
-      {(!contract || !currentUser) && <div>Loading...</div>}
 
       {validationSummary.length > 0 && (
         <Alert heading="Error!" messages={validationSummary} />
@@ -114,38 +115,33 @@ const EditContent: NextPage = () => {
 
       {contract && currentUser && !contractLoaded && !fields.length && <LoadButton initFunction={init} />}
 
-      {contract && loading && (
-        <LoadingIndicator />
-      )}
+      <LoadingIndicator loading={(!contract || !currentUser) || (contract && loading)} />
 
       {contract && contractLoaded && fields.length && (
         <>
-          <label htmlFor="name">Name</label>
-          <input className="block px-3 py-2 mb-3 w-1/2" type="text" value={name} onChange={(e) => setName(e.target.value)} />
+          <TextInput
+            classes="block px-3 py-2 mb-3 w-1/2"
+            for="name"
+            label="Name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
 
           <FieldsEditor fields={fields} setFields={setFields} />
 
-          <label className="block">
-            Public?&nbsp;
-            <input
-              className='ml-2'
-              name="isPublic"
-              type="checkbox"
-              checked={isPublic}
-              onChange={(e) => setIsPublic(!isPublic)}
-              />
-          </label>
+          <Checkbox
+            label="Public?"
+            name="isPublic"
+            checked={isPublic}
+            onChange={() => setIsPublic(!isPublic)}
+          />
 
-          <label className="block">
-            Encrypt?&nbsp;
-            <input
-              className='ml-2'
-              name="isEncrypted"
-              type="checkbox"
-              checked={isEncrypted}
-              onChange={(e) => setIsEncrypted(!isEncrypted)}
-              />
-          </label>
+          <Checkbox
+            label="Encrypt?"
+            name="isEncrypted"
+            checked={isEncrypted}
+            onChange={() => setIsEncrypted(!isEncrypted)}
+          />
 
           <button className="px-3 py-2 my-3 mr-3 x-4 border border-blue shadow-sm text-gray-light bg-blue hover:bg-blue focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue" onClick={handleSubmit}>Update</button>
         </>
